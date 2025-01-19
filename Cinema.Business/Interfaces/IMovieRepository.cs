@@ -11,9 +11,9 @@ namespace Cinema.Business.Interfaces
     {
         Task Add(MovieEntity movie);
         Task Update(int Id, MovieEntity movie);
-        Task Delete(MovieEntity movie);
+        Task DeleteById(int Id);
         Task<MovieEntity> GetById(int id);
-        Task<MovieEntity> GetByName(string name);
         Task<List<MovieEntity>> GetAll();
+        Task Save();
     }
 }

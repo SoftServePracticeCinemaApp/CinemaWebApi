@@ -18,5 +18,6 @@ namespace Cinema.Business.Interfaces
         Task<TicketEntity> GetById(long Id);
         Task<TicketEntity> GetByMovieId(int movieId);
         Task<TicketEntity> GetByMovieName(string movieName);
+        Task Save();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Cinema.Business.Entities;
 using Cinema.Business.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,33 +16,54 @@ public class SessionRepository : ISessionRepository
     {
         _context = context;
     }
-    public Task Add(SessionEntity session)
+    public async Task Add(SessionEntity session)
     {
-        throw new NotImplementedException();
+        if (session == null) throw new ArgumentNullException(nameof(session) + "can't be null");
+        await _context.AddAsync(session);
     }
 
-    public Task Delete(long sessionId)
+    public async Task Delete(long Id)
     {
-        throw new NotImplementedException();
+        var sessionInDb = await _context.Sessions
+            .AsNoTracking()
+            .FirstOrDefaultAsync(s => s.Id == Id);
+
+        if (sessionInDb == null) throw new InvalidOperationException($"session with id {Id} doesn't exist");
+        await Task.Run(() => _context.Remove(Id));
     }
 
-    public Task Get(long sessionId)
+    public async Task<SessionEntity> Get(long Id)
     {
-        throw new NotImplementedException();
+        var sessionInDb = await _context.Sessions
+            .AsNoTracking()
+            .FirstOrDefaultAsync(s => s.Id == Id);
+
+        if (sessionInDb == null) throw new ArgumentException($"session with Id {Id} doesn't exist");
+        return sessionInDb;
     }
 
-    public Task<IEnumerable<SessionEntity>> GetAll()
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<IEnumerable<SessionEntity>> GetAll() => await _context.Sessions.ToListAsync();
 
-    public Task<IEnumerable<SessionEntity>> GetByDate(DateTime dateTime)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<IEnumerable<SessionEntity>> GetByDate(DateTime dateTime) => 
+        await _context.Sessions
+        .AsNoTracking()
+        .Where(s => s.Date == dateTime)
+        .ToListAsync();
 
-    public Task Update(long sessionId, SessionEntity session)
+    public async Task Update(long Id, SessionEntity session)
     {
-        throw new NotImplementedException();
+        if(session == null) throw new ArgumentException($"{nameof(session)} can't be null");
+
+        var sessionInDb = await _context.Sessions
+            .AsNoTracking()
+            .FirstOrDefaultAsync(s => s.Id == Id);
+
+        if(sessionInDb == null) throw new InvalidOperationException($"session with Id {Id} doesn't exist");
+
+        sessionInDb.Date = session.Date;
+        sessionInDb.MovieId = session.MovieId;
+        sessionInDb.HallId = session.HallId;
     }
+    
+    public async Task Save() => await _context.SaveChangesAsync();
 }

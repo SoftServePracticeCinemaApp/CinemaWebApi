@@ -11,9 +11,10 @@ namespace Cinema.Business.Interfaces
     {
         Task Add(SessionEntity session);
         Task Update(long sessionId, SessionEntity session);
-        Task Get(long sessionId);
+        Task<SessionEntity> Get(long sessionId);
         Task<IEnumerable<SessionEntity>> GetAll();
         Task<IEnumerable<SessionEntity>> GetByDate(DateTime dateTime);
         Task Delete(long sessionId);
+        Task Save();
     }
 }

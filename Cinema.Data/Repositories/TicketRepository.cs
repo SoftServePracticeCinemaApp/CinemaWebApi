@@ -59,4 +59,6 @@ public class TicketRepository : ITicketRepository
     {
         throw new NotImplementedException();
     }
+
+    public async Task Save() => await _context.SaveChangesAsync();
 }
