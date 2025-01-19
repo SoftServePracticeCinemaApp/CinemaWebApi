@@ -1,5 +1,6 @@
 ﻿using Cinema.Business.Entities;
 using Cinema.Business.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,49 +16,65 @@ public class TicketRepository : ITicketRepository
     {
         _context = context;
     }
-    public Task Add(TicketEntity ticket)
+    public async Task Add(TicketEntity ticket)
     {
-        throw new NotImplementedException();
+        if(ticket != null) await _context.Tickets.AddAsync(ticket);
     }
 
-    public Task<TicketEntity> Get(long Id)
+    public async Task<IEnumerable<TicketEntity>> GetAll() 
+        => await _context.Tickets
+        .AsNoTracking()
+        .ToListAsync();
+
+    public async Task<TicketEntity> GetById(long Id)
     {
-        throw new NotImplementedException();
+        var ticketInDb = await _context.Tickets
+            .AsNoTracking()
+            .FirstOrDefaultAsync(t => t.Id == Id);
+
+        if (ticketInDb == null) throw new ArgumentException($"Ticket with Id {Id} does not exist");
+        return ticketInDb;
     }
 
-    public Task<IEnumerable<TicketEntity>> GetAll()
+    public async Task<IEnumerable<TicketEntity>> GetByMovieId(int movieId)
     {
-        throw new NotImplementedException();
+        var ticketInDb = await _context.Tickets
+            .AsNoTracking()
+            .Where(t => t.MovieId == movieId).ToListAsync();
+
+        if(ticketInDb == null) throw new ArgumentException($"Ticket with movie id {movieId} does not exist");
+        return ticketInDb;
     }
 
-    public Task<TicketEntity> GetById(long Id)
+    public async Task<IEnumerable<TicketEntity>> GetByUserId(string UserId)
     {
-        throw new NotImplementedException();
+        var ticketsInDb = await _context.Tickets
+            .AsNoTracking()
+            .Where(t => t.UserId == UserId)
+            .ToListAsync();
+
+        if(ticketsInDb.Count <= 0) return new List<TicketEntity>();
+
+        return ticketsInDb;
     }
 
-    public Task<TicketEntity> GetByMovieId(int movieId)
+    public async Task Remove(long Id)
     {
-        throw new NotImplementedException();
+        var ticketInDb = await _context.Tickets.AsNoTracking().FirstOrDefaultAsync(t => t.Id == Id);
+
+        if (ticketInDb == null) throw new InvalidOperationException($"Ticket with Id {Id} does not exist");
+        else await Task.Run(() => _context.Remove(ticketInDb));
     }
 
-    public Task<TicketEntity> GetByMovieName(string movieName)
+    public async Task Update(long Id, TicketEntity ticketEntity)
     {
-        throw new NotImplementedException();
-    }
+        var ticketInDb = await _context.Tickets.AsNoTracking().FirstOrDefaultAsync(t => t.Id == Id);
 
-    public Task<IEnumerable<TicketEntity>> GetByUserId(string Id)
-    {
-        throw new NotImplementedException();
-    }
+        if (ticketInDb == null) throw new InvalidOperationException($"Ticket with Id {Id} does not exist");
 
-    public Task Remove(long Id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task Update(long Id, TicketEntity ticketEntity)
-    {
-        throw new NotImplementedException();
+        ticketInDb.SessionId = Id;
+        ticketInDb.MovieId = Id;
+        ticketInDb.Row = ticketEntity.Row;
     }
 
     public async Task Save() => await _context.SaveChangesAsync();

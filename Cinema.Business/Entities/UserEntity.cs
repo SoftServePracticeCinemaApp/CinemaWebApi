@@ -12,5 +12,5 @@ public class UserEntity
     public string? Name { get; set; }
     public string? LastName { get; set; }
     public string? Phone { get; set; }
-    public List<TicketEntity> Tickets { get; set; } = [];
+    public ICollection<TicketEntity> Tickets { get; set; } = [];
 }
