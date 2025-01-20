@@ -18,7 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Cinema.Business\Cinema.Business.csproj" />
+    <ProjectReference Include="..\Cinema.Application\Cinema.Application.csproj" />
+    <ProjectReference Include="..\Cinema.Domain\Cinema.Domain.csproj" />
   </ItemGroup>
 
 </Project>

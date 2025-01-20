@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cinema.Business.Entities;
+namespace Cinema.Domain.Entities;
 
 public class UserEntity : IdentityUser
 {

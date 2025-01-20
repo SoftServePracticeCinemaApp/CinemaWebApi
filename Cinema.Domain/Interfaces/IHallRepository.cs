@@ -1,11 +1,11 @@
-﻿using Cinema.Business.Entities;
+﻿using Cinema.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cinema.Business.Interfaces
+namespace Cinema.Domain.Interfaces
 {
     public interface IHallRepository
     {
