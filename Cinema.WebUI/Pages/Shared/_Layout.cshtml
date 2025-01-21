@@ -1,51 +1,103 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Cinema.WebUI</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Cinema.WebUI.styles.css" asp-append-version="true" />
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Cinema.WebUI</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
+
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"] - PlayOn</title>
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/Cinema.WebUI.styles.css" asp-append-version="true" />
+    </head>
+
+    <body>
+        <header>
+            <nav class="navigation w-100 navbar-expand-sm navbar-toggleable-sm">
+                <div class="mw-100 container d-flex gap-4 align-items-center h-auto">
+                    <a class="navigation-brand lh-1 text-decoration-none" asp-area="" asp-page="/Index">
+                        <span class="fs-1 lh-1">
+                            PlayOn
+                        </span>
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav d-flex align-items-center flex-grow-1 gap-3 text-white">
+                            <li class="nav-item">
+                                <a class="nav-link text-white fs-6 lh-1 fw-normal" asp-area="" asp-page="/Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white fs-6 lh-1 fw-normal" asp-area=""
+                                    asp-page="/Privacy">Movies</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white fs-6 lh-1 fw-normal" asp-area="" asp-page="/Index">Series</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white fs-6 lh-1 fw-normal" asp-area="" asp-page="/Privacy">Top</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="navbar-collapse d-flex justify-content-end align-items-center w-100 h-100 gap-2 ps-3">
+                        <button class="search d-flex justify-content-center align-items-center" onclick="toggleInput()">
+                            <img class="w-100 h-100" src="~/images/layout/search.svg" alt="">
+                        </button>
+
+                        <div class="search-block">
+                            <input class="search-block-input fs-6" placeholder="Movie/Series name or actor/director name">
+                            </input>
+                        </div>
+
+                        <button class="search d-flex justify-content-center align-items-center">
+                            <img class="w-100 h-100" src="~/images/layout/notifications.svg" alt="">
+                        </button>
+
+                        <button class="user border border-1 rounded p-1 d-flex justify-content-center align-items-center">
+                            <img class="w-100 h-100" src="~/images/layout/user.svg" alt="">
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
+            </nav>
+        </header>
         <div class="container">
-            &copy; 2025 - Cinema.WebUI - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
         </div>
-    </footer>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; 2025 - Cinema.WebUI - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            </div>
+        </footer>
 
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+            rel="stylesheet">
+
+        <script>
+            let isInputEnabled = false;
+
+            function toggleInput() {
+                const inputBlock = document.querySelector('.search-block');
+                if (inputBlock) {
+                    inputBlock.style.width = isInputEnabled ? 0 : "100%";
+                    @* inputBlock.style.display = isInputEnabled ? "none" : "flex"; *@
+
+                    isInputEnabled = !isInputEnabled
+                }
+            }
+        </script>
+
+        @await RenderSectionAsync("Scripts", required: false)
+    </body>
+
 </html>

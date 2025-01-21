@@ -15,8 +15,17 @@ html {
 html {
   position: relative;
   min-height: 100%;
+
+  background: #020510;
+
+  * {
+    font-family: Poppins;
+    color: #FFF;
+  }
 }
 
 body {
   margin-bottom: 60px;
+
+  background: #020510;
 }

@@ -7,6 +7,89 @@ a.navbar-brand {
   word-break: break-all;
 }
 
+.navigation {
+  width: 100%;
+  height: auto;
+
+  background: #020510;
+}
+
+.navigation .container {
+  padding: 15px 50px;
+  margin: 0;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+a, .navigation-brand {
+  text-decoration: none !important;
+}
+
+.navigation-brand span {
+  font-family: Poppins;
+  /* font-size: 43.74px; */
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+
+  background: radial-gradient(337.35% 73.23% at 87.5% 50%, #FF2C78 0%, #DCA4FF 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-link > a {
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+
+  color :#FFF !important;
+}
+
+.navigation .search {
+  width: 2.5vh;
+  background: none;
+  outline: none;
+  border: none;
+}
+
+.navigation .user {
+  width: 2.31vh;
+  height: auto;
+
+  background: none;
+  outline: none;
+}
+
+.navigation .search-block {
+  width: 0;
+  height: auto;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  transition: width ease-in-out 2s;
+}
+
+.navigation .search-block-input {
+  width: 100%;
+  height: 100%;
+
+  background: none;
+  outline: none;
+  border: none;
+
+  color: #FFF;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+/*
 a {
   color: #0077cc;
 }
@@ -38,6 +121,7 @@ button.accept-policy {
   font-size: 1rem;
   line-height: inherit;
 }
+*/
 
 .footer {
   position: absolute;
