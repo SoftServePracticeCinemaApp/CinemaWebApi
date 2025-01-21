@@ -15,4 +15,8 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Cinema.Business\Cinema.Business.csproj" />
+  </ItemGroup>
+
 </Project>
