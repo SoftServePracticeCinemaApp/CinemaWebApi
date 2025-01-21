@@ -1,5 +1,5 @@
-using Cinema.Data;
-using Cinema.Data.Utils;
+using Cinema.Infrastructure;
+using Cinema.Infrastructure.Utils;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
