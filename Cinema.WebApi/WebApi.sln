@@ -9,11 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.Business", "..\Cinem
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.Data", "..\Cinema.Data\Cinema.Data.csproj", "{6B0C2D23-FDAD-4391-9AF0-28DD1BAEE9B8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.WebUI", "..\Cinema.WebUI\Cinema.WebUI.csproj", "{9474BAFA-0661-4AD0-B811-9B62C9F6FC4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.UI", "..\Cinema.UI\Cinema.UI\Cinema.UI.csproj", "{085A6DB1-D792-4934-8CDE-FF2B5151449E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinema.UI", "..\Cinema.UI\Cinema.UI\Cinema.UI.csproj", "{085A6DB1-D792-4934-8CDE-FF2B5151449E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinema.UI.Client", "..\Cinema.UI\Cinema.UI.Client\Cinema.UI.Client.csproj", "{876494BC-615A-4EDF-B6A8-7DBF7E117CBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.UI.Client", "..\Cinema.UI\Cinema.UI.Client\Cinema.UI.Client.csproj", "{876494BC-615A-4EDF-B6A8-7DBF7E117CBA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,10 +31,6 @@ Global
 		{6B0C2D23-FDAD-4391-9AF0-28DD1BAEE9B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B0C2D23-FDAD-4391-9AF0-28DD1BAEE9B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B0C2D23-FDAD-4391-9AF0-28DD1BAEE9B8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9474BAFA-0661-4AD0-B811-9B62C9F6FC4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9474BAFA-0661-4AD0-B811-9B62C9F6FC4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9474BAFA-0661-4AD0-B811-9B62C9F6FC4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9474BAFA-0661-4AD0-B811-9B62C9F6FC4A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{085A6DB1-D792-4934-8CDE-FF2B5151449E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{085A6DB1-D792-4934-8CDE-FF2B5151449E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{085A6DB1-D792-4934-8CDE-FF2B5151449E}.Release|Any CPU.ActiveCfg = Release|Any CPU
