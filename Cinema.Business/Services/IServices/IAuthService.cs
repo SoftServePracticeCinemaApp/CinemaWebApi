@@ -9,7 +9,7 @@ namespace Cinema.Business.Services.IServices
 {
 	public interface IAuthService
 	{
-		Task<string> Register(RegistrationRequestDto registrationrequestDto);
+		Task Register(RegistrationRequestDto registrationrequestDto);
 		Task<LoginResponceDto> Login(LoginRequestDto loginrequestDto);
 		Task<bool> AssignRole(string email, string role);
 	}
