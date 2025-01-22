@@ -1,0 +1,109 @@
+@use "sass:math";
+
+@function pxToRem($pxValue, $scale: 1) {
+  @return math.div($pxValue, 16px) * $scale * 1rem;
+}
+
+.layout-footer {
+  width: 100%;
+  height: auto;
+
+  display: flex;
+
+  &-container {
+    width: 100%;
+    height: auto;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: pxToRem(50px);
+
+    padding: pxToRem(50px) pxToRem(140px);
+  }
+
+  .links {
+    width: 100%;
+    height: auto;
+
+    display: flex;
+
+    ul {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: pxToRem(25px);
+
+      li {
+        list-style: none;
+
+        width: auto;
+        height: auto;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
+          width: pxToRem(24px);
+          height: pxToRem(24px);
+        }
+      }
+    }
+  }
+
+  .pages {
+    width: 100%;
+    height: auto;
+
+    display: flex;
+
+    &-list {
+      width: 100%;
+
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+
+      gap: pxToRem(50px);
+
+      li {
+        text-decoration: none;
+        list-style-type: none;
+
+        a, a.active {
+          color: #9E9E9E;
+          font-size: pxToRem(19px);
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+        }
+      }
+    }
+  }
+
+  .data {
+    .logo {
+      font-size: pxToRem(18px);
+  
+      background: radial-gradient(337.35% 73.23% at 87.5% 50%, #FF2C78 0%, #DCA4FF 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    
+      font-weight: 600;
+    }
+  
+    .city {
+      color: #B6B6B6;
+      font-size: pxToRem(15px);
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+    }
+  }
+}
