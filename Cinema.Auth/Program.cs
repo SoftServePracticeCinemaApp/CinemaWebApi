@@ -1,11 +1,21 @@
 using Cinema.Business.Options;
+using Cinema.Business.Services.IServices;
+using Cinema.Business.Services;
+using Microsoft.AspNetCore.Identity;
+using Cinema.Business.Entities;
+using Cinema.Data;
+using Cinema.Business.Interfaces;
+using Cinema.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+builder.Services.AddIdentity<UserEntity, IdentityRole>().AddEntityFrameworkStores<CinemaDbContext>();
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("ApiSettings:JwtOptions"));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
