@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Infrastructure;
 
-public class CinemaDbContext(DbContextOptions options) : IdentityDbContext(options)
+public class CinemaDbContext(DbContextOptions<CinemaDbContext> options) : IdentityDbContext<UserEntity>(options)
 {
     public DbSet<MovieEntity> Movies {  get; set; }
     public DbSet<TicketEntity> Tickets {  get; set; }
