@@ -1,5 +1,5 @@
-﻿using Cinema.Business.Entities;
-using Cinema.Business.Interfaces;
+﻿using Cinema.Domain.Entities;
+using Cinema.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cinema.Data.Repositories
+namespace Cinema.Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
     {

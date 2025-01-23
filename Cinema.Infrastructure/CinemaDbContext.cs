@@ -1,8 +1,8 @@
-﻿using Cinema.Business.Entities;
+﻿using Cinema.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cinema.Data;
+namespace Cinema.Infrastructure;
 
 public class CinemaDbContext(DbContextOptions<CinemaDbContext> options) : IdentityDbContext<UserEntity>(options)
 {
