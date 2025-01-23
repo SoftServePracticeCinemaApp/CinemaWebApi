@@ -1,5 +1,7 @@
-using Cinema.UI.Client.Pages;
-using Cinema.UI.Components;
+using Blazored.LocalStorage;
+using Cinema.UI.Services;
+using Cinema.UI.Services.Interfaces;
+using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +9,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+
+builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddScoped<IAccountManagement, AuthStateProvider>();
+builder.Services.AddScoped(sp => (IAccountManagement)sp.GetRequiredService<AuthStateProvider>());
+builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
+builder.Services.AddAuthorizationCore();
+
+builder.Services.AddHttpClient("AuthServiceUrl", opt => opt.BaseAddress =
+new Uri(builder.Configuration["AuthServiceUrl"] ?? "https://localhost:0000"))
+    .AddHttpMessageHandler<HttpHandler>();
 
 var app = builder.Build();
 
@@ -27,7 +39,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
-app.MapRazorComponents<App>()
+app.MapRazorComponents<Cinema.UI.Components.App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(Cinema.UI.Client._Imports).Assembly);

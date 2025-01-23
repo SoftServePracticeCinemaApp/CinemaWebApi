@@ -36,18 +36,35 @@
             </div>
         </div>
 
-        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end align-items-center w-auto h-100 gap-2 ps-3">
+        <div
+            class="navbar-collapse collapse d-sm-inline-flex justify-content-end align-items-center w-auto h-100 gap-2 ps-3">
             <ul class="navbar-nav d-flex justify-content-end align-items-center flex-grow-1 gap-3 text-white">
-                <li class="nav-item">
-                    <button class="search d-flex justify-content-center align-items-center">
-                        <img class="w-100 h-100" src="images/layout/notifications.svg" alt="">
-                    </button>
-                </li>
-                <li class="nav-item">
-                    <button class="user">
-                        <img class="w-100 h-100" src="images/layout/user.svg" alt="">
-                    </button>
-                </li>
+                <AuthorizeView>
+                    <Authorized>
+                        <li class="nav-item">
+                            <button class="search d-flex justify-content-center align-items-center">
+                                <NavLink href="counter">
+                                    <img class="w-100 h-100" src="images/layout/notifications.svg" alt="">
+                                </NavLink>
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="user">
+                                <NavLink href="counter">
+                                    <img class="w-100 h-100" src="images/layout/user.svg" alt="">
+                                </NavLink>
+                            </button>
+                        </li>
+                    </Authorized>
+                    <NotAuthorized>
+                        <li class="nav-item">
+                            <NavLink class="nav-link text-white fs-6 lh-1 fw-normal" href="counter">Login</NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link text-white fs-6 lh-1 fw-normal" href="counter">Register</NavLink>
+                        </li>
+                    </NotAuthorized>
+                </AuthorizeView>
             </ul>
         </div>
     </div>
@@ -66,7 +83,8 @@
 </script>
 
 @code {
-    public float convertPxToRem(double pxValue, double scale = 1) {
+    public float convertPxToRem(double pxValue, double scale = 1)
+    {
         return 1.0f;
     }
 }
