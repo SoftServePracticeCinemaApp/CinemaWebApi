@@ -1,6 +1,7 @@
+
+using Cinema.Infrastructure.Utils;
 using System.Text;
-using Cinema.Data;
-using Cinema.Data.Utils;
+using Cinema.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -8,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddInMemoryDataBase();
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 var secret = builder.Configuration.GetValue<string>("ApiSettings:Secret");
 var issuer = builder.Configuration.GetValue<string>("ApiSettings:Issuer");
