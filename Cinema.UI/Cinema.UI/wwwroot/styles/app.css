@@ -6,6 +6,8 @@ html, body {
   background: #020510; 
 
   font-size: 1.482vmin;
+  min-height: 100dvh;
+  height: 100dvh;
 }
 
 /*

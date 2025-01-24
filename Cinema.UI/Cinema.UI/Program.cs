@@ -5,20 +5,25 @@ using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddAuthorizationCore();
+
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
 builder.Services.AddBlazoredLocalStorage();
-builder.Services.AddScoped<IAccountManagement, AuthStateProvider>();
-builder.Services.AddScoped(sp => (IAccountManagement)sp.GetRequiredService<AuthStateProvider>());
+builder.Services.AddScoped<CustomHttpHandler>();
+// builder.Services.AddScoped<IAccountManagement, AuthStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
-builder.Services.AddAuthorizationCore();
+builder.Services.AddScoped<IAccountManagement>(sp => 
+    (IAccountManagement)sp.GetRequiredService<AuthenticationStateProvider>());
 
-builder.Services.AddHttpClient("AuthServiceUrl", opt => opt.BaseAddress =
-new Uri(builder.Configuration["AuthServiceUrl"] ?? "https://localhost:0000"))
-    .AddHttpMessageHandler<HttpHandler>();
+builder.Services.AddHttpClient("AuthServiceUrl", opt => 
+{
+    opt.BaseAddress = new Uri(builder.Configuration["AuthServiceUrl"] ?? "https://localhost:7006/api/auth/");
+})
+.AddHttpMessageHandler<CustomHttpHandler>();
 
 var app = builder.Build();
 

@@ -4,6 +4,44 @@
   @return math.div($pxValue, 16px) * $scale * 1rem;
 }
 
+.page {
+  position: relative;
+  width: 100%;
+  min-height: 100%;
+  height: auto;
+
+  display: flex;
+  flex-direction: column;
+  background: #020510; 
+
+  header {
+    width: 100%;
+    height: auto;
+  }
+
+  main {
+    width: 100%;
+    min-height: 100% !important;
+    height: 100%;
+
+    display: flex;
+    flex: 1;
+
+  }
+
+  footer {
+    width: 100% !important; 
+    height: auto !important;
+
+    display: flex;
+    justify-self: flex-end;
+
+    // display: flex !important;
+
+    position: relative !important;
+  }
+}
+
 .layout-footer {
   width: 100%;
   height: auto;

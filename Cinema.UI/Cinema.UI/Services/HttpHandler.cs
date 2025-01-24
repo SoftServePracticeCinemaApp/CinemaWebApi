@@ -2,11 +2,11 @@ using Blazored.LocalStorage;
 
 namespace Cinema.UI.Services;
 
-public class HttpHandler : DelegatingHandler
+public class CustomHttpHandler : DelegatingHandler
 {
     private readonly ILocalStorageService _localStorageService;
 
-    public HttpHandler(ILocalStorageService localStorageService)
+    public CustomHttpHandler(ILocalStorageService localStorageService)
     {
         _localStorageService = localStorageService;
     }

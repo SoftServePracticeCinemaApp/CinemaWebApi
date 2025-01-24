@@ -7,6 +7,7 @@ using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
+using Cinema.UI.Services;
 
 namespace Cinema.UI.Services;
 public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
@@ -90,14 +91,14 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
     return new AuthenticationState(user);
   }
 
-  public async Task<FormResult> RegisterAsync(string email, string password)
+  public async Task<FormResult> RegisterAsync(string email, string password, string phone, string name)
   {
     string[] defaultDetail = ["An unknown error prevented registration from succeeding."];
 
     try
     {
         var result = await _httpClient.PostAsJsonAsync("register",
-              new { email, password });
+              new { email, password, phone, name });
         if (result.IsSuccessStatusCode)
         {
             return new FormResult { Succeeded = true };

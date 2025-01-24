@@ -1,24 +1,22 @@
 ﻿@inherits LayoutComponentBase
 @using Cinema.UI.Components.Layout
+@inject NavigationManager NavigationManager
 
 <div class="page">
-    <header class="sidebar">
+    <header>
         <NavMenu />
     </header>
 
     <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
+        @Body
     </main>
 
-    <footer>
-        <FooterMenu />
-    </footer>
+    @if (!ShouldHideFooter())
+    {
+        <footer>
+            <FooterMenu />
+        </footer>
+    }
 </div>
 
 <div id="blazor-error-ui">
@@ -28,3 +26,15 @@
 </div>
 
 
+@code {
+    private bool ShouldHideFooter()
+    {
+        if (NavigationManager == null) return false;
+        
+        var currentUrl = NavigationManager.Uri.ToLower();
+        return currentUrl.EndsWith("/login") || 
+               currentUrl.EndsWith("/register") ||
+               currentUrl.EndsWith("/forgot-password");
+        // Add more pages where footer should be hidden
+    }
+}
