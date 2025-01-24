@@ -34,9 +34,17 @@ builder.Services.AddAuthentication(options =>
 		ValidAudience = audience
 	};
 });
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 app.MapGet("/", () => "Hello World!");
 app.UseHttpsRedirection();

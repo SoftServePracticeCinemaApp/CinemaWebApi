@@ -2,7 +2,7 @@ using Cinema.Business.Options;
 using Cinema.Business.Services.IServices;
 using Cinema.Business.Services;
 using Microsoft.AspNetCore.Identity;
-using Cinema.Business.Entities;
+using Cinema.Domain.Entities;
 using Cinema.Data;
 using Cinema.Business.Interfaces;
 using Cinema.Data.Repositories;
