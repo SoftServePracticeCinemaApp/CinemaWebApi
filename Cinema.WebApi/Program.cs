@@ -5,11 +5,16 @@ using Cinema.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Cinema.WebApi.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddInMemoryDataBase();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<GlobalExceptionFilter>();
+});
 
 var secret = builder.Configuration.GetValue<string>("ApiSettings:Secret");
 var issuer = builder.Configuration.GetValue<string>("ApiSettings:Issuer");
