@@ -1,4 +1,5 @@
 ﻿using Cinema.Domain.Entities;
+using Cinema.Infrastructure.Configuration;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,14 @@ public class CinemaDbContext(DbContextOptions<CinemaDbContext> options) : Identi
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        
+
+        builder.ApplyConfiguration(new UserConfiguration());
+        builder.ApplyConfiguration(new HallConfiguration());
+        builder.ApplyConfiguration(new MovieConfiguration());
+        builder.ApplyConfiguration(new SessionConfiguration());
+        builder.ApplyConfiguration(new TicketConfiguration());
+
         base.OnModelCreating(builder);
     }
 }
