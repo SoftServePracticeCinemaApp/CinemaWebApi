@@ -63,7 +63,7 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
                         .Select(c => new Claim(c.Key, c.Value)));
             }
 
-            var rolesResponse = await _httpClient.GetAsync($"api/Role/GetuserRole?userEmail={userInfo.Email}");
+            var rolesResponse = await _httpClient.GetAsync($"Role/GetuserRole?userEmail={userInfo.Email}");
             rolesResponse.EnsureSuccessStatusCode();
 
             var rolesJson = await rolesResponse.Content.ReadAsStringAsync();
@@ -157,6 +157,7 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
             if (tokenInfo?.AccessToken != null)
             {
                 await _localStorageService.SetItemAsync("accessToken", tokenInfo.AccessToken);
+
                 NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
                 return new FormResult { Succeeded = true };
             }
@@ -179,10 +180,11 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
     const string Empty = "{}";
     var emptyContent = new StringContent(Empty, Encoding.UTF8, "application/json");
 
-    var result = await _httpClient.PostAsync("api/user/Logout", emptyContent);
+    var result = await _httpClient.PostAsync("logout", emptyContent);
     if (result.IsSuccessStatusCode)
     {
       await _localStorageService.RemoveItemAsync("accessToken");
+
       NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     }
   }

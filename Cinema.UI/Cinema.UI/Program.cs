@@ -1,12 +1,14 @@
 using Blazored.LocalStorage;
 using Cinema.UI.Services;
 using Cinema.UI.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthorizationCore();
 
+// Add test authentication for development
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
@@ -31,6 +33,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
   app.UseWebAssemblyDebugging();
+  // app.UseAuthentication();
 }
 else
 {
