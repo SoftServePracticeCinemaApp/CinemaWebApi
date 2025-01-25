@@ -1,4 +1,5 @@
-﻿using Cinema.Domain.Entities;
+﻿using Cinema.Business.Interfaces;
+using Cinema.Domain.Entities;
 using Cinema.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;

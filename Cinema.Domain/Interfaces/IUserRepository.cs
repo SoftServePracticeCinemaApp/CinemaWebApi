@@ -1,4 +1,5 @@
-﻿using Cinema.Business.Entities;
+﻿
+using Cinema.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
