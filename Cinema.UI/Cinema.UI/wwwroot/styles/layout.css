@@ -1,0 +1,107 @@
+.page {
+  position: relative;
+  width: 100%;
+  min-height: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  background: #020510;
+}
+.page header {
+  width: 100%;
+  height: auto;
+}
+.page main {
+  width: 100%;
+  min-height: 100% !important;
+  height: 100%;
+  display: flex;
+  flex: 1;
+}
+.page footer {
+  width: 100% !important;
+  height: auto !important;
+  display: flex;
+  justify-self: flex-end;
+  position: relative !important;
+}
+
+.layout-footer {
+  width: 100%;
+  height: auto;
+  display: flex;
+}
+.layout-footer-container {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3.125rem;
+  padding: 3.125rem 8.75rem;
+}
+.layout-footer .links {
+  width: 100%;
+  height: auto;
+  display: flex;
+}
+.layout-footer .links ul {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5625rem;
+}
+.layout-footer .links ul li {
+  list-style: none;
+  width: auto;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.layout-footer .links ul li img {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.layout-footer .pages {
+  width: 100%;
+  height: auto;
+  display: flex;
+}
+.layout-footer .pages-list {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 3.125rem;
+}
+.layout-footer .pages-list li {
+  text-decoration: none;
+  list-style-type: none;
+}
+.layout-footer .pages-list li a, .layout-footer .pages-list li a.active {
+  color: #9E9E9E;
+  font-size: 1.1875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.layout-footer .data .logo {
+  font-size: 1.125rem;
+  background: radial-gradient(337.35% 73.23% at 87.5% 50%, #FF2C78 0%, #DCA4FF 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 600;
+}
+.layout-footer .data .city {
+  color: #B6B6B6;
+  font-size: 0.9375rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}/*# sourceMappingURL=layout.css.map */
