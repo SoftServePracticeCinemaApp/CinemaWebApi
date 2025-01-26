@@ -1,4 +1,5 @@
 ﻿using Cinema.Domain.Interfaces;
+using Cinema.Application.Interfaces;
 
 namespace Cinema.Infrastructure.Utils
 {

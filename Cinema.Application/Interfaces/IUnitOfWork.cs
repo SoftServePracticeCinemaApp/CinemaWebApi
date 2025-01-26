@@ -1,8 +1,8 @@
 ﻿using Cinema.Domain.Interfaces;
 
-namespace Cinema.Infrastructure.Utils
+namespace Cinema.Application.Interfaces
 {
-    interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork : IDisposable
     {
         IHallRepository HallRepository { get; }
         IMovieRepository MovieRepository { get; }
