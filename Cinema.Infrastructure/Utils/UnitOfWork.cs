@@ -6,10 +6,10 @@ namespace Cinema.Infrastructure.Utils
     class UnitOfWork : IUnitOfWork
     {
         private readonly CinemaDbContext _context;
-        public IHallRepository HallRepository { get; }
-        public IMovieRepository MovieRepository { get; }
-        public ISessionRepository SessionRepository { get; }
-        public ITicketRepository TicketRepository { get; }
+        public IHallRepository Hall { get; }
+        public IMovieRepository Movie { get; }
+        public ISessionRepository Session { get; }
+        public ITicketRepository Ticket { get; }
 
         public UnitOfWork(CinemaDbContext context,
                           IHallRepository hallRepository,
@@ -18,10 +18,10 @@ namespace Cinema.Infrastructure.Utils
                           ITicketRepository ticketRepository)
         {
             _context = context;
-            HallRepository = hallRepository;
-            MovieRepository = movieRepository;
-            SessionRepository = sessionRepository;
-            TicketRepository = ticketRepository;
+            Hall = hallRepository;
+            Movie = movieRepository;
+            Session = sessionRepository;
+            Ticket = ticketRepository;
         }
 
         public async Task CompleteAsync()

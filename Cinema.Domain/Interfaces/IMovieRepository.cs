@@ -4,11 +4,10 @@ namespace Cinema.Domain.Interfaces
 {
     public interface IMovieRepository
     {
-        Task Add(MovieEntity movie);
-        Task Update(int Id, MovieEntity movie);
-        Task DeleteById(int Id);
-        Task<MovieEntity> GetById(int id);
-        Task<List<MovieEntity>> GetAll();
-        Task Save();
+        Task AddAsync(MovieEntity movie);
+        Task UpdateAsync(int Id, MovieEntity movie);
+        Task DeleteByIdAsync(int Id);
+        Task<MovieEntity> GetByIdAsync(int id);
+        Task<List<MovieEntity>> GetAllAsync();
     }
 }

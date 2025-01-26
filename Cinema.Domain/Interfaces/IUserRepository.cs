@@ -11,10 +11,10 @@ namespace Cinema.Business.Interfaces
 {
     public interface IUserRepository
     {
-        Task Add(UserEntity user);
-        Task<UserEntity> Get(Expression<Func<UserEntity, bool>>? filter = null);
-        Task<IEnumerable<UserEntity>> GetAll(Expression<Func<UserEntity, bool>>? filter = null);
-        Task Update(string id, UserEntity user);
-        Task Delete(string id);
+        Task AddAsync(UserEntity user);
+        Task<UserEntity> GetAsync(Expression<Func<UserEntity, bool>>? filter = null);
+        Task<IEnumerable<UserEntity>> GetAllAsync(Expression<Func<UserEntity, bool>>? filter = null);
+        Task UpdateAsync(string id, UserEntity user);
+        Task DeleteAsync(string id);
     }
 }

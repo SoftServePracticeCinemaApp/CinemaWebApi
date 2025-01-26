@@ -4,10 +4,10 @@ namespace Cinema.Application.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IHallRepository HallRepository { get; }
-        IMovieRepository MovieRepository { get; }
-        ISessionRepository SessionRepository { get; }
-        ITicketRepository TicketRepository { get; }
+        IHallRepository Hall { get; }
+        IMovieRepository Movie{ get; }
+        ISessionRepository Session{ get; }
+        ITicketRepository Ticket{ get; }
         Task CompleteAsync();
     }
 }

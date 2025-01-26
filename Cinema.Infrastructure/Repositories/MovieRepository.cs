@@ -1,11 +1,6 @@
 ﻿using Cinema.Domain.Entities;
 using Cinema.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cinema.Infrastructure.Repositories;
 
@@ -17,13 +12,13 @@ public class MovieRepository : IMovieRepository
         _context = context;
     }
 
-    public async Task Add(MovieEntity movie)
+    public async Task AddAsync(MovieEntity movie)
     {
         if (movie == null) throw new ArgumentNullException(nameof(movie) + " No data provided");
         await _context.AddAsync(movie);
     }
 
-    public async Task DeleteById(int Id)
+    public async Task DeleteByIdAsync(int Id)
     {
         var movieInDb = await _context.Movies
             .AsNoTracking()
@@ -33,9 +28,9 @@ public class MovieRepository : IMovieRepository
         else throw new InvalidOperationException($"session with id {Id} doesn't exist");
     }
 
-    public async Task<List<MovieEntity>> GetAll() => await _context.Movies.ToListAsync();
+    public async Task<List<MovieEntity>> GetAllAsync() => await _context.Movies.ToListAsync();
 
-    public async Task<MovieEntity> GetById(int Id)
+    public async Task<MovieEntity> GetByIdAsync(int Id)
     {
         var movieInDb = await _context.Movies
             .AsNoTracking()
@@ -45,7 +40,7 @@ public class MovieRepository : IMovieRepository
         else throw new ArgumentException($"movie with {Id} doesn't exist");
     }
 
-    public async Task Update(int Id, MovieEntity movie)
+    public async Task UpdateAsync(int Id, MovieEntity movie)
     {
         if (movie == null) throw new ArgumentException($"{nameof(movie)} can't be null");
 
@@ -59,6 +54,4 @@ public class MovieRepository : IMovieRepository
             movieInDb.CinemaRating = movie.CinemaRating;
         }
     }
-
-    public async Task Save() => await _context.SaveChangesAsync();
 }
