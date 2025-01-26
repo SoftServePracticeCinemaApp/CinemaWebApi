@@ -6,7 +6,7 @@ namespace Cinema.Domain.Interfaces
     {
         Task AddAsync(TicketEntity ticket);
         Task UpdateAsync(long Id, TicketEntity ticketEntity);
-        Task RemoveAsync(long Id);
+        Task DeleteAsync(long Id);
         Task<IEnumerable<TicketEntity>> GetByUserIdAsync(string Id);
         Task<IEnumerable<TicketEntity>> GetAllAsync();
         Task<TicketEntity> GetByIdAsync(long Id);

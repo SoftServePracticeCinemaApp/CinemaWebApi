@@ -17,7 +17,7 @@ public class SessionRepository : ISessionRepository
         await _context.AddAsync(session);
     }
 
-    public async Task DeleteAsync(long Id)
+    public async Task DeleteByIdAsync(long Id)
     {
         var sessionInDb = await _context.Sessions
             .AsNoTracking()
@@ -27,7 +27,7 @@ public class SessionRepository : ISessionRepository
         await Task.Run(() => _context.Remove(Id));
     }
 
-    public async Task<SessionEntity> GetAsync(long Id)
+    public async Task<SessionEntity> GetByIdAsync(long Id)
     {
         var sessionInDb = await _context.Sessions
             .AsNoTracking()

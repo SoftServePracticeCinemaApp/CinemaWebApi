@@ -53,7 +53,7 @@ public class TicketRepository : ITicketRepository
         return ticketsInDb;
     }
 
-    public async Task RemoveAsync(long Id)
+    public async Task DeleteAsync(long Id)
     {
         var ticketInDb = await _context.Tickets.AsNoTracking().FirstOrDefaultAsync(t => t.Id == Id);
 

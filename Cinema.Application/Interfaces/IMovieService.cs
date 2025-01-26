@@ -2,7 +2,7 @@
 
 namespace Cinema.Application.Interfaces
 {
-    interface IMovieService
+    public interface IMovieService
     {
         Task<List<GetMovieDTO>> GetAllAsync();
         Task<GetMovieDTO> GetByIdAsync(int id);

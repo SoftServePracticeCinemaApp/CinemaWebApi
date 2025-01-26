@@ -6,9 +6,9 @@ namespace Cinema.Domain.Interfaces
     {
         Task AddAsync(SessionEntity session);
         Task UpdateAsync(long sessionId, SessionEntity session);
-        Task<SessionEntity> GetAsync(long sessionId);
+        Task<SessionEntity> GetByIdAsync(long sessionId);
         Task<IEnumerable<SessionEntity>> GetAllAsync();
         Task<IEnumerable<SessionEntity>> GetByDateAsync(DateTime dateTime);
-        Task DeleteAsync(long sessionId);
+        Task DeleteByIdAsync(long sessionId);
     }
 }
