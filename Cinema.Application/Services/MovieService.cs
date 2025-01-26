@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿]using AutoMapper;
 using Cinema.Application.DTO.MovieDTOs;
 using Cinema.Application.Interfaces;
 using Cinema.Domain.Entities;

@@ -1,11 +1,5 @@
 ﻿using Cinema.Application.DTO.MovieDTOs;
 using Cinema.Application.DTO.SessionDTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Cinema.Application.DTO.TicketDTOs
 {
     public class GetTicketDTO
