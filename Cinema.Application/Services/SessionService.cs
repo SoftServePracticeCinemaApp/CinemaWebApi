@@ -2,6 +2,7 @@
 using Cinema.Application.DTO.SessionDTOs;
 using AutoMapper;
 using Cinema.Domain.Entities;
+using Cinema.Application.DTO.TicketDTOs;
 
 namespace Cinema.Application.Services
 {
@@ -45,6 +46,11 @@ namespace Cinema.Application.Services
             var session = await _unitOfWork.Session.GetByIdAsync(sessionDto.Id);
             _mapper.Map(sessionDto, session);
             await _unitOfWork.CompleteAsync();
+        }
+        public async Task<IEnumerable<GetSessionDTO>> GetByDateAsync(DateTime dateTime)
+        {
+            var sessions = await _unitOfWork.Session.GetByDateAsync(dateTime);
+            return _mapper.Map<IEnumerable<GetSessionDTO>>(sessions);
         }
     }
 }

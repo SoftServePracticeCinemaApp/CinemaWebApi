@@ -22,7 +22,7 @@ namespace Cinema.Application.Services
             await _unitOfWork.CompleteAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteByIdAsync(int id)
         {
             await _unitOfWork.Movie.DeleteByIdAsync(id);
             await _unitOfWork.CompleteAsync();

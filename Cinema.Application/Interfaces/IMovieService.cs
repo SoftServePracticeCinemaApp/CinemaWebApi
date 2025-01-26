@@ -8,6 +8,6 @@ namespace Cinema.Application.Interfaces
         Task<GetMovieDTO> GetByIdAsync(int id);
         Task AddAsync(AddMovieDTO movieDto);
         Task UpdateAsync(UpdateMovieDTO movieDto);
-        Task DeleteAsync(int id);
+        Task DeleteByIdAsync(int id);
     }
 }

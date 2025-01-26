@@ -1,4 +1,5 @@
 ﻿using Cinema.Application.DTO.SessionDTOs;
+using Cinema.Domain.Entities;
 
 namespace Cinema.Application.Interfaces
 {
@@ -9,5 +10,6 @@ namespace Cinema.Application.Interfaces
         Task AddAsync(AddSessionDTO sessionDto);
         Task UpdateAsync(UpdateSessionDTO sessionDto);
         Task DeleteByIdAsync(int id);
+        Task<IEnumerable<GetSessionDTO>> GetByDateAsync(DateTime dateTime);
     }
 }
