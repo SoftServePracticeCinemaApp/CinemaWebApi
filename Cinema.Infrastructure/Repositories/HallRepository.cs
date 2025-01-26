@@ -1,11 +1,6 @@
 ﻿using Cinema.Domain.Entities;
 using Cinema.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cinema.Infrastructure.Repositories
 {
@@ -16,19 +11,19 @@ namespace Cinema.Infrastructure.Repositories
         {
             _context = context;
         }
-        public async Task Add(HallEntity hall)
+        public async Task AddAsync(HallEntity hall)
         {
             if (hall == null) throw new ArgumentNullException($"No data provided");
             await _context.Halls.AddAsync(hall);
         }
 
-        public async Task Delete(int Id)
+        public async Task DeleteAsync(int Id)
         {
             var hallInDb = await _context.Halls.AsNoTracking().FirstOrDefaultAsync(h => h.Id == Id);
             if (hallInDb == null) throw new InvalidOperationException($"Hall with Id {Id} does not exist");
         }
 
-        public async Task<HallEntity> Get(int Id)
+        public async Task<HallEntity> GetAsync(int Id)
         {
             var hallInDb = await _context.Halls
                 .AsNoTracking()
@@ -38,12 +33,12 @@ namespace Cinema.Infrastructure.Repositories
             else throw new ArgumentException($"Hall with Id {Id} does not exist");
         }
 
-        public async Task<IEnumerable<HallEntity>> GetAll() => 
+        public async Task<IEnumerable<HallEntity>> GetAllAsync() => 
             await _context.Halls
             .AsNoTracking()
             .ToListAsync();
 
-        public async Task Update(int Id, HallEntity hall)
+        public async Task UpdateAsync(int Id, HallEntity hall)
         {
             if (hall == null) throw new InvalidOperationException($"No data provided");
 
@@ -55,7 +50,5 @@ namespace Cinema.Infrastructure.Repositories
 
             hallInDb.Seats = hall.Seats;
         }
-
-        public async Task Save() => await _context.SaveChangesAsync();
     }
 }
