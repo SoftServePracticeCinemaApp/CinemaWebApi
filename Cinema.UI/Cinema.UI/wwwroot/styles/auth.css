@@ -1,0 +1,98 @@
+.auth {
+  width: 100%;
+  display: flex;
+  flex: 1;
+  padding: 1.25rem;
+}
+.auth-container {
+  width: 100%;
+  height: 100%;
+  background-image: url("/images/auth/background.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.auth-container * {
+  box-sizing: none;
+}
+.auth-container-block {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.875rem;
+  max-width: 31.25rem;
+  padding: 6.25rem;
+  border-radius: 0.9375rem;
+  background: rgba(255, 255, 255, 0.2);
+  -webkit-backdrop-filter: blur(0.5vh);
+          backdrop-filter: blur(0.5vh);
+}
+.auth-container-block-form {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+.auth-container-block-form-title {
+  width: 100%;
+  color: #FFF;
+  font-size: 1.875rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+.auth-container-block-form-item {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+.auth-container-block-form-item input {
+  width: 100%;
+  height: auto;
+  color: #FFF;
+  font-size: 0.9375rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  background: rgba(2, 5, 16, 0.7);
+  -webkit-backdrop-filter: blur(0.5vh);
+          backdrop-filter: blur(0.5vh);
+  border-radius: 0.625rem;
+  padding: 0.9375rem 1.25rem;
+  border: none;
+  outline: none;
+}
+.auth-container-block-form-item-error {
+  color: #b90000;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+.auth-container-block-button {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #FF2C78;
+  -webkit-backdrop-filter: blur(0.5vh);
+          backdrop-filter: blur(0.5vh);
+  border-radius: 0.625rem;
+  border: none;
+  outline: none;
+  padding: 0.6875rem;
+  color: #FFF;
+  font-size: 1.375rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  pointer-events: all;
+}/*# sourceMappingURL=auth.css.map */
