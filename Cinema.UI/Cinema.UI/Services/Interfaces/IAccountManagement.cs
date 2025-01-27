@@ -8,5 +8,6 @@ public interface IAccountManagement
   Task<FormResult> LoginAsync(string email, string password);
   Task LogoutAsync();
   Task<bool> CheckAuthenticatedAsync();
+  UserInfo GetUserInfo();
 }
 
