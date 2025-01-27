@@ -6,13 +6,25 @@ using Cinema.Infrastructure.Repositories;
 using Cinema.Infrastructure;
 using Cinema.Business.Services.IServices;
 using Cinema.Business.Options;
+using Microsoft.EntityFrameworkCore;
+using Cinema.Infrastructure.Utils;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+var useInMemoryDB = builder.Configuration.GetValue<bool>("UseInMemoryDB");
 builder.Services.AddControllers();
+if (useInMemoryDB)
+{
+	builder.Services.AddInMemoryDataBase();
+}
+else
+{
+	builder.Services.AddDbContext<CinemaDbContext>(options =>
+		options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaDb"),
+		ServiceProviderOptions => ServiceProviderOptions.EnableRetryOnFailure()));
+}
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();

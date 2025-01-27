@@ -1,5 +1,4 @@
-﻿
-using Cinema.Infrastructure.Utils;
+﻿using Cinema.Infrastructure.Utils;
 using System.Text;
 using Cinema.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
