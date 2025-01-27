@@ -1,0 +1,84 @@
+@page "/register"
+@using Cinema.UI.Services
+@using Cinema.UI.Model
+@inject IAccountManagement Acct
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+
+<PageTitle>Sign up</PageTitle>
+
+
+<CascadingAuthenticationState>
+  <AuthorizeView>
+    <NotAuthorized>
+      <div class="auth">
+        <div class="auth-container">
+          <div class="auth-container-block">
+            <div class="auth-container-block-form">
+              <div class="auth-container-block-form-title">Sign up</div>
+              <div class="auth-container-block-form-item">
+                <input type="text" placeholder="Email" @bind-value="email">
+              </div>
+              <div class="auth-container-block-form-item">
+                <input type="text" placeholder="Phone" @bind-value="phone">
+              </div>
+              <div class="auth-container-block-form-item">
+                <input type="text" placeholder="Name" @bind-value="name">
+              </div>
+              <div class="auth-container-block-form-item">
+                <input type="text" placeholder="Password" @bind-value="password">
+              </div>
+
+              @if (errors && errorList.Length > 0) {
+                <div class="auth-container-block-form-item">
+                  @foreach (var error in errorList) {
+                    <div class="auth-container-block-form-item-error">@error</div>
+                  }
+                </div>
+              }
+            </div>
+
+            <button class="auth-container-block-button" @onclick="onRegister">Sign up</button>
+          </div>
+        </div>
+      </div>
+    </NotAuthorized>
+  </AuthorizeView>
+</CascadingAuthenticationState>
+
+
+@code {
+  private bool success;
+  private bool errors;
+
+  private string email = string.Empty;
+  private string phone = string.Empty;
+  private string name = string.Empty;
+  private string password = string.Empty;
+
+  private string[] errorList = [];
+
+  public async Task onRegister() {
+    success = errors = false;
+
+    if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(phone) || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(password)) {
+      errors = true;
+
+      errorList = new string[] { "All fields are required" };
+      return;
+    }
+
+    FormResult result = await Acct.RegisterAsync(email, password, phone, name);
+
+    if (result.Succeeded) {
+      success = true;
+      NavigationManager.NavigateTo("/login");
+    } else {
+      errors = true;
+      errorList = result.ErrorList;
+    }
+
+    return;
+  }
+}

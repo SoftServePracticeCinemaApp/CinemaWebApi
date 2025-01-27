@@ -1,0 +1,134 @@
+@use "sass:math";
+
+@function pxToRem($pxValue, $scale: 1) {
+  @return math.div($pxValue, 16px) * $scale * 1rem;
+}
+
+.auth {
+  width: 100%;
+
+  display: flex;
+  flex: 1;
+
+  padding: pxToRem(20px);
+
+  &-container {
+    width: 100%;
+    height: 100%;
+  
+    background-image: url('/images/auth/background.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    * {
+      box-sizing: none;
+    }
+
+    &-block {
+      width: 100%;
+      height: auto;
+
+      display: flex;
+      flex-direction: column;
+      gap: pxToRem(30px);
+
+      max-width: pxToRem(500px);
+
+      padding: pxToRem(100px);
+
+      border-radius: pxToRem(15px);
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(0.5vh);
+
+      &-form {
+        width: 100%;
+        height: auto;
+
+        // max-width: 400px;
+  
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: flex-start;
+
+        gap: pxToRem(12px);
+
+        &-title {
+          width: 100%;
+          
+          color: #FFF;
+          font-size: pxToRem(30px);
+          font-style: normal;
+          font-weight: 600;
+          line-height: normal;
+        }
+
+        &-item {
+          width: 100%;
+          height: auto;
+
+          display: flex;
+          flex-direction: column;
+          gap: pxToRem(6px);
+
+          input {
+            width: 100%;
+            height: auto;
+            
+            color: #FFF;
+            font-size: pxToRem(15px);
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+
+            background: rgba(2, 5, 16, 0.70);
+            backdrop-filter: blur(0.5vh);
+            border-radius: pxToRem(10px);
+
+            padding: pxToRem(15px) pxToRem(20px);
+
+            border: none;
+            outline: none;
+          }
+
+          &-error {
+            color: #b90000;
+            font-size: pxToRem(16px);
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
+          }
+        }
+      }
+
+      &-button {
+        width: 100%;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        background: #FF2C78;
+        backdrop-filter: blur(0.5vh); 
+
+        border-radius: pxToRem(10px);
+        border: none;
+        outline: none;
+
+        padding: pxToRem(11px);
+
+        color: #FFF;
+        font-size: pxToRem(22px);
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+
+        pointer-events: all;
+      }
+    }
+  }
+}
