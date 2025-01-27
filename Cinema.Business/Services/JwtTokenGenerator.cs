@@ -5,9 +5,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Cinema.Business.Entities;
 using Cinema.Business.Options;
 using Cinema.Business.Services.IServices;
+using Cinema.Domain.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 

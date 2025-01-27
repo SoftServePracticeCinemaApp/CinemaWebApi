@@ -1,11 +1,12 @@
-using Cinema.Business.Options;
-using Cinema.Business.Services.IServices;
-using Cinema.Business.Services;
 using Microsoft.AspNetCore.Identity;
-using Cinema.Domain.Entities;
-using Cinema.Data;
 using Cinema.Business.Interfaces;
-using Cinema.Data.Repositories;
+using Cinema.Business.Services;
+using Cinema.Domain.Entities;
+using Cinema.Infrastructure.Repositories;
+using Cinema.Infrastructure;
+using Cinema.Business.Services.IServices;
+using Cinema.Business.Options;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
