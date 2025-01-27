@@ -5,14 +5,26 @@ using Cinema.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+
+using Cinema.WebApi.Filters;
+
 using System;
 using Cinema.Domain.Entities;
 using Microsoft.Extensions.Options;
+
 
 public static class Program
 {
     public static void Main(string[] args)
     {
+
+
+builder.Services.AddInMemoryDataBase();
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<GlobalExceptionFilter>();
+});
 
 
         var builder = WebApplication.CreateBuilder(args);
