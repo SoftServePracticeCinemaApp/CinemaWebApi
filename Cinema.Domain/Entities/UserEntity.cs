@@ -11,5 +11,5 @@ public class UserEntity : IdentityUser
 {
     public string? Name { get; set; }
     public string? LastName { get; set; }
-    public IEnumerable<TicketEntity> Tickets { get; set; } = [];
+    public List<TicketEntity> Tickets { get; set; } = new List<TicketEntity>();
 }
