@@ -9,8 +9,8 @@ using System;
 using Cinema.Domain.Entities;
 using Microsoft.Extensions.Options;
 using Cinema.Application.Helpers;
-using Cinema.Application.Interfaces;
 using Cinema;
+using Cinema.Application.Helpers.Interfaces;
 
 public static class Program
 {

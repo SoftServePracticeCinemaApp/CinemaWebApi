@@ -1,4 +1,5 @@
 ﻿using Cinema.Application.DTO.MovieDTOs;
+using Cinema.Application.Helpers.Interfaces;
 
 namespace Cinema.Application.Interfaces
 {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Helpers.Interfaces;
 
 namespace Cinema.Infrastructure.Utils
 {

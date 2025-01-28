@@ -1,5 +1,5 @@
 ﻿using Cinema.Application.Enums;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Helpers.Interfaces;
 
 namespace Cinema
 {

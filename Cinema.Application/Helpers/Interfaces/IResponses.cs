@@ -1,6 +1,6 @@
 ﻿using Cinema.Application.Enums;
 
-namespace Cinema.Application.Interfaces
+namespace Cinema.Application.Helpers.Interfaces
 {
     public interface IResponses
     {

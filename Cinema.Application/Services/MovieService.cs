@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Azure;
 using Cinema.Application.DTO.MovieDTOs;
+using Cinema.Application.Helpers.Interfaces;
 using Cinema.Application.Interfaces;
 using Cinema.Domain.Entities;
 
