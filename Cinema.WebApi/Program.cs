@@ -4,31 +4,23 @@ using Cinema.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-
 using Cinema.WebApi.Filters;
-
 using System;
 using Cinema.Domain.Entities;
 using Microsoft.Extensions.Options;
 using Cinema.Application.Helpers;
 using Cinema;
 using Cinema.Application.Helpers.Interfaces;
+using Cinema.Application.Interfaces;
+using Cinema.Application.Services;
+using Cinema.Domain.Interfaces;
+using Cinema.Infrastructure.Repositories;
 
 
 public static class Program
 {
     public static void Main(string[] args)
     {
-
-
-builder.Services.AddInMemoryDataBase();
-builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<GlobalExceptionFilter>();
-});
-
-
         var builder = WebApplication.CreateBuilder(args);
         var useInMemoryDB = builder.Configuration.GetValue<bool>("UseInMemoryDB");
 
@@ -38,7 +30,12 @@ builder.Services.AddControllers(options =>
         var secret = builder.Configuration.GetValue<string>("ApiSettings:Secret");
         var issuer = builder.Configuration.GetValue<string>("ApiSettings:Issuer");
         var audience = builder.Configuration.GetValue<string>("ApiSettings:Audience");
-
+        builder.Services.AddInMemoryDataBase();
+        builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+        builder.Services.AddControllers(options =>
+        {
+            options.Filters.Add<GlobalExceptionFilter>();
+        });
 
         var key = Encoding.ASCII.GetBytes(secret);
 
@@ -55,6 +52,16 @@ builder.Services.AddControllers(options =>
 
 
         builder.Services.AddScoped<IResponses, Responses>();
+
+        builder.Services.AddScoped<IMovieService, MovieService>();
+        builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+
+        builder.Services.AddScoped<ISessionService, SessionService>();
+        builder.Services.AddScoped<ISessionRepository, SessionRepository>();
+
+        builder.Services.AddScoped<ITicketService, TicketService>();
+        builder.Services.AddScoped<ITicketRepository, TicketRepository>();
+
 
         builder.Services.AddAuthentication(options =>
         {

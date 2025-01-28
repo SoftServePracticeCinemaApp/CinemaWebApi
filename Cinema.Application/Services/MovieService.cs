@@ -7,7 +7,7 @@ using Cinema.Domain.Entities;
 
 namespace Cinema.Application.Services
 {
-    class MovieService : IMovieService
+    public class MovieService : IMovieService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper; 
