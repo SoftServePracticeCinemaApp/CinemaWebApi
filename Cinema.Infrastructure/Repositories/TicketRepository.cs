@@ -71,4 +71,21 @@ public class TicketRepository : ITicketRepository
         ticketInDb.MovieId = Id;
         ticketInDb.Row = ticketEntity.Row;
     }
+    public async Task<IEnumerable<TicketEntity>> GetBySessionIdAsync(long sessionId)
+    {
+        return await _context.Tickets
+            .Where(t => t.SessionId == sessionId)
+            .Include(t => t.User)
+            .Include(t => t.Movie)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<TicketEntity>> GetTicketsForHallAsync(int hallId)
+    {
+        return await _context.Tickets
+            .Where(t => t.Session != null && t.Session.HallId == hallId)
+            .Include(t => t.Session)
+            .Include(t => t.Movie)
+            .ToListAsync();
+    }
 }

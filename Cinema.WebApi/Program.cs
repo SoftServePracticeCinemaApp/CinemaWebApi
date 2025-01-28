@@ -10,6 +10,9 @@ using Cinema.WebApi.Filters;
 using System;
 using Cinema.Domain.Entities;
 using Microsoft.Extensions.Options;
+using Cinema.Application.Helpers;
+using Cinema;
+using Cinema.Application.Helpers.Interfaces;
 
 
 public static class Program
@@ -49,7 +52,9 @@ builder.Services.AddControllers(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaDb"),
                 ServiceProviderOptions => ServiceProviderOptions.EnableRetryOnFailure()));
         }
-        
+
+
+        builder.Services.AddScoped<IResponses, Responses>();
 
         builder.Services.AddAuthentication(options =>
         {
