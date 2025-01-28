@@ -1,4 +1,5 @@
-﻿using Cinema.Domain.Entities;
+﻿using System;
+using Cinema.Domain.Entities;
 using Cinema.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -53,5 +54,13 @@ public class MovieRepository : IMovieRepository
             movieInDb.SearchId = movie.SearchId;
             movieInDb.CinemaRating = movie.CinemaRating;
         }
+    }
+
+    public async Task<List<MovieEntity>> GetTopRatedAsync(int take)
+    {
+        return await _context.Movies
+            .OrderByDescending(m => m.CinemaRating)
+            .Take(take)
+            .ToListAsync();
     }
 }

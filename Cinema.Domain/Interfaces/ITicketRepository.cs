@@ -11,5 +11,7 @@ namespace Cinema.Domain.Interfaces
         Task<IEnumerable<TicketEntity>> GetAllAsync();
         Task<TicketEntity> GetByIdAsync(long Id);
         Task<IEnumerable<TicketEntity>> GetByMovieIdAsync(int movieId);
+        Task<IEnumerable<TicketEntity>> GetBySessionIdAsync(long sessionId);
+        Task<IEnumerable<TicketEntity>> GetTicketsForHallAsync(int hallId);
     }
 }
