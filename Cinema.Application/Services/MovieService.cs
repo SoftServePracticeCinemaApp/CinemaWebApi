@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure;
 using Cinema.Application.DTO.MovieDTOs;
 using Cinema.Application.Interfaces;
 using Cinema.Domain.Entities;
@@ -8,43 +9,121 @@ namespace Cinema.Application.Services
     class MovieService : IMovieService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-        public MovieService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IMapper _mapper; 
+        private readonly IResponses _responses;
+
+        public MovieService(IResponses responses, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _responses = responses;
         }
 
-        public async Task AddAsync(AddMovieDTO movieDto)
+        public async Task<IBaseResponse<List<GetMovieDTO>>> GetAllMoviesAsync()
         {
-            var movie = _mapper.Map<MovieEntity>(movieDto);
-            await _unitOfWork.Movie.AddAsync(movie);
-            await _unitOfWork.CompleteAsync();
+            try
+            {
+                var movies = await _unitOfWork.Movie.GetAllAsync();
+
+                if (movies == null || movies.Count == 0)
+                    return _responses.CreateBaseBadRequest<List<GetMovieDTO>>("No movies found.");
+
+                var moviesDto = _mapper.Map<List<GetMovieDTO>>(movies);
+                return _responses.CreateBaseOk(moviesDto, moviesDto.Count);
+            }
+            catch (Exception ex)
+            {
+                return _responses.CreateBaseServerError<List<GetMovieDTO>>(ex.Message);
+            }
         }
 
-        public async Task DeleteByIdAsync(int id)
+        public async Task<IBaseResponse<GetMovieDTO>> GetMovieByIdAsync(int id)
         {
-            await _unitOfWork.Movie.DeleteByIdAsync(id);
-            await _unitOfWork.CompleteAsync();
+            try
+            {
+                var movie = await _unitOfWork.Movie.GetByIdAsync(id);
+
+                if (movie == null)
+                    return _responses.CreateBaseNotFound<GetMovieDTO>($"Movie with id {id} not found.");
+
+                var movieDto = _mapper.Map<GetMovieDTO>(movie);
+                return _responses.CreateBaseOk(movieDto, 1);
+            }
+            catch (Exception ex)
+            {
+                return _responses.CreateBaseServerError<GetMovieDTO>(ex.Message);
+            }
         }
 
-        public async Task<List<GetMovieDTO>> GetAllAsync()
+        public async Task<IBaseResponse<string>> AddMovieAsync(AddMovieDTO movieDto)
         {
-            var movies = await _unitOfWork.Movie.GetAllAsync();
-            return _mapper.Map<List<GetMovieDTO>>(movies);
+            try
+            {
+                var movie = _mapper.Map<MovieEntity>(movieDto);
+
+                await _unitOfWork.Movie.AddAsync(movie);
+                await _unitOfWork.CompleteAsync();
+
+                return _responses.CreateBaseOk("Movie added successfully.", 1);
+            }
+            catch (Exception ex)
+            {
+                return _responses.CreateBaseServerError<string>(ex.Message);
+            }
         }
 
-        public async Task<GetMovieDTO> GetByIdAsync(int id)
+        public async Task<IBaseResponse<string>> UpdateMovieAsync(int id, UpdateMovieDTO movieDto)
         {
-            var movie = await _unitOfWork.Movie.GetByIdAsync(id);
-            return _mapper.Map<GetMovieDTO>(movie);
+            try
+            {
+                var existingMovie = await _unitOfWork.Movie.GetByIdAsync(id);
+
+                if (existingMovie == null)
+                    return _responses.CreateBaseNotFound<string>($"Movie with id {id} not found.");
+
+                _mapper.Map(movieDto, existingMovie);
+
+                await _unitOfWork.CompleteAsync();
+
+                return _responses.CreateBaseOk("Movie updated successfully.", 1);
+            }
+            catch (Exception ex)
+            {
+                return _responses.CreateBaseServerError<string>(ex.Message);
+            }
         }
 
-        public async Task UpdateAsync(UpdateMovieDTO movieDto)
+        public async Task<IBaseResponse<string>> DeleteMovieAsync(int id)
         {
-            var movie = await _unitOfWork.Movie.GetByIdAsync(movieDto.SearchId);
-            _mapper.Map(movieDto, movie);
-            await _unitOfWork.CompleteAsync();
+            try
+            {
+                await _unitOfWork.Movie.DeleteByIdAsync(id);
+                await _unitOfWork.CompleteAsync();
+
+                return _responses.CreateBaseOk("Movie deleted successfully.", 1);
+            }
+            catch (Exception ex)
+            {
+                return _responses.CreateBaseServerError<string>(ex.Message);
+            }
+        }
+
+        public async Task<IBaseResponse<List<GetMovieDTO>>> GetTopRatedMoviesAsync(int take)
+        {
+            try
+            {
+                var movies = await _unitOfWork.Movie.GetTopRatedAsync(take);
+
+                if (movies == null || movies.Count == 0)
+                    return _responses.CreateBaseBadRequest<List<GetMovieDTO>>("No top-rated movies found.");
+
+                var moviesDto = _mapper.Map<List<GetMovieDTO>>(movies);
+                return _responses.CreateBaseOk(moviesDto, moviesDto.Count);
+            }
+            catch (Exception ex)
+            {
+                return _responses.CreateBaseServerError<List<GetMovieDTO>>(ex.Message);
+            }
         }
     }
 }

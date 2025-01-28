@@ -1,8 +1,9 @@
 ﻿using Cinema.Application.Enums;
+using Cinema.Application.Interfaces;
 
 namespace Cinema
 {
-    public class BaseResponse<T>
+    public class BaseResponse<T> : IBaseResponse<T>
     {
         public string Description { get; set; } = null!;
         public StatusCode StatusCode { get; set; }

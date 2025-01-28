@@ -8,6 +8,9 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using Cinema.Domain.Entities;
 using Microsoft.Extensions.Options;
+using Cinema.Application.Helpers;
+using Cinema.Application.Interfaces;
+using Cinema;
 
 public static class Program
 {
@@ -38,7 +41,9 @@ public static class Program
                 options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaDb"),
                 ServiceProviderOptions => ServiceProviderOptions.EnableRetryOnFailure()));
         }
-        
+
+
+        builder.Services.AddScoped<IResponses, Responses>();
 
         builder.Services.AddAuthentication(options =>
         {

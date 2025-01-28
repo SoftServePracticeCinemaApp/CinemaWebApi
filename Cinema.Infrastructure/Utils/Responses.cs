@@ -1,9 +1,11 @@
 ﻿using Cinema.Application.Enums;
+using Cinema.Application.Interfaces;
+
 namespace Cinema.Application.Helpers
 {
-    public class ResponseCreator
+    public class Responses : IResponses
     {
-        public BaseResponse<T> CreateBase<T>(string description, StatusCode statusCode, T data = default, int resultsCount = 0)
+        public IBaseResponse<T> CreateBase<T>(string description, StatusCode statusCode, T data = default, int resultsCount = 0)
         {
             return new BaseResponse<T>()
             {
@@ -14,7 +16,7 @@ namespace Cinema.Application.Helpers
             };
         }
 
-        public BaseResponse<T> CreateBaseOk<T>(T data, int resultsCount)
+        public IBaseResponse<T> CreateBaseOk<T>(T data, int resultsCount)
         {
             return new BaseResponse<T>()
             {
@@ -25,7 +27,7 @@ namespace Cinema.Application.Helpers
             };
         }
 
-        public BaseResponse<T> CreateBaseOk<T>(T data, int resultsCount, string description)
+        public IBaseResponse<T> CreateBaseOk<T>(T data, int resultsCount, string description)
         {
             return new BaseResponse<T>()
             {
@@ -36,7 +38,7 @@ namespace Cinema.Application.Helpers
             };
         }
 
-        public BaseResponse<T> CreateBaseBadRequest<T>(string description)
+        public IBaseResponse<T> CreateBaseBadRequest<T>(string description)
         {
             return new BaseResponse<T>()
             {
@@ -47,7 +49,7 @@ namespace Cinema.Application.Helpers
             };
         }
 
-        public BaseResponse<T> CreateBaseNotFound<T>(string description)
+        public IBaseResponse<T> CreateBaseNotFound<T>(string description)
         {
             return new BaseResponse<T>()
             {
@@ -58,7 +60,7 @@ namespace Cinema.Application.Helpers
             };
         }
 
-        public BaseResponse<T> CreateBaseServerError<T>(string exceptionMessage)
+        public IBaseResponse<T> CreateBaseServerError<T>(string exceptionMessage)
         {
             return new BaseResponse<T>()
             {
