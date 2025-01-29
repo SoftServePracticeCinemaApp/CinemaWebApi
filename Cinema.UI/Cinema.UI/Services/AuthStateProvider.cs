@@ -54,11 +54,7 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
 
         var claims = new List<Claim>
         {
-            // new(ClaimTypes.Name, _testUser.Name),
             new(ClaimTypes.Email, _testUser.Email),
-            // new(ClaimTypes.Phone, _testUser.Phone),
-            // new(ClaimTypes.IsEmailConfirmed, _testUser.IsEmailConfirmed.ToString()),
-            // new(ClaimTypes.Dictionary, JsonSerializer.Serialize(_testUser.Claims))
         };
 
         // Add custom claims
@@ -78,8 +74,7 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
         _authenticated = true;
 
         return new AuthenticationState(user);
-
-        /* test 
+        /*
         _authenticated = false;
         var user = Unauthenticated;
 
@@ -95,8 +90,10 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
             {
                 var claims = new List<Claim>
             {
-                new(ClaimTypes.Name, userInfo.Email),
-                new(ClaimTypes.Email, userInfo.Email)
+                new(ClaimTypes.Name, userInfo.Name),
+                new(ClaimTypes.Email, userInfo.Email),
+                // new(ClaimTypes.Phone, userInfo.Phone),
+                new(ClaimTypes.Role, userInfo.Claims["Role"]),
             };
 
                 if (userInfo.Claims != null)
@@ -132,7 +129,6 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
         }
 
         return new AuthenticationState(user);
-
         */
     }
 

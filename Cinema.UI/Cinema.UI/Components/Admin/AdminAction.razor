@@ -1,0 +1,47 @@
+@using Cinema.UI.Model
+@namespace Cinema.UI.Components.Admin
+
+<div class="admin-action">
+    <div class="admin-action-title">@Title</div>
+    
+    <div class="admin-action-form">
+        @foreach (var input in Inputs)
+        {
+            <div class="admin-action-form-group">
+                <label>@input.Label</label>
+                <input type="@input.Type" 
+                       class="admin-action-form-group-control"
+                       @bind="input.Value"
+                       placeholder="@input.Placeholder"/>
+            </div>
+        }
+        
+        <div class="buttons">
+            <button @onclick="OnSubmit">
+                @(SubmitText ?? "Submit")
+            </button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public List<InputField> Inputs { get; set; }
+
+    [Parameter]
+    public EventCallback OnSubmit { get; set; }
+
+    [Parameter]
+    public string SubmitText { get; set; }
+
+    public class InputField
+    {
+        public string Label { get; set; }
+        public string Type { get; set; } = "text";
+        public string Value { get; set; }
+        public string Placeholder { get; set; }
+    }
+} 

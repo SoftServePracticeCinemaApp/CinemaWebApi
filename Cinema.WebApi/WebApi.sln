@@ -7,26 +7,22 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.WebApi", "Cinema.Web
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.Business", "..\Cinema.Business\Cinema.Business.csproj", "{F87F8861-AB33-47A5-9E32-99AD462D9054}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.WebUI", "..\Cinema.WebUI\Cinema.WebUI.csproj", "{9474BAFA-0661-4AD0-B811-9B62C9F6FC4A}"
-EndProject
-<<<<<<< HEAD
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.UI", "..\Cinema.UI\Cinema.UI\Cinema.UI.csproj", "{085A6DB1-D792-4934-8CDE-FF2B5151449E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.UI.Client", "..\Cinema.UI\Cinema.UI.Client\Cinema.UI.Client.csproj", "{876494BC-615A-4EDF-B6A8-7DBF7E117CBA}"
-=======
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinema.Auth", "..\Cinema.Auth\Cinema.Auth.csproj", "{441D8BE6-3BB6-4A9B-BB9C-26804940F018}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.Auth", "..\Cinema.Auth\Cinema.Auth.csproj", "{441D8BE6-3BB6-4A9B-BB9C-26804940F018}"
 	ProjectSection(ProjectDependencies) = postProject
 		{11502212-2B78-4094-9420-4B5E35F9F8D2} = {11502212-2B78-4094-9420-4B5E35F9F8D2}
 		{7957D742-72AD-4198-AC09-BE9A8B023D0B} = {7957D742-72AD-4198-AC09-BE9A8B023D0B}
 		{D01BCAD6-B2E3-487E-BA4F-5DF6693359EA} = {D01BCAD6-B2E3-487E-BA4F-5DF6693359EA}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinema.Application", "..\Cinema.Application\Cinema.Application.csproj", "{11502212-2B78-4094-9420-4B5E35F9F8D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.Application", "..\Cinema.Application\Cinema.Application.csproj", "{11502212-2B78-4094-9420-4B5E35F9F8D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinema.Domain", "..\Cinema.Domain\Cinema.Domain.csproj", "{7957D742-72AD-4198-AC09-BE9A8B023D0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.Domain", "..\Cinema.Domain\Cinema.Domain.csproj", "{7957D742-72AD-4198-AC09-BE9A8B023D0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinema.Infrastructure", "..\Cinema.Infrastructure\Cinema.Infrastructure.csproj", "{D01BCAD6-B2E3-487E-BA4F-5DF6693359EA}"
->>>>>>> dev
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.Infrastructure", "..\Cinema.Infrastructure\Cinema.Infrastructure.csproj", "{D01BCAD6-B2E3-487E-BA4F-5DF6693359EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,11 +38,6 @@ Global
 		{F87F8861-AB33-47A5-9E32-99AD462D9054}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F87F8861-AB33-47A5-9E32-99AD462D9054}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F87F8861-AB33-47A5-9E32-99AD462D9054}.Release|Any CPU.Build.0 = Release|Any CPU
-<<<<<<< HEAD
-		{6B0C2D23-FDAD-4391-9AF0-28DD1BAEE9B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B0C2D23-FDAD-4391-9AF0-28DD1BAEE9B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6B0C2D23-FDAD-4391-9AF0-28DD1BAEE9B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6B0C2D23-FDAD-4391-9AF0-28DD1BAEE9B8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{085A6DB1-D792-4934-8CDE-FF2B5151449E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{085A6DB1-D792-4934-8CDE-FF2B5151449E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{085A6DB1-D792-4934-8CDE-FF2B5151449E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -55,11 +46,6 @@ Global
 		{876494BC-615A-4EDF-B6A8-7DBF7E117CBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{876494BC-615A-4EDF-B6A8-7DBF7E117CBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{876494BC-615A-4EDF-B6A8-7DBF7E117CBA}.Release|Any CPU.Build.0 = Release|Any CPU
-=======
-		{9474BAFA-0661-4AD0-B811-9B62C9F6FC4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9474BAFA-0661-4AD0-B811-9B62C9F6FC4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9474BAFA-0661-4AD0-B811-9B62C9F6FC4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9474BAFA-0661-4AD0-B811-9B62C9F6FC4A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{441D8BE6-3BB6-4A9B-BB9C-26804940F018}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{441D8BE6-3BB6-4A9B-BB9C-26804940F018}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{441D8BE6-3BB6-4A9B-BB9C-26804940F018}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -76,7 +62,6 @@ Global
 		{D01BCAD6-B2E3-487E-BA4F-5DF6693359EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D01BCAD6-B2E3-487E-BA4F-5DF6693359EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D01BCAD6-B2E3-487E-BA4F-5DF6693359EA}.Release|Any CPU.Build.0 = Release|Any CPU
->>>>>>> dev
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

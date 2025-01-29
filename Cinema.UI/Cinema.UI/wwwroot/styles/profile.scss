@@ -10,6 +10,30 @@
 
   padding: pxToRem(50px);
 
+  *::-webkit-scrollbar {
+    width: 0.1852vh;
+    height: 0.1852vh;
+  }
+  *::-webkit-scrollbar-button {
+    width: 0.1852vh;
+    height: 0.1852vh;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: #FFF;
+    border: 0vh none #ffffff;
+    border-radius: 4.3519vh;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: rgba(217, 217, 217, 0.05);
+    border: 0vh none #ffffff;
+    border-radius: 4.6296vh;
+  }
+
+  *::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
   &-container {
     width: 100%;
     height: 100%;

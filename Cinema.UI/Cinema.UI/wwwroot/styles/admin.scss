@@ -1,0 +1,235 @@
+@use "sass:math";
+
+@function pxToRem($pxValue, $scale: 1) {
+  @return math.div($pxValue, 16px) * $scale * 1rem;
+}
+
+.admin {
+  width: 100%;
+  height: auto;
+
+  padding: pxToRem(50px);
+
+  *::-webkit-scrollbar {
+    width: 0.1852vh;
+    height: 0.1852vh;
+  }
+  *::-webkit-scrollbar-button {
+    width: 0.1852vh;
+    height: 0.1852vh;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: #FFF;
+    border: 0vh none #ffffff;
+    border-radius: 4.3519vh;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: rgba(217, 217, 217, 0.05);
+    border: 0vh none #ffffff;
+    border-radius: 4.6296vh;
+  }
+
+  *::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  &-container {
+    width: 100%;
+    height: 100%;
+
+    padding: pxToRem(60px);
+
+    border-radius: pxToRem(15px);
+    // background: #0A031C;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: pxToRem(20px);
+
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    &-title {
+      color: #FFF;
+      font-size: pxToRem(30px);
+      font-style: normal;
+      font-weight: 500;
+      line-height: normal;
+    }
+
+    &-body {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: pxToRem(40px);
+
+      width: 100%;
+
+      &-sidebar {
+        width: 20%;
+        height: auto;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: pxToRem(10px);
+
+        button {
+          width: 100%;
+          height: auto;
+
+          padding: pxToRem(16px) pxToRem(0px);
+
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          border: none;
+          outline: none;
+  
+          border-radius: pxToRem(8px);
+          border: pxToRem(2px) solid rgba(255, 255, 255, 0.30);
+          background: transparent;
+          // background: rgba(255, 255, 255, 0.30);
+          backdrop-filter: blur(1vh);
+
+          color: #EEE;
+          font-size: pxToRem(18px);
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.50);
+            backdrop-filter: blur(1vh);
+            color: #000;
+          }
+        }
+      }
+
+      &-content {
+        width: 100%;
+        height: auto;
+
+        display: flex;
+      }
+    }
+  }
+
+  &-action {
+    width: 100%;
+    height: auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: pxToRem(15px);
+
+    &-title {
+      color: #FFF;
+      font-size: pxToRem(30px);
+      font-style: normal;
+      font-weight: 500;
+      line-height: normal;
+    }
+
+    &-form {
+      width: 100%;
+      height: auto;
+
+      display: flex;
+      flex-direction: column;
+      gap: pxToRem(10px);
+
+      &-group {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: pxToRem(10px);
+
+        label {
+          color: #FFF;
+          font-size: pxToRem(16px);
+          font-style: normal;
+          font-weight: 500;
+          line-height: normal;
+        }
+
+        input {
+          width: 100%;
+          height: auto;
+
+          padding: pxToRem(10px);
+
+          border: none;
+          outline: none;
+          border-radius: pxToRem(8px);
+          background: rgba(255, 255, 255, 0.30);
+          backdrop-filter: blur(1vh);
+
+          color: #FFF;
+          font-size: pxToRem(16px);
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+
+          &::placeholder {
+            color: #dadada;
+            font-size: pxToRem(16px);
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+          }
+        }
+      }
+    }
+
+    .buttons {
+      width: 100%;
+      height: auto;
+
+      display: flex;
+      flex-direction: column;
+      gap: pxToRem(10px);
+
+      padding-top: pxToRem(15px);
+
+      button {
+        width: 100%;
+        height: auto;
+  
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+  
+        padding: pxToRem(15px);
+  
+        border: none;
+        outline: none;
+  
+        color: #000;
+        background: #FFF;
+  
+        border: none;
+        border-radius: pxToRem(8px);
+  
+        font-size: pxToRem(20px);
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+          background: #b9b9b9;
+          color: #000;
+        }
+      }
+    }
+  }
+}

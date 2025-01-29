@@ -1,0 +1,230 @@
+@page "/admin"
+@using Cinema.UI.Model
+@using Cinema.UI.Services
+@using Cinema.UI.Services.Interfaces
+@inject IAccountManagement Acct
+@inject IAdminService AService
+@inject NavigationManager NavigationManager
+@using Cinema.UI.Components.Admin
+@namespace Cinema.UI.Pages.Admin
+@rendermode InteractiveServer
+
+<PageTitle>Admin</PageTitle>
+
+<CascadingAuthenticationState>
+  <AuthorizeView>
+    <Authorized>
+      @if (user.Claims.ContainsKey("Role") && user.Claims["Role"] == "Admin")
+      {
+        <div class="admin">
+          <div class="admin-container" style="background-image: url('../../images/profile/bg.png');">
+            <div class="admin-container-title">
+              Admin panel
+            </div>
+            <div class="admin-container-body">
+              <div class="admin-container-body-sidebar">
+                <button @onclick="@(e => onChangePage("addMovie"))">
+                  Add movie
+                </button>
+                <button @onclick="@(e => onChangePage("deleteMovie"))">
+                  Delete movie
+                </button>
+                <button @onclick="@(e => onChangePage("createSession"))">
+                  Create session
+                </button>
+                <button @onclick="@(e => onChangePage("getSessions"))">
+                  Get sessions
+                </button>
+                <button @onclick="@(e => onChangePage("updateSession"))">
+                  Update session
+                </button>
+                <button @onclick="@(e => onChangePage("deleteSession"))">
+                  Delete session
+                </button>
+                <button @onclick="@(e => onChangePage("addTickets"))">
+                  Add tickets
+                </button>
+                <button @onclick="@(e => onChangePage("updateTickets"))">
+                  Update tickets
+                </button>
+              </div>
+              <div class="admin-container-body-content">
+                @* @if (page == "createMovie")
+                {
+                  <AdminAction Title="Create Movie" Inputs="@(new List<AdminAction.InputField>
+                        {
+                            new() { Label = "Movie search ID", Placeholder = "Enter a movie search ID" },
+                        })" OnSubmit="@CreateMovie" SubmitText="Create Movie" />
+                } *@
+                @if (page == "createSession") {
+                  <CreateSession Title="Create Session" OnSubmit="@CreateSession" SubmitText="Create Session" />
+                }
+                else if (page == "deleteMovie") {
+                  <AdminAction
+                    Title="Delete Movie"
+                    Inputs="@(new List<AdminAction.InputField> {
+                      new() { Label = "Movie ID", Type = "number", Placeholder = "Enter a movie ID" },
+                    })"
+                    SubmitText="Delete"                  
+                    OnSubmit="@DeleteMovie"
+                  />
+                }
+                else if (page == "deleteSession") {
+                  <AdminAction 
+                    Title="Delete Session"
+                    Inputs="@(new List<AdminAction.InputField>{
+                      new() {
+                        Label = "Session ID",
+                        Type = "number",
+                        Placeholder = "Enter a session ID"
+                      }
+                    })"
+                    SubmitText="Delete"
+                    OnSubmit="@DeleteSession"
+                  />
+                }
+                else if (page == "addTickets") {
+                  <AdminAction
+                    Title="Add Tickets"
+                    Inputs="@(new List<AdminAction.InputField>{
+                      new() {
+                        Label = "Session ID",
+                        Type = "number",
+                        Placeholder = "Enter a session ID"
+                      },
+                      new() {
+                        Label = "Ticket count",
+                        Type = "number",
+                        Placeholder = "Enter a ticket count"
+                      },
+                      new() {
+                        Label = "Ticket price",
+                        Type = "number",
+                        Placeholder = "Enter a ticket price"
+                      }
+                    })"
+                    SubmitText="Add"
+
+                    OnSubmit="@AddTickets"
+                  />
+                }
+                else if (page == "updateTickets") {
+                  <AdminAction
+                    Title="Update Tickets"
+                    Inputs="@(new List<AdminAction.InputField>{
+                      new() {
+                        Label = "Session ID",
+                        Type = "number",
+                        Placeholder = "Enter a session ID"
+                      },
+                      new() {
+                        Label = "Ticket count",
+                        Type = "number",
+                        Placeholder = "Enter a ticket count"
+                      },
+                      new() {
+                        Label = "Ticket price",
+                        Type = "number",
+                        Placeholder = "Enter a ticket price"
+                      }
+                    })"
+                    SubmitText="Update"
+                    OnSubmit="@UpdateTickets"
+                  />
+                }
+                else if (page == "updateSession") {
+                  <AdminAction 
+                    Title="Update Session"
+                                        Inputs="@(new List<AdminAction.InputField>{
+                      new() {
+                        Label = "Session ID",
+                        Type = "number",
+                        Placeholder = "Enter a session ID"
+                      },
+                      new() {
+                        Label = "Date of session",
+                        Type = "datetime-local",
+                        Placeholder = "Select date and time"
+                      },
+                      new() {
+                        Label = "Hall number",
+                        Type = "number",
+                        Placeholder = "Enter a hall number"
+                      }
+                    })"
+                    OnSubmit="@UpdateSession" 
+                    SubmitText="Update Session" />
+                }
+
+
+                @* @if (page == "createSession")
+
+
+
+                {
+                  <AdminAction Title="Create Session" Inputs="@(new List<AdminAction.InputField>
+                        {
+                            new() { Label = "Movie ID", Type = "number", Placeholder = "Enter movie ID" },
+                            new() { Label = "Date", Type = "datetime-local", Placeholder = "Select date and time" },
+                            new() { Label = "Hall number", Type = "number", Placeholder = "Enter a hall number" },
+                        })" OnSubmit="@CreateSession" SubmitText="Create Session" />
+                } *@
+              </div>
+            </div>
+          </div>
+
+        </div>
+      }
+    </Authorized>
+    <NotAuthorized>
+      <div class="alert alert-warning">
+        Please log in to view your profile.
+      </div>
+    </NotAuthorized>
+  </AuthorizeView>
+</CascadingAuthenticationState>
+
+@code {
+  private UserInfo user;
+  private string page = "";
+
+  protected override void OnInitialized()
+  {
+    user = Acct.GetUserInfo();
+  }
+
+  private void onChangePage(string value)
+  {
+    page = value;
+  }
+
+  private async Task CreateMovie()
+  {
+    // Implement movie creation logic
+  }
+
+  private async Task CreateSession()
+  {
+    // Implement session creation logic
+  }
+
+  private async Task DeleteMovie() {
+    // Implement movie deletion logic
+  }
+
+  private async Task DeleteSession() {
+
+  }
+
+  private async Task AddTickets() {
+
+  }
+
+  private async Task UpdateTickets() {
+
+  }
+
+  private async Task UpdateSession() {
+
+  }
+}
