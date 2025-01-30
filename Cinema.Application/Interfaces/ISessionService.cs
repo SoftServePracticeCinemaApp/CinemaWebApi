@@ -4,8 +4,6 @@ using Cinema.Domain.Entities;
 
 namespace Cinema.Application.Interfaces
 {
-    public interface ISessionService
-    {
         public interface ISessionService
         {
             Task<IBaseResponse<List<GetSessionDTO>>> GetAllSessionsAsync();
@@ -16,5 +14,4 @@ namespace Cinema.Application.Interfaces
             Task<IBaseResponse<List<GetSessionDTO>>> GetSessionsByDateAsync(DateTime date);
             Task<IBaseResponse<List<GetSessionDTO>>> GetSessionsByMovieIdAsync(long movieId);
         }
-    }
 }

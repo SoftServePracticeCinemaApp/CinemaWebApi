@@ -26,12 +26,7 @@ namespace Cinema.WebApi.Controllers
         {
             var response = await _movieService.AddMovieAsync(createMovieDto);
 
-            return response.StatusCode switch
-            {
-                Application.Enums.StatusCode.Ok => StatusCode((int)HttpStatusCode.Created, response),
-                Application.Enums.StatusCode.BadRequest => BadRequest(response),
-                _ => BadRequest(response)
-            };
+            return StatusCode((int)response.StatusCode, response);
         }
 
         /// <summary>
@@ -44,12 +39,7 @@ namespace Cinema.WebApi.Controllers
         {
             var response = await _movieService.GetAllMoviesAsync();
 
-            return response.StatusCode switch
-            {
-                Application.Enums.StatusCode.Ok => Ok(response),
-                Application.Enums.StatusCode.NotFound => NotFound(response),
-                _ => BadRequest(response)
-            };
+            return StatusCode((int)response.StatusCode, response);
         }
 
         /// <summary>
@@ -63,13 +53,7 @@ namespace Cinema.WebApi.Controllers
         {
             var response = await _movieService.UpdateMovieAsync(id, updateMovieDto);
 
-            return response.StatusCode switch
-            {
-                Application.Enums.StatusCode.Ok => Ok(response),
-                Application.Enums.StatusCode.NotFound => NotFound(response),
-                Application.Enums.StatusCode.BadRequest => BadRequest(response),
-                _ => BadRequest(response)
-            };
+            return StatusCode((int)response.StatusCode, response);
         }
 
         /// <summary>
@@ -82,12 +66,7 @@ namespace Cinema.WebApi.Controllers
         {
             var response = await _movieService.DeleteMovieAsync(id);
 
-            return response.StatusCode switch
-            {
-                Application.Enums.StatusCode.Ok => Ok(response),
-                Application.Enums.StatusCode.NotFound => NotFound(response),
-                _ => BadRequest(response)
-            };
+            return StatusCode((int)response.StatusCode, response);
         }
     }
 }
