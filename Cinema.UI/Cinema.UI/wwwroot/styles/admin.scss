@@ -186,6 +186,103 @@
           }
         }
       }
+
+      .movie-results {
+        width: 100%;
+        height: auto;
+
+        display: flex;
+        flex-direction: column;
+        gap: pxToRem(10px);
+
+        .movie-item {
+          width: 100%;
+          height: auto;
+
+          padding: pxToRem(10px);
+          border-radius: pxToRem(8px);
+          border: pxToRem(2px) solid rgba(255, 255, 255, 0.30);
+          backdrop-filter: blur(1vh);
+
+          background: transparent;
+
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
+          align-items: flex-start;
+          gap: pxToRem(10px);
+
+          &-image {
+            width: auto;
+            height: auto;
+
+            img {
+              width: pxToRem(200px);
+              height: pxToRem(300px);
+
+              border-radius: pxToRem(8px);
+            }
+          }
+
+          &-info {
+            width: 100%;
+            height: auto;
+
+            display: flex;
+            flex-direction: column;
+            gap: pxToRem(3px);
+
+            &-title {
+              color: #FFF;
+              font-size: pxToRem(16px);
+              font-style: normal;
+              font-weight: 500;
+              line-height: normal;
+            }
+
+            &-release-date {
+              color: #FFF;
+              font-size: pxToRem(14px);
+              font-style: normal;
+              font-weight: 400;
+              line-height: normal;
+            }
+
+            &-rating {
+              color: #FFF;
+              font-size: pxToRem(14px);
+              font-style: normal;
+              font-weight: 400;
+              line-height: normal;
+            }
+
+            &-button {
+              width: fit-content;
+              height: fit-content;
+
+              padding: pxToRem(10px);
+
+              border: none;
+              outline: none;
+              border-radius: pxToRem(8px);
+              background: #FFF;
+
+              color: #000;
+              font-size: pxToRem(16px);
+              font-style: normal;
+              font-weight: 500;
+              line-height: normal;
+
+              transition: all 0.3s ease-in-out;
+
+              &:hover {
+                background: #b9b9b9;
+                color: #000;
+              }
+            }
+          }
+        }
+      }
     }
 
     .buttons {

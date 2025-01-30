@@ -1,4 +1,5 @@
 using Cinema.UI.Model;
+using Cinema.UI.Model.TMDb;
 
 namespace Cinema.UI.Services.Interfaces;
 
@@ -11,4 +12,5 @@ public interface IAdminService
   Task<FormResult> UpdateSessionAsync(int sessionId, DateTime date, int hallNumber);
   Task<FormResult> UpdateMovieAsync(int movieId, string title, string description, string imageUrl, string trailerUrl);
   Task<FormResult> DeleteTicketAsync(int ticketId);
+  Task<List<MovieResult>> GetMovieByTitle(string title = "");
 }

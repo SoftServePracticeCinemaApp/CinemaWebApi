@@ -1,21 +1,25 @@
 using Cinema.UI.Services.Interfaces;
 using Cinema.UI.Model;
 using System.Text.Json;
+using RestSharp;
+using Cinema.UI.Model.TMDb;
 
 namespace Cinema.UI.Services;
 
 public class AdminService : IAdminService
 {
     private readonly HttpClient _httpClient;
+    private readonly string _movieApiKey;
     private readonly JsonSerializerOptions _jsonSerializerOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };
     
 
-    public AdminService(IHttpClientFactory httpClient)
+    public AdminService(IHttpClientFactory httpClient, IConfiguration configuration)
     {
         _httpClient = httpClient.CreateClient("WebApiUrl");
+        _movieApiKey = configuration["MovieApiKey"];
     }
 
     public async Task<FormResult> DeleteMovieAsync(int movieId)
@@ -110,5 +114,37 @@ public class AdminService : IAdminService
             Succeeded = false,
             ErrorList = new[] { errorMessage }
         };
+    }
+
+    public async Task<List<MovieResult>> GetMovieByTitle(string title = "") 
+    {
+        var options = new RestClientOptions($"https://api.themoviedb.org/3/search/movie?query={title}&include_adult=true&language=en-US&page=1");
+        var client = new RestClient(options);
+        var request = new RestRequest("");
+        request.AddHeader("accept", "application/json");
+        request.AddHeader("Authorization", $"Bearer {_movieApiKey}");
+        
+        try {
+            var response = await client.GetAsync(request);
+            if (response.IsSuccessful)
+            {
+                var result = JsonSerializer.Deserialize<MovieSearchResponse>(
+                    response.Content, 
+                    _jsonSerializerOptions
+                );
+                
+                return result?.Results ?? new List<MovieResult>();
+            }
+            return new List<MovieResult>();
+        }
+        catch (Exception ex) {
+            Console.WriteLine($"Error getting movie: {ex.Message}");
+            return new List<MovieResult>();
+        }
+    }
+
+    Task<List<MovieResult>> IAdminService.GetMovieByTitle(string title)
+    {
+        return GetMovieByTitle(title);
     }
 }

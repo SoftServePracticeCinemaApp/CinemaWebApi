@@ -57,7 +57,10 @@
                         })" OnSubmit="@CreateMovie" SubmitText="Create Movie" />
                 } *@
                 @if (page == "createSession") {
-                  <CreateSession Title="Create Session" OnSubmit="@CreateSession" SubmitText="Create Session" />
+                  <CreateSession Title="Create Session" OnSubmit="@HandleCreateSession" SubmitText="Create Session" />
+                }
+                else if (page == "addMovie") {
+                  <AddMovie Title="Add Movie" OnSubmit="@HandleAddMovie" SubmitText="Add Movie" />
                 }
                 else if (page == "deleteMovie") {
                   <AdminAction
@@ -66,7 +69,7 @@
                       new() { Label = "Movie ID", Type = "number", Placeholder = "Enter a movie ID" },
                     })"
                     SubmitText="Delete"                  
-                    OnSubmit="@DeleteMovie"
+                    OnSubmit="@(async () => await DeleteMovie())"
                   />
                 }
                 else if (page == "deleteSession") {
@@ -80,7 +83,7 @@
                       }
                     })"
                     SubmitText="Delete"
-                    OnSubmit="@DeleteSession"
+                    OnSubmit="@(async () => await DeleteSession())"
                   />
                 }
                 else if (page == "addTickets") {
@@ -104,8 +107,7 @@
                       }
                     })"
                     SubmitText="Add"
-
-                    OnSubmit="@AddTickets"
+                    OnSubmit="@(async () => await AddTickets())"
                   />
                 }
                 else if (page == "updateTickets") {
@@ -129,13 +131,13 @@
                       }
                     })"
                     SubmitText="Update"
-                    OnSubmit="@UpdateTickets"
+                    OnSubmit="@(async () => await UpdateTickets())"
                   />
                 }
                 else if (page == "updateSession") {
                   <AdminAction 
                     Title="Update Session"
-                                        Inputs="@(new List<AdminAction.InputField>{
+                    Inputs="@(new List<AdminAction.InputField>{
                       new() {
                         Label = "Session ID",
                         Type = "number",
@@ -152,7 +154,7 @@
                         Placeholder = "Enter a hall number"
                       }
                     })"
-                    OnSubmit="@UpdateSession" 
+                    OnSubmit="@(async () => await UpdateSession())" 
                     SubmitText="Update Session" />
                 }
 
@@ -203,9 +205,9 @@
     // Implement movie creation logic
   }
 
-  private async Task CreateSession()
+  private async Task HandleCreateSession(CreateSession.SessionData data)
   {
-    // Implement session creation logic
+    await AService.CreateSessionAsync(data.MovieId, data.Dates.ToList(), data.HallNumber);
   }
 
   private async Task DeleteMovie() {
@@ -226,5 +228,10 @@
 
   private async Task UpdateSession() {
 
+  }
+
+  private async Task HandleAddMovie(int movieId)
+  {
+    @* await AService.Add(movieId); *@
   }
 }

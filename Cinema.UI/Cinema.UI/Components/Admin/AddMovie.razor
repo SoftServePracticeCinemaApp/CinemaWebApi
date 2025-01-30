@@ -1,0 +1,76 @@
+@using Cinema.UI.Model
+@using Cinema.UI.Model.TMDb
+@inject IAdminService AService
+@namespace Cinema.UI.Components.Admin
+
+<div class="admin-action">
+    <div class="admin-action-title">@Title</div>
+    
+    <div class="admin-action-form">
+        <div class="admin-action-form-group">
+            <label>Movie title</label>
+            <input type="text" 
+                class="admin-action-form-group-control"
+                @bind="MovieTitle"
+                placeholder="Enter movie title"/>
+        </div>
+
+        <div class="buttons">
+          <button @onclick="GetMovieByTitle">Get movies</button>
+          <button @onclick="ClearMovies">Clear</button>
+        </div>
+
+        @if (movies != null && movies.Any())
+        {
+            <div class="movie-results">
+                @foreach (var movie in movies)
+                {
+                    <div class="movie-item">
+                      <div class="movie-item-image">
+                        <img src="https://image.tmdb.org/t/p/w185/@movie.PosterPath" alt="@movie.Title" />
+                      </div>
+                      <div class="movie-item-info">
+                        <div class="movie-item-info-title">@movie.Title</div>
+                        <div class="movie-item-info-release-date">Release Date: @movie.ReleaseDate</div>
+                        <div class="movie-item-info-rating">Rating: @movie.VoteAverage</div>
+
+                        <button class="movie-item-info-button"  @onclick="() => SelectMovie(movie.Id)">Add</button>
+                      </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnSubmit { get; set; }
+
+    [Parameter]
+    public string SubmitText { get; set; }
+
+    private int movieId;
+    private string MovieTitle { get; set; }
+    private List<MovieResult> movies;
+
+    private async Task GetMovieByTitle() 
+    {
+        movies = await AService.GetMovieByTitle(MovieTitle);
+        StateHasChanged();
+    }
+
+    private async Task ClearMovies()
+    {
+        movies.Clear();
+        StateHasChanged();
+    }
+
+    private async Task SelectMovie(int id)
+    {
+        await OnSubmit.InvokeAsync(id);
+    }
+} 

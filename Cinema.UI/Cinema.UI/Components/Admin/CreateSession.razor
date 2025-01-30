@@ -39,7 +39,7 @@
         
 
         <div class="buttons">
-            <button @onclick="OnSubmit">
+            <button @onclick="HandleSubmit">
                 @(SubmitText ?? "Submit")
             </button>
         </div>
@@ -47,18 +47,25 @@
 </div>
 
 @code {
+    public class SessionData
+    {
+        public int MovieId { get; set; }
+        public DateTime[] Dates { get; set; }
+        public int HallNumber { get; set; }
+    }
+
     [Parameter]
     public string Title { get; set; }
 
     [Parameter]
-    public EventCallback OnSubmit { get; set; }
+    public EventCallback<SessionData> OnSubmit { get; set; }
 
     [Parameter]
     public string SubmitText { get; set; }
 
-    public int MovieId { get; set; }
-
+    private int MovieId { get; set; }
     private List<DateTime> Dates { get; set; } = new() { DateTime.Now };
+    private int HallNumber { get; set; }
 
     private void HandleDateChange(int index)
     {
@@ -71,5 +78,14 @@
 
     public DateTime[] Date => Dates.ToArray();
 
-    public int HallNumber { get; set; }
+    private async Task HandleSubmit()
+    {
+        var sessionData = new SessionData
+        {
+            MovieId = MovieId,
+            Dates = Dates.ToArray(),
+            HallNumber = HallNumber
+        };
+        await OnSubmit.InvokeAsync(sessionData);
+    }
 } 

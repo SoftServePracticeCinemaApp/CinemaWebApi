@@ -17,7 +17,7 @@
         }
         
         <div class="buttons">
-            <button @onclick="OnSubmit">
+            <button @onclick="HandleSubmit">
                 @(SubmitText ?? "Submit")
             </button>
         </div>
@@ -32,10 +32,19 @@
     public List<InputField> Inputs { get; set; }
 
     [Parameter]
-    public EventCallback OnSubmit { get; set; }
+    public EventCallback<Dictionary<string, string>> OnSubmit { get; set; }
 
     [Parameter]
     public string SubmitText { get; set; }
+
+    private async Task HandleSubmit()
+    {
+        var values = Inputs.ToDictionary(
+            input => input.Label,
+            input => input.Value
+        );
+        await OnSubmit.InvokeAsync(values);
+    }
 
     public class InputField
     {
