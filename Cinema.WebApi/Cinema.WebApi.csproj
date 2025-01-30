@@ -28,7 +28,6 @@
     <ProjectReference Include="..\Cinema.Application\Cinema.Application.csproj" />
     <ProjectReference Include="..\Cinema.Infrastructure\Cinema.Infrastructure.csproj" />
     <ProjectReference Include="..\Cinema.Domain\Cinema.Domain.csproj" />
-    <ProjectReference Include="..\Cinema.WebUI\Cinema.WebUI.csproj" />
   </ItemGroup>
 
 </Project>

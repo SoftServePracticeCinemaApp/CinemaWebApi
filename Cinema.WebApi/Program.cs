@@ -52,6 +52,7 @@ public static class Program
 
 
         builder.Services.AddScoped<IResponses, Responses>();
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         builder.Services.AddScoped<IMovieService, MovieService>();
         builder.Services.AddScoped<IMovieRepository, MovieRepository>();
@@ -62,6 +63,7 @@ public static class Program
         builder.Services.AddScoped<ITicketService, TicketService>();
         builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 
+        builder.Services.AddScoped<IHallRepository, HallRepository>();
 
         builder.Services.AddAuthentication(options =>
         {
@@ -88,7 +90,11 @@ public static class Program
 
         var app = builder.Build();
         app.UseSwagger();
-        app.UseSwaggerUI();
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Cinema API V1");
+            c.RoutePrefix = string.Empty;
+        });
 
         if (useInMemoryDB)
         {
@@ -108,7 +114,7 @@ public static class Program
         }
 
 
-        app.MapGet("/", () => "Hello World!");
+        app.MapControllers();
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();

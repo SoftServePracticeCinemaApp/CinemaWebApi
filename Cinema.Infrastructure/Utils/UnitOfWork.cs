@@ -3,7 +3,7 @@ using Cinema.Application.Helpers.Interfaces;
 
 namespace Cinema.Infrastructure.Utils
 {
-    class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly CinemaDbContext _context;
         public IHallRepository Hall { get; }
