@@ -29,7 +29,7 @@ namespace Cinema.WebApi.Controllers
         }
 
         /// <summary>
-        /// Отримати сеанс за айді
+        /// Отримати сеанс за ID
         /// </summary>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(IBaseResponse<GetSessionDTO>), (int)HttpStatusCode.OK)]
@@ -88,7 +88,7 @@ namespace Cinema.WebApi.Controllers
         }
 
         /// <summary>
-        /// Отримати сеанс по айді фільму
+        /// Отримати сеанс по ID фільму
         /// </summary>
         [HttpGet("by-movie/{movieId}")]
         [ProducesResponseType(typeof(IBaseResponse<List<GetSessionDTO>>), (int)HttpStatusCode.OK)]
