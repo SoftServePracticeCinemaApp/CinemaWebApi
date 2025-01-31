@@ -2,7 +2,6 @@
 {
     public class UpdateTicketDTO
     {
-        public long Id { get; set; }
         public long SessionId { get; set; }
         public string? UserId { get; set; }
         public long MovieId { get; set; }
