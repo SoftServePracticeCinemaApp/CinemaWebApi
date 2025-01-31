@@ -147,4 +147,16 @@ public class AdminService : IAdminService
     {
         return GetMovieByTitle(title);
     }
+
+    public async Task<FormResult> CreateMovieAsync(int movieId)
+    {
+        var response = await _httpClient.PostAsJsonAsync("api/admin/create-movie", new { movieId });
+        return await HandleResponse(response, "Failed to create movie");
+    }
+
+    public async Task<FormResult> UpdateTicketsAsync(int sessionId, int numberOfTickets, double price)
+    {
+        var response = await _httpClient.PutAsJsonAsync("api/admin/update-tickets", new { sessionId, numberOfTickets, price });
+        return await HandleResponse(response, "Failed to update tickets");
+    }
 }

@@ -13,4 +13,6 @@ public interface IAdminService
   Task<FormResult> UpdateMovieAsync(int movieId, string title, string description, string imageUrl, string trailerUrl);
   Task<FormResult> DeleteTicketAsync(int ticketId);
   Task<List<MovieResult>> GetMovieByTitle(string title = "");
+  Task<FormResult> CreateMovieAsync(int movieId);
+  Task<FormResult> UpdateTicketsAsync(int sessionId, int numberOfTickets, double price);
 }

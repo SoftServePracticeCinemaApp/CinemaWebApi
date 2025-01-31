@@ -69,7 +69,7 @@
                       new() { Label = "Movie ID", Type = "number", Placeholder = "Enter a movie ID" },
                     })"
                     SubmitText="Delete"                  
-                    OnSubmit="@(async () => await DeleteMovie())"
+                    OnSubmit="@(async (data) => await DeleteMovie(data))"
                   />
                 }
                 else if (page == "deleteSession") {
@@ -83,7 +83,7 @@
                       }
                     })"
                     SubmitText="Delete"
-                    OnSubmit="@(async () => await DeleteSession())"
+                    OnSubmit="@(async (data) => await DeleteSession(data))"
                   />
                 }
                 else if (page == "addTickets") {
@@ -107,7 +107,7 @@
                       }
                     })"
                     SubmitText="Add"
-                    OnSubmit="@(async () => await AddTickets())"
+                    OnSubmit="@(async (data) => await AddTickets(data))"
                   />
                 }
                 else if (page == "updateTickets") {
@@ -131,7 +131,7 @@
                       }
                     })"
                     SubmitText="Update"
-                    OnSubmit="@(async () => await UpdateTickets())"
+                    OnSubmit="@(async (data) => await UpdateTickets(data))"
                   />
                 }
                 else if (page == "updateSession") {
@@ -154,7 +154,7 @@
                         Placeholder = "Enter a hall number"
                       }
                     })"
-                    OnSubmit="@(async () => await UpdateSession())" 
+                    OnSubmit="@(async (data) => await UpdateSession(data))" 
                     SubmitText="Update Session" />
                 }
 
@@ -200,38 +200,32 @@
     page = value;
   }
 
-  private async Task CreateMovie()
-  {
-    // Implement movie creation logic
-  }
-
   private async Task HandleCreateSession(CreateSession.SessionData data)
   {
     await AService.CreateSessionAsync(data.MovieId, data.Dates.ToList(), data.HallNumber);
   }
-
-  private async Task DeleteMovie() {
-    // Implement movie deletion logic
+  private async Task DeleteMovie(Dictionary<string, string> data) {
+    await AService.DeleteMovieAsync(int.Parse(data["movieId"]));
   }
 
-  private async Task DeleteSession() {
-
+  private async Task DeleteSession(Dictionary<string, string> data) {
+    await AService.DeleteSessionAsync(int.Parse(data["sessionId"]));
   }
 
-  private async Task AddTickets() {
-
+  private async Task AddTickets(Dictionary<string, string> data) {
+    await AService.AddTicketsAsync(int.Parse(data["sessionId"]), int.Parse(data["ticketCount"]), double.Parse(data["ticketPrice"]));
   }
 
-  private async Task UpdateTickets() {
-
+  private async Task UpdateTickets(Dictionary<string, string> data) {
+    await AService.UpdateTicketsAsync(int.Parse(data["sessionId"]), int.Parse(data["ticketCount"]), double.Parse(data["ticketPrice"]));
   }
 
-  private async Task UpdateSession() {
-
+  private async Task UpdateSession(Dictionary<string, string> data) {
+    await AService.UpdateSessionAsync(int.Parse(data["sessionId"]), DateTime.Parse(data["date"]), int.Parse(data["hallNumber"]));
   }
 
   private async Task HandleAddMovie(int movieId)
   {
-    @* await AService.Add(movieId); *@
+    await AService.CreateMovieAsync(movieId);
   }
 }
