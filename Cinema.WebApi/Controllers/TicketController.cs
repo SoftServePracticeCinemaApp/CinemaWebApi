@@ -19,7 +19,7 @@ namespace Cinema.WebApi.Controllers
         /// <summary>
         /// Додати новий квиток
         /// </summary>
-        [HttpPost("Create")]
+        [HttpPost]
         [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Create([FromBody] AddTicketDTO createTicketDto)
@@ -32,7 +32,7 @@ namespace Cinema.WebApi.Controllers
         /// <summary>
         /// Отримати всі квитки
         /// </summary>
-        [HttpGet("GetAll")]
+        [HttpGet]
         [ProducesResponseType(typeof(BaseResponse<List<GetTicketDTO>>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(BaseResponse<List<GetTicketDTO>>), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetAll()
