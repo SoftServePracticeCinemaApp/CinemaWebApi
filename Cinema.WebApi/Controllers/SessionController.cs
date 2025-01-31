@@ -41,42 +41,6 @@ namespace Cinema.WebApi.Controllers
         }
 
         /// <summary>
-        /// Додати новий сеанс
-        /// </summary>
-        [HttpPost]
-        [ProducesResponseType(typeof(IBaseResponse<string>), (int)HttpStatusCode.Created)]
-        [ProducesResponseType(typeof(IBaseResponse<string>), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> AddSession([FromBody] AddSessionDTO sessionDto)
-        {
-            var response = await _sessionService.AddSessionAsync(sessionDto);
-            return StatusCode((int)response.StatusCode, response);
-        }
-
-        /// <summary>
-        /// Редагувати сеанс
-        /// </summary>
-        [HttpPut("{id}")]
-        [ProducesResponseType(typeof(IBaseResponse<string>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(IBaseResponse<string>), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> UpdateSession(long id, [FromBody] UpdateSessionDTO sessionDto)
-        {
-            var response = await _sessionService.UpdateSessionAsync(id, sessionDto);
-            return StatusCode((int)response.StatusCode, response);
-        }
-
-        /// <summary>
-        /// Видалити сеанс
-        /// </summary>
-        [HttpDelete("{id}")]
-        [ProducesResponseType(typeof(IBaseResponse<string>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(IBaseResponse<string>), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> DeleteSession(long id)
-        {
-            var response = await _sessionService.DeleteSessionAsync(id);
-            return StatusCode((int)response.StatusCode, response);
-        }
-
-        /// <summary>
         /// Отримати сеанс за датою
         /// </summary>
         [HttpGet("by-date/{date}")]
