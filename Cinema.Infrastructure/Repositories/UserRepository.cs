@@ -1,13 +1,7 @@
 ﻿using Cinema.Business.Interfaces;
 using Cinema.Domain.Entities;
-using Cinema.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cinema.Infrastructure.Repositories
 {
@@ -19,13 +13,13 @@ namespace Cinema.Infrastructure.Repositories
             _context = context;
         }
     
-        public async Task Add(UserEntity user)
+        public async Task AddAsync(UserEntity user)
         {
             if (user == null) throw new ArgumentNullException("No data provided");
             await _context.Users.AddAsync(user);        
         }
 
-        public async Task Delete(string id)
+        public async Task DeleteAsync(string id)
         {
             var userInDb = await _context.Users
                 .AsNoTracking()
@@ -36,14 +30,14 @@ namespace Cinema.Infrastructure.Repositories
             await Task.Run(() => _context.Remove(userInDb));
         }
 
-        public async Task<UserEntity> Get(Expression<Func<UserEntity, bool>> filter)
+        public async Task<UserEntity> GetAsync(Expression<Func<UserEntity, bool>> filter)
         {
             var userInDb = await _context.Users.AsNoTracking().FirstOrDefaultAsync(filter);
             
             return userInDb;
         }
 
-        public async Task<IEnumerable<UserEntity>> GetAll(Expression<Func<UserEntity, bool>>? filter = null)
+        public async Task<IEnumerable<UserEntity>> GetAllAsync(Expression<Func<UserEntity, bool>>? filter = null)
         {
             var query =_context.Users.AsNoTracking();
             if(filter != null)
@@ -53,7 +47,7 @@ namespace Cinema.Infrastructure.Repositories
 			return await query.ToListAsync();
         }
 
-        public async Task Update(string id, UserEntity user)
+        public async Task UpdateAsync(string id, UserEntity user)
         {
             if (user == null) throw new ArgumentNullException($"No data provided");
 
@@ -63,7 +57,5 @@ namespace Cinema.Infrastructure.Repositories
 
             if (userInDb == null) throw new ArgumentException($"User with Id {id} does not exist");
         }
-
-        public async Task Save() => await _context.SaveChangesAsync();
     }
 }

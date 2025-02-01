@@ -1,20 +1,26 @@
-﻿
-using Cinema.Infrastructure.Utils;
+﻿using Cinema.Infrastructure.Utils;
 using System.Text;
 using Cinema.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Cinema.WebApi.Filters;
 using System;
 using Cinema.Domain.Entities;
 using Microsoft.Extensions.Options;
+using Cinema.Application.Helpers;
+using Cinema;
+using Cinema.Application.Helpers.Interfaces;
+using Cinema.Application.Interfaces;
+using Cinema.Application.Services;
+using Cinema.Domain.Interfaces;
+using Cinema.Infrastructure.Repositories;
+
 
 public static class Program
 {
     public static void Main(string[] args)
     {
-
-
         var builder = WebApplication.CreateBuilder(args);
         var useInMemoryDB = builder.Configuration.GetValue<bool>("UseInMemoryDB");
 
@@ -24,7 +30,12 @@ public static class Program
         var secret = builder.Configuration.GetValue<string>("ApiSettings:Secret");
         var issuer = builder.Configuration.GetValue<string>("ApiSettings:Issuer");
         var audience = builder.Configuration.GetValue<string>("ApiSettings:Audience");
-
+        builder.Services.AddInMemoryDataBase();
+        builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+        builder.Services.AddControllers(options =>
+        {
+            options.Filters.Add<GlobalExceptionFilter>();
+        });
 
         var key = Encoding.ASCII.GetBytes(secret);
 
@@ -38,7 +49,21 @@ public static class Program
                 options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaDb"),
                 ServiceProviderOptions => ServiceProviderOptions.EnableRetryOnFailure()));
         }
-        
+
+
+        builder.Services.AddScoped<IResponses, Responses>();
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        builder.Services.AddScoped<IMovieService, MovieService>();
+        builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+
+        builder.Services.AddScoped<ISessionService, SessionService>();
+        builder.Services.AddScoped<ISessionRepository, SessionRepository>();
+
+        builder.Services.AddScoped<ITicketService, TicketService>();
+        builder.Services.AddScoped<ITicketRepository, TicketRepository>();
+
+        builder.Services.AddScoped<IHallRepository, HallRepository>();
 
         builder.Services.AddAuthentication(options =>
         {
@@ -65,7 +90,11 @@ public static class Program
 
         var app = builder.Build();
         app.UseSwagger();
-        app.UseSwaggerUI();
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Cinema API V1");
+            c.RoutePrefix = string.Empty;
+        });
 
         if (useInMemoryDB)
         {
@@ -85,7 +114,7 @@ public static class Program
         }
 
 
-        app.MapGet("/", () => "Hello World!");
+        app.MapControllers();
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();

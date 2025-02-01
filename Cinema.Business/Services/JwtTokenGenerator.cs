@@ -5,9 +5,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Cinema.Business.Entities;
 using Cinema.Business.Options;
 using Cinema.Business.Services.IServices;
+using Cinema.Domain.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -28,7 +28,8 @@ namespace Cinema.Business.Services
 			{
 				new Claim(JwtRegisteredClaimNames.Email,user.Email),
 				new Claim(JwtRegisteredClaimNames.Sub,user.Id),
-				new Claim(JwtRegisteredClaimNames.Name,user.UserName)
+				new Claim(JwtRegisteredClaimNames.Name,user.Name),
+				new Claim(JwtRegisteredClaimNames.UniqueName, user.PhoneNumber)
 			};
 			claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 			var descriptor = new SecurityTokenDescriptor()

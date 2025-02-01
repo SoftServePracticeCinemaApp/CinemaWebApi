@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Cinema.Business.Entities;
+using Cinema.Domain.Entities;
 
 namespace Cinema.Business.Services.IServices
 {

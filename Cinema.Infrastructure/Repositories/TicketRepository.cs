@@ -1,11 +1,6 @@
 ﻿using Cinema.Domain.Entities;
 using Cinema.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cinema.Infrastructure.Repositories;
 
@@ -16,17 +11,17 @@ public class TicketRepository : ITicketRepository
     {
         _context = context;
     }
-    public async Task Add(TicketEntity ticket)
+    public async Task AddAsync(TicketEntity ticket)
     {
         if(ticket != null) await _context.Tickets.AddAsync(ticket);
     }
 
-    public async Task<IEnumerable<TicketEntity>> GetAll() 
+    public async Task<IEnumerable<TicketEntity>> GetAllAsync() 
         => await _context.Tickets
         .AsNoTracking()
         .ToListAsync();
 
-    public async Task<TicketEntity> GetById(long Id)
+    public async Task<TicketEntity> GetByIdAsync(long Id)
     {
         var ticketInDb = await _context.Tickets
             .AsNoTracking()
@@ -36,7 +31,7 @@ public class TicketRepository : ITicketRepository
         return ticketInDb;
     }
 
-    public async Task<IEnumerable<TicketEntity>> GetByMovieId(int movieId)
+    public async Task<IEnumerable<TicketEntity>> GetByMovieIdAsync(int movieId)
     {
         var ticketInDb = await _context.Tickets
             .AsNoTracking()
@@ -46,7 +41,7 @@ public class TicketRepository : ITicketRepository
         return ticketInDb;
     }
 
-    public async Task<IEnumerable<TicketEntity>> GetByUserId(string UserId)
+    public async Task<IEnumerable<TicketEntity>> GetByUserIdAsync(string UserId)
     {
         var ticketsInDb = await _context.Tickets
             .AsNoTracking()
@@ -58,7 +53,7 @@ public class TicketRepository : ITicketRepository
         return ticketsInDb;
     }
 
-    public async Task Remove(long Id)
+    public async Task DeleteAsync(long Id)
     {
         var ticketInDb = await _context.Tickets.AsNoTracking().FirstOrDefaultAsync(t => t.Id == Id);
 
@@ -66,7 +61,7 @@ public class TicketRepository : ITicketRepository
         else await Task.Run(() => _context.Remove(ticketInDb));
     }
 
-    public async Task Update(long Id, TicketEntity ticketEntity)
+    public async Task UpdateAsync(long Id, TicketEntity ticketEntity)
     {
         var ticketInDb = await _context.Tickets.AsNoTracking().FirstOrDefaultAsync(t => t.Id == Id);
 
@@ -76,6 +71,21 @@ public class TicketRepository : ITicketRepository
         ticketInDb.MovieId = Id;
         ticketInDb.Row = ticketEntity.Row;
     }
+    public async Task<IEnumerable<TicketEntity>> GetBySessionIdAsync(long sessionId)
+    {
+        return await _context.Tickets
+            .Where(t => t.SessionId == sessionId)
+            .Include(t => t.User)
+            .Include(t => t.Movie)
+            .ToListAsync();
+    }
 
-    public async Task Save() => await _context.SaveChangesAsync();
+    public async Task<IEnumerable<TicketEntity>> GetTicketsForHallAsync(int hallId)
+    {
+        return await _context.Tickets
+            .Where(t => t.Session != null && t.Session.HallId == hallId)
+            .Include(t => t.Session)
+            .Include(t => t.Movie)
+            .ToListAsync();
+    }
 }

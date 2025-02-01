@@ -9,11 +9,10 @@ namespace Cinema.Domain.Interfaces
 {
     public interface IHallRepository
     {
-        Task Add(HallEntity hall);
-        Task Update(int Id, HallEntity hall);
-        Task Delete(int Id);
-        Task<HallEntity> Get(int Id);
-        Task<IEnumerable<HallEntity>> GetAll();
-        Task Save();
+        Task AddAsync(HallEntity hall);
+        Task UpdateAsync(int Id, HallEntity hall);
+        Task DeleteAsync(int Id);
+        Task<HallEntity> GetAsync(int Id);
+        Task<IEnumerable<HallEntity>> GetAllAsync();
     }
 }
