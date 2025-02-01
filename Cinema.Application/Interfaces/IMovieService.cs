@@ -1,13 +1,15 @@
 ﻿using Cinema.Application.DTO.MovieDTOs;
+using Cinema.Application.Helpers.Interfaces;
 
 namespace Cinema.Application.Interfaces
 {
     public interface IMovieService
     {
-        Task<List<GetMovieDTO>> GetAllAsync();
-        Task<GetMovieDTO> GetByIdAsync(int id);
-        Task AddAsync(AddMovieDTO movieDto);
-        Task UpdateAsync(UpdateMovieDTO movieDto);
-        Task DeleteByIdAsync(int id);
+        Task<IBaseResponse<List<GetMovieDTO>>> GetAllMoviesAsync();
+        Task<IBaseResponse<GetMovieDTO>> GetMovieByIdAsync(int id);
+        Task<IBaseResponse<string>> AddMovieAsync(AddMovieDTO movieDto);
+        Task<IBaseResponse<string>> UpdateMovieAsync(int id, UpdateMovieDTO movieDto);
+        Task<IBaseResponse<string>> DeleteMovieAsync(int id);
+        Task<IBaseResponse<List<GetMovieDTO>>> GetTopRatedMoviesAsync(int take);
     }
 }

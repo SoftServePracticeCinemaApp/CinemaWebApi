@@ -9,5 +9,6 @@ namespace Cinema.Domain.Interfaces
         Task DeleteByIdAsync(int Id);
         Task<MovieEntity> GetByIdAsync(int id);
         Task<List<MovieEntity>> GetAllAsync();
+        Task<List<MovieEntity>> GetTopRatedAsync(int take);
     }
 }
