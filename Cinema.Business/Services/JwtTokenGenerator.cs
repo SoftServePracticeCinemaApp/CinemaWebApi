@@ -28,7 +28,8 @@ namespace Cinema.Business.Services
 			{
 				new Claim(JwtRegisteredClaimNames.Email,user.Email),
 				new Claim(JwtRegisteredClaimNames.Sub,user.Id),
-				new Claim(JwtRegisteredClaimNames.Name,user.UserName)
+				new Claim(JwtRegisteredClaimNames.Name,user.Name),
+				new Claim(JwtRegisteredClaimNames.UniqueName, user.PhoneNumber)
 			};
 			claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 			var descriptor = new SecurityTokenDescriptor()
