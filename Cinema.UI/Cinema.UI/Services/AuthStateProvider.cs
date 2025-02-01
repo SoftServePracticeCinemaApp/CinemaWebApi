@@ -51,30 +51,31 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-
-        var claims = new List<Claim>
-        {
-            new(ClaimTypes.Email, _testUser.Email),
-        };
-
-        // Add custom claims
-        foreach (var claim in _testUser.Claims)
-        {
-            claims.Add(new Claim(claim.Key, claim.Value));
-        }
-
-        // Add test roles
-        foreach (var role in _testRoles)
-        {
-            claims.Add(new Claim(ClaimTypes.Role, role));
-        }
-
-        var id = new ClaimsIdentity(claims, nameof(AuthStateProvider));
-        var user = new ClaimsPrincipal(id);
-        _authenticated = true;
-
-        return new AuthenticationState(user);
         /*
+                var claims = new List<Claim>
+                {
+                    new(ClaimTypes.Email, _testUser.Email),
+                };
+
+                // Add custom claims
+                foreach (var claim in _testUser.Claims)
+                {
+                    claims.Add(new Claim(claim.Key, claim.Value));
+                }
+
+                // Add test roles
+                foreach (var role in _testRoles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role));
+                }
+
+                var id = new ClaimsIdentity(claims, nameof(AuthStateProvider));
+                var user = new ClaimsPrincipal(id);
+                _authenticated = true;
+
+                return new AuthenticationState(user);
+        */
+
         _authenticated = false;
         var user = Unauthenticated;
 
@@ -89,33 +90,12 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
             if (userInfo?.Email != null)
             {
                 var claims = new List<Claim>
-            {
-                new(ClaimTypes.Name, userInfo.Name),
-                new(ClaimTypes.Email, userInfo.Email),
-                // new(ClaimTypes.Phone, userInfo.Phone),
-                new(ClaimTypes.Role, userInfo.Claims["Role"]),
-            };
-
-                if (userInfo.Claims != null)
                 {
-                    claims.AddRange(
-                        userInfo.Claims.Where(c => c.Key != ClaimTypes.Name && c.Key != ClaimTypes.Email)
-                            .Select(c => new Claim(c.Key, c.Value)));
-                }
-
-                var rolesResponse = await _httpClient.GetAsync($"Role/GetuserRole?userEmail={userInfo.Email}");
-                rolesResponse.EnsureSuccessStatusCode();
-
-                var rolesJson = await rolesResponse.Content.ReadAsStringAsync();
-                var roles = JsonSerializer.Deserialize<string[]>(rolesJson, jsonSerializerOptions);
-
-                if (roles != null && roles.Length > 0)
-                {
-                    foreach (var role in roles)
-                    {
-                        claims.Add(new(ClaimTypes.Role, role));
-                    }
-                }
+                    new(ClaimTypes.Name, userInfo.Name),
+                    new(ClaimTypes.Email, userInfo.Email),
+                    new(ClaimTypes.Role, userInfo.Claims["Role"]),
+                    new("Phone", userInfo.PhoneNumber)
+                };
 
                 var id = new ClaimsIdentity(claims, nameof(AuthStateProvider));
                 user = new ClaimsPrincipal(id);
@@ -129,7 +109,6 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
         }
 
         return new AuthenticationState(user);
-        */
     }
 
     public async Task<FormResult> RegisterAsync(string email, string password, string phone, string name)
@@ -240,7 +219,7 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
     {
         var state = GetAuthenticationStateAsync().Result;
         var user = state.User;
-        
+
         if (!user.Identity?.IsAuthenticated ?? true)
         {
             return new UserInfo();
@@ -250,7 +229,7 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
         {
             Email = user.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty,
             Name = user.FindFirst("Name")?.Value ?? string.Empty,
-            Phone = user.FindFirst("Phone")?.Value ?? string.Empty,
+            PhoneNumber = user.FindFirst("Phone")?.Value ?? string.Empty,
             Claims = new Dictionary<string, string>()
         };
 

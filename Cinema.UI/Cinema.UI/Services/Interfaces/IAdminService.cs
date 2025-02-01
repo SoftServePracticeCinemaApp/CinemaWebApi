@@ -10,7 +10,7 @@ public interface IAdminService
   Task<FormResult> AddTicketsAsync(int sessionId, int numberOfTickets, double price);
   Task<FormResult> CreateSessionAsync(int movieId, List<DateTime> dates, int hallNumber);
   Task<FormResult> UpdateSessionAsync(int sessionId, DateTime date, int hallNumber);
-  Task<FormResult> UpdateMovieAsync(int movieId, string title, string description, string imageUrl, string trailerUrl);
+  Task<FormResult> UpdateMovieAsync(int movieId, int searchId, double cinemaRating);
   Task<FormResult> DeleteTicketAsync(int ticketId);
   Task<List<MovieResult>> GetMovieByTitle(string title = "");
   Task<FormResult> CreateMovieAsync(int movieId);

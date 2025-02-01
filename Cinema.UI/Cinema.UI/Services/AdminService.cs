@@ -19,70 +19,76 @@ public class AdminService : IAdminService
     public AdminService(IHttpClientFactory httpClient, IConfiguration configuration)
     {
         _httpClient = httpClient.CreateClient("WebApiUrl");
-        _movieApiKey = configuration["MovieApiKey"];
+        _movieApiKey = configuration["MovieApiKey"] ?? "";
     }
 
     public async Task<FormResult> DeleteMovieAsync(int movieId)
     {
-        var response = await _httpClient.DeleteAsync($"api/admin/delete-movie/{movieId}");
+        var response = await _httpClient.DeleteAsync($"api/admin/Movies/Delete/{movieId}");
         return await HandleResponse(response);
     }
 
     public async Task<FormResult> DeleteSessionAsync(int sessionId)
     {
-        var response = await _httpClient.DeleteAsync($"api/admin/delete-session/{sessionId}");
+        var response = await _httpClient.DeleteAsync($"api/admin/Sessions/Delete/{sessionId}");
         return await HandleResponse(response, "Failed to delete session, check session ID");
     }
 
     public async Task<FormResult> AddTicketsAsync(int sessionId, int numberOfTickets, double price)
     {
-        var response = await _httpClient.PostAsJsonAsync("api/admin/add-tickets", new
+        var response = await _httpClient.PostAsJsonAsync("api/admin/Tickets/Add", new
         {
-            sessionId,
-            numberOfTickets,
-            price
+            sessionId = sessionId,
+            count = numberOfTickets,
+            price = price
         });
         return await HandleResponse(response, "Failed to add tickets, check session ID");
     }
 
     public async Task<FormResult> CreateSessionAsync(int movieId, List<DateTime> dates, int hallNumber)
     {
-        var response = await _httpClient.PostAsJsonAsync("api/admin/create-session", new
+        foreach (DateTime date in dates) 
         {
-            movieId,
-            dates,
-            hallNumber
-        });
-        return await HandleResponse(response, "Failed to create session");
+            var response = await _httpClient.PostAsJsonAsync("api/admin/Sessions/Add", new
+            {
+                movieId = movieId,
+                date = date,
+                hallId = hallNumber
+            });
+            var result = await HandleResponse(response, "Failed to create session");
+            if (!result.Succeeded)
+            {
+                return result;
+            }
+        }
+        return new FormResult { Succeeded = true };
     }
 
     public async Task<FormResult> UpdateSessionAsync(int sessionId, DateTime date, int hallNumber)
     {
-        var response = await _httpClient.PutAsJsonAsync("api/admin/update-session", new
+        var response = await _httpClient.PutAsJsonAsync("api/admin/Sessions/Update", new
         {
-            sessionId,
-            date,
-            hallNumber
+            sessionId = sessionId,
+            date = date,
+            hallId = hallNumber
         });
         return await HandleResponse(response, "Failed to update session");
     }
 
-    public async Task<FormResult> UpdateMovieAsync(int movieId, string title, string description, string imageUrl, string trailerUrl)
+    public async Task<FormResult> UpdateMovieAsync(int movieId, int searchId, double cinemaRating)
     {
-        var response = await _httpClient.PutAsJsonAsync("api/admin/update-movie", new
+        var response = await _httpClient.PutAsJsonAsync($"api/admin/Movies/Update/{movieId}", new
         {
-            movieId,
-            title,
-            description,
-            imageUrl,
-            trailerUrl
+            searchId = searchId,
+            cinemaRating = cinemaRating,
+
         });
         return await HandleResponse(response, "Failed to update movie");
     }
 
     public async Task<FormResult> DeleteTicketAsync(int ticketId)
     {
-        var response = await _httpClient.DeleteAsync($"api/admin/delete-ticket/{ticketId}");
+        var response = await _httpClient.DeleteAsync($"api/admin/Tickets/Delete/{ticketId}");
         return await HandleResponse(response, "Failed to delete ticket");
     }
 
@@ -150,7 +156,7 @@ public class AdminService : IAdminService
 
     public async Task<FormResult> CreateMovieAsync(int movieId)
     {
-        var response = await _httpClient.PostAsJsonAsync("api/admin/create-movie", new { movieId });
+        var response = await _httpClient.PostAsJsonAsync("api/admin/Movies/Add", new { searchId = movieId });
         return await HandleResponse(response, "Failed to create movie");
     }
 
