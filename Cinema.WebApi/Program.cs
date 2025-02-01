@@ -50,6 +50,9 @@ public static class Program
                 ServiceProviderOptions => ServiceProviderOptions.EnableRetryOnFailure()));
         }
 
+        builder.Services.Configure<TmdbSettings>(builder.Configuration.GetSection("TMDB"));
+        builder.Services.AddHttpClient<TmdbService>();
+        builder.Services.AddScoped<TmdbService>();
 
         builder.Services.AddScoped<IResponses, Responses>();
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

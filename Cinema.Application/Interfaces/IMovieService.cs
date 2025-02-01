@@ -1,5 +1,6 @@
 ﻿using Cinema.Application.DTO.MovieDTOs;
 using Cinema.Application.Helpers.Interfaces;
+using Cinema.Domain.Entities;
 
 namespace Cinema.Application.Interfaces
 {
@@ -11,5 +12,6 @@ namespace Cinema.Application.Interfaces
         Task<IBaseResponse<string>> UpdateMovieAsync(int id, UpdateMovieDTO movieDto);
         Task<IBaseResponse<string>> DeleteMovieAsync(int id);
         Task<IBaseResponse<List<GetMovieDTO>>> GetTopRatedMoviesAsync(int take);
+        Task<IBaseResponse<string>> AddMovieFromTmdbAsync(int searchId);
     }
 }

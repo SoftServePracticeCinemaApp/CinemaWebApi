@@ -59,5 +59,22 @@ namespace Cinema.WebApi.AdminControllers
 
             return StatusCode((int)response.StatusCode, response);
         }
+
+
+
+        /// <summary>
+        /// Додати фільм з TMDB за SearchId.
+        /// </summary>
+        [HttpPost("add-from-tmdb/{searchId}")]
+        [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.Conflict)]
+        [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
+        public async Task<IActionResult> AddMovieFromTmdbAsync(int searchId)
+        {
+            var response = await _movieService.AddMovieFromTmdbAsync(searchId);
+
+            return StatusCode((int)response.StatusCode, response);
+        }
     }
 }
