@@ -69,7 +69,6 @@ public class MovieRepository : IMovieRepository
             .AsNoTracking()
             .FirstOrDefaultAsync(m => m.SearchId == searchId);
 
-        if (movie != null) return movie;
-        else throw new ArgumentException($"movie with {searchId} doesn't exist");
+        return movie;
     }
 }
