@@ -6,15 +6,12 @@ namespace Cinema.Application.Interfaces
 {
     public interface ISessionService
     {
-        public interface ISessionService
-        {
-            Task<IBaseResponse<List<GetSessionDTO>>> GetAllSessionsAsync();
-            Task<IBaseResponse<GetSessionDTO>> GetSessionByIdAsync(long id);
-            Task<IBaseResponse<string>> AddSessionAsync(AddSessionDTO sessionDto);
-            Task<IBaseResponse<string>> UpdateSessionAsync(long id, UpdateSessionDTO sessionDto);
-            Task<IBaseResponse<string>> DeleteSessionAsync(long id);
-            Task<IBaseResponse<List<GetSessionDTO>>> GetSessionsByDateAsync(DateTime date);
-            Task<IBaseResponse<List<GetSessionDTO>>> GetSessionsByMovieIdAsync(long movieId);
-        }
+        Task<IBaseResponse<List<GetSessionDTO>>> GetAllSessionsAsync();
+        Task<IBaseResponse<GetSessionDTO>> GetSessionByIdAsync(long id);
+        Task<IBaseResponse<string>> AddSessionAsync(AddSessionDTO sessionDto);
+        Task<IBaseResponse<string>> UpdateSessionAsync(long id, UpdateSessionDTO sessionDto);
+        Task<IBaseResponse<string>> DeleteSessionAsync(long id);
+        Task<IBaseResponse<List<GetSessionDTO>>> GetSessionsByDateAsync(DateTime date);
+        Task<IBaseResponse<List<GetSessionDTO>>> GetSessionsByMovieIdAsync(long movieId);
     }
 }

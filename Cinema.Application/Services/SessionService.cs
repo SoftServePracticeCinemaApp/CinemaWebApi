@@ -2,7 +2,6 @@
 using Cinema.Application.DTO.SessionDTOs;
 using AutoMapper;
 using Cinema.Domain.Entities;
-using Cinema.Application.DTO.TicketDTOs;
 using Cinema.Application.Helpers.Interfaces;
 
 namespace Cinema.Application.Services

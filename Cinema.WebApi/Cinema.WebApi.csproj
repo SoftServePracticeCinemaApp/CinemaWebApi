@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
@@ -32,7 +28,6 @@
     <ProjectReference Include="..\Cinema.Application\Cinema.Application.csproj" />
     <ProjectReference Include="..\Cinema.Infrastructure\Cinema.Infrastructure.csproj" />
     <ProjectReference Include="..\Cinema.Domain\Cinema.Domain.csproj" />
-    <ProjectReference Include="..\Cinema.WebUI\Cinema.WebUI.csproj" />
   </ItemGroup>
 
 </Project>
