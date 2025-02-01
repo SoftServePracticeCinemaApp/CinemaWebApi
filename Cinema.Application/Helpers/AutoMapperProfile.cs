@@ -31,22 +31,16 @@ namespace Cinema.Infrastructure.Utils
             CreateMap<TicketEntity, UpdateTicketDTO>().ReverseMap();
 
             CreateMap<TmdbMovieResponse, MovieEntity>()
-                .ForMember(dest => dest.SearchId, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.ReleaseDate, opt => opt.MapFrom(src => src.ReleaseDate.Value.ToString("yyyy-MM-dd")));
-            CreateMap<TmdbMovieResponse, MovieEntity>()
-                .ForMember(dest => dest.SearchId, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
-                .ForMember(dest => dest.Overview, opt => opt.MapFrom(src => src.Overview))
-                .ForMember(dest => dest.PosterPath, opt => opt.MapFrom(src => src.PosterPath != null
-                ? $"https://image.tmdb.org/t/p/w500/{src.PosterPath}"
-                : string.Empty))
-                .ForMember(dest => dest.CinemaRating, opt => opt.MapFrom(src => src.VoteAverage ?? 0.0))
-                .AfterMap((src, dest) =>
-                {
-                    dest.ReleaseDate = src.ReleaseDate.HasValue
-                    ? src.ReleaseDate.Value.ToString("yyyy-MM-dd")
-                    : "0001-01-01";
-                });
+    .ForMember(dest => dest.SearchId, opt => opt.MapFrom(src => src.Id))
+    .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+    .ForMember(dest => dest.Overview, opt => opt.MapFrom(src => src.Overview))
+    .ForMember(dest => dest.PosterPath, opt => opt.MapFrom(src =>
+        !string.IsNullOrWhiteSpace(src.PosterPath)
+            ? $"https://image.tmdb.org/t/p/w500/{src.PosterPath}"
+            : string.Empty))
+    .ForMember(dest => dest.CinemaRating, opt => opt.MapFrom(src => src.VoteAverage))
+    .ForMember(dest => dest.ReleaseDate, opt => opt.MapFrom(src =>
+        src.ReleaseDate.ToString("yyyy-MM-dd")));
+        }
         }
     }
-}
