@@ -6,6 +6,7 @@ using Cinema.Application.Interfaces;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Interfaces;
 using System.Net;
+using System.Text.Json;
 
 namespace Cinema.Application.Services
 {
@@ -150,7 +151,7 @@ namespace Cinema.Application.Services
                     return _responses.CreateBaseNotFound<string>($"Movie with SearchId {searchId} not found in TMDB.");
                 }
 
-                var movieEntity = _mapper.Map<MovieEntity>(tmdbMovie);
+                var movieEntity = tmdbMovie;
 
                 await _unitOfWork.Movie.AddAsync(movieEntity);
                 await _unitOfWork.CompleteAsync();

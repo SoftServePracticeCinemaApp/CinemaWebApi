@@ -3,6 +3,8 @@ using Cinema.Domain.Entities;
 using Cinema.Infrastructure.Utils;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Cinema.Application.Services
 {
@@ -20,36 +22,54 @@ namespace Cinema.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<MovieEntity> GetMovieByIdAsync(int searchId, string language = "en-UA")
+        public async Task<MovieEntity?> GetMovieByIdAsync(int searchId, string language = "en-UA")
         {
-            Console.WriteLine($"Fetching movie with ID {searchId} and language {language} from TMDB.");
+            Console.WriteLine($"Fetching movie with ID {searchId} from TMDB...");
 
             var response = await _httpClient.GetAsync($"movie/{searchId}?api_key={_apiKey}&language={language}");
 
             if (!response.IsSuccessStatusCode)
             {
                 var errorMessage = await response.Content.ReadAsStringAsync();
-                throw new InvalidOperationException($"Failed to fetch movie from TMDB. Status code: {response.StatusCode}, Message: {errorMessage}");
+                Console.WriteLine($"Error fetching movie: {errorMessage}");
+                return null;
             }
 
-            var tmdbMovie = await response.Content.ReadFromJsonAsync<TmdbMovieResponse>();
-            if (tmdbMovie == null)
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"TMDB Response: {jsonResponse}");
+
+            var tmdbMovie = JsonSerializer.Deserialize<TmdbMovie>(jsonResponse, new JsonSerializerOptions
             {
-                throw new InvalidOperationException("Received empty response from TMDB.");
-            }
+                PropertyNameCaseInsensitive = true
+            });
+            Console.WriteLine($"TMDB Release Date: {tmdbMovie.ReleaseDate}");
+            Console.WriteLine($"TMDB Vote Average: {tmdbMovie.VoteAverage}");
+            Console.WriteLine($"TMDB Poster Path: {tmdbMovie.PosterPath}");
 
             return _mapper.Map<MovieEntity>(tmdbMovie);
         }
     }
 
-    public class TmdbMovieResponse
+    public class TmdbMovie
     {
+        [JsonPropertyName("id")]
         public int Id { get; set; }
-        public string? Title { get; set; }
-        public string? Overview { get; set; }
-        public DateTime ReleaseDate { get; set; }
+
+        [JsonPropertyName("title")]
+        public string Title { get; set; }
+
+        [JsonPropertyName("overview")]
+        public string Overview { get; set; }
+
+        [JsonPropertyName("release_date")]
+        public string ReleaseDate { get; set; }  // Строка, бо може бути пустою
+
+        [JsonPropertyName("vote_average")]
         public double VoteAverage { get; set; }
-        public string? PosterPath { get; set; }
+
+        [JsonPropertyName("poster_path")]
+        public string PosterPath { get; set; }
     }
+
 
 }
