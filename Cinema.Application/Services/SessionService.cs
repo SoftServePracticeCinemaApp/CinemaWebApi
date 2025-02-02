@@ -85,7 +85,7 @@ namespace Cinema.Application.Services
 
                 await _unitOfWork.CompleteAsync();
 
-                return _responses.CreateBaseOk("Session updated successfully.", 1);
+                return _responses.CreateBaseOk("Session date and hall updated successfully.", 1);
             }
             catch (Exception ex)
             {

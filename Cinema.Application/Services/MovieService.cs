@@ -4,6 +4,9 @@ using Cinema.Application.DTO.MovieDTOs;
 using Cinema.Application.Helpers.Interfaces;
 using Cinema.Application.Interfaces;
 using Cinema.Domain.Entities;
+using Cinema.Domain.Interfaces;
+using System.Net;
+using System.Text.Json;
 
 namespace Cinema.Application.Services
 {
@@ -12,12 +15,14 @@ namespace Cinema.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper; 
         private readonly IResponses _responses;
+        private readonly TmdbService _tmdbService;
 
-        public MovieService(IResponses responses, IUnitOfWork unitOfWork, IMapper mapper)
+        public MovieService(IResponses responses, IUnitOfWork unitOfWork, IMapper mapper, TmdbService tmdbService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _responses = responses;
+            _tmdbService = tmdbService;
         }
 
         public async Task<IBaseResponse<List<GetMovieDTO>>> GetAllMoviesAsync()
@@ -124,6 +129,38 @@ namespace Cinema.Application.Services
             catch (Exception ex)
             {
                 return _responses.CreateBaseServerError<List<GetMovieDTO>>(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Додати фільм з TMDB за SearchId.
+        /// </summary>
+        public async Task<IBaseResponse<string>> AddMovieFromTmdbAsync(int searchId)
+        {
+            try
+            {
+                var existingMovie = await _unitOfWork.Movie.GetBySearchIdAsync(searchId);
+                if (existingMovie != null)
+                {
+                    return _responses.CreateBaseConflict<string>($"Movie with SearchId {searchId} already exists in the database.");
+                }
+
+                var tmdbMovie = await _tmdbService.GetMovieByIdAsync(searchId);
+                if (tmdbMovie == null)
+                {
+                    return _responses.CreateBaseNotFound<string>($"Movie with SearchId {searchId} not found in TMDB.");
+                }
+
+                var movieEntity = tmdbMovie;
+
+                await _unitOfWork.Movie.AddAsync(movieEntity);
+                await _unitOfWork.CompleteAsync();
+
+                return _responses.CreateBaseOk("Movie added successfully from TMDB.", 1);
+            }
+            catch (Exception ex)
+            {
+                return _responses.CreateBaseServerError<string>(ex.Message);
             }
         }
     }

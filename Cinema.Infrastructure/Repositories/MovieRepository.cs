@@ -63,4 +63,12 @@ public class MovieRepository : IMovieRepository
             .Take(take)
             .ToListAsync();
     }
+    public async Task<MovieEntity> GetBySearchIdAsync(int searchId)
+    {
+        var movie = await _context.Movies
+            .AsNoTracking()
+            .FirstOrDefaultAsync(m => m.SearchId == searchId);
+
+        return movie;
+    }
 }
