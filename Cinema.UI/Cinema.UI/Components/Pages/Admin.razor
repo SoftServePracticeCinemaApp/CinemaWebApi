@@ -1,0 +1,231 @@
+@page "/admin"
+@using Cinema.UI.Model
+@using Cinema.UI.Services
+@using Cinema.UI.Services.Interfaces
+@inject IAccountManagement Acct
+@inject IAdminService AService
+@inject NavigationManager NavigationManager
+@using Cinema.UI.Components.Admin
+@namespace Cinema.UI.Pages.Admin
+@rendermode InteractiveServer
+
+<PageTitle>Admin</PageTitle>
+
+<CascadingAuthenticationState>
+  <AuthorizeView>
+    <Authorized>
+      @if (user.Claims.ContainsKey("Role") && user.Claims["Role"] == "Admin")
+      {
+        <div class="admin">
+          <div class="admin-container" style="background-image: url('../../images/profile/bg.png');">
+            <div class="admin-container-title">
+              Admin panel
+            </div>
+            <div class="admin-container-body">
+              <div class="admin-container-body-sidebar">
+                <button @onclick="@(e => onChangePage("addMovie"))">
+                  Add movie
+                </button>
+                <button @onclick="@(e => onChangePage("deleteMovie"))">
+                  Delete movie
+                </button>
+                <button @onclick="@(e => onChangePage("createSession"))">
+                  Create session
+                </button>
+                <button @onclick="@(e => onChangePage("getSessions"))">
+                  Get sessions
+                </button>
+                <button @onclick="@(e => onChangePage("updateSession"))">
+                  Update session
+                </button>
+                <button @onclick="@(e => onChangePage("deleteSession"))">
+                  Delete session
+                </button>
+                <button @onclick="@(e => onChangePage("addTickets"))">
+                  Add tickets
+                </button>
+                <button @onclick="@(e => onChangePage("updateTickets"))">
+                  Update tickets
+                </button>
+              </div>
+              <div class="admin-container-body-content">
+                @* @if (page == "createMovie")
+                {
+                  <AdminAction Title="Create Movie" Inputs="@(new List<AdminAction.InputField>
+                        {
+                            new() { Label = "Movie search ID", Placeholder = "Enter a movie search ID" },
+                        })" OnSubmit="@CreateMovie" SubmitText="Create Movie" />
+                } *@
+                @if (page == "createSession") {
+                  <CreateSession Title="Create Session" OnSubmit="@HandleCreateSession" SubmitText="Create Session" />
+                }
+                else if (page == "addMovie") {
+                  <AddMovie Title="Add Movie" OnSubmit="@HandleAddMovie" SubmitText="Add Movie" />
+                }
+                else if (page == "deleteMovie") {
+                  <AdminAction
+                    Title="Delete Movie"
+                    Inputs="@(new List<AdminAction.InputField> {
+                      new() { Label = "Movie ID", Type = "number", Placeholder = "Enter a movie ID" },
+                    })"
+                    SubmitText="Delete"                  
+                    OnSubmit="@(async (data) => await DeleteMovie(data))"
+                  />
+                }
+                else if (page == "deleteSession") {
+                  <AdminAction 
+                    Title="Delete Session"
+                    Inputs="@(new List<AdminAction.InputField>{
+                      new() {
+                        Label = "Session ID",
+                        Type = "number",
+                        Placeholder = "Enter a session ID"
+                      }
+                    })"
+                    SubmitText="Delete"
+                    OnSubmit="@(async (data) => await DeleteSession(data))"
+                  />
+                }
+                else if (page == "addTickets") {
+                  <AdminAction
+                    Title="Add Tickets"
+                    Inputs="@(new List<AdminAction.InputField>{
+                      new() {
+                        Label = "Session ID",
+                        Type = "number",
+                        Placeholder = "Enter a session ID"
+                      },
+                      new() {
+                        Label = "Ticket count",
+                        Type = "number",
+                        Placeholder = "Enter a ticket count"
+                      },
+                      new() {
+                        Label = "Ticket price",
+                        Type = "number",
+                        Placeholder = "Enter a ticket price"
+                      }
+                    })"
+                    SubmitText="Add"
+                    OnSubmit="@(async (data) => await AddTickets(data))"
+                  />
+                }
+                else if (page == "updateTickets") {
+                  <AdminAction
+                    Title="Update Tickets"
+                    Inputs="@(new List<AdminAction.InputField>{
+                      new() {
+                        Label = "Session ID",
+                        Type = "number",
+                        Placeholder = "Enter a session ID"
+                      },
+                      new() {
+                        Label = "Ticket count",
+                        Type = "number",
+                        Placeholder = "Enter a ticket count"
+                      },
+                      new() {
+                        Label = "Ticket price",
+                        Type = "number",
+                        Placeholder = "Enter a ticket price"
+                      }
+                    })"
+                    SubmitText="Update"
+                    OnSubmit="@(async (data) => await UpdateTickets(data))"
+                  />
+                }
+                else if (page == "updateSession") {
+                  <AdminAction 
+                    Title="Update Session"
+                    Inputs="@(new List<AdminAction.InputField>{
+                      new() {
+                        Label = "Session ID",
+                        Type = "number",
+                        Placeholder = "Enter a session ID"
+                      },
+                      new() {
+                        Label = "Date of session",
+                        Type = "datetime-local",
+                        Placeholder = "Select date and time"
+                      },
+                      new() {
+                        Label = "Hall number",
+                        Type = "number",
+                        Placeholder = "Enter a hall number"
+                      }
+                    })"
+                    OnSubmit="@(async (data) => await UpdateSession(data))" 
+                    SubmitText="Update Session" />
+                }
+
+
+                @* @if (page == "createSession")
+
+
+
+                {
+                  <AdminAction Title="Create Session" Inputs="@(new List<AdminAction.InputField>
+                        {
+                            new() { Label = "Movie ID", Type = "number", Placeholder = "Enter movie ID" },
+                            new() { Label = "Date", Type = "datetime-local", Placeholder = "Select date and time" },
+                            new() { Label = "Hall number", Type = "number", Placeholder = "Enter a hall number" },
+                        })" OnSubmit="@CreateSession" SubmitText="Create Session" />
+                } *@
+              </div>
+            </div>
+          </div>
+
+        </div>
+      }
+    </Authorized>
+    <NotAuthorized>
+      <div class="alert alert-warning">
+        Please log in to view your profile.
+      </div>
+    </NotAuthorized>
+  </AuthorizeView>
+</CascadingAuthenticationState>
+
+@code {
+  private UserInfo user;
+  private string page = "";
+
+  protected override void OnInitialized()
+  {
+    user = Acct.GetUserInfo();
+  }
+
+  private void onChangePage(string value)
+  {
+    page = value;
+  }
+
+  private async Task HandleCreateSession(CreateSession.SessionData data)
+  {
+    await AService.CreateSessionAsync(data.MovieId, data.Dates.ToList(), data.HallNumber);
+  }
+  private async Task DeleteMovie(Dictionary<string, string> data) {
+    await AService.DeleteMovieAsync(int.Parse(data["movieId"]));
+  }
+
+  private async Task DeleteSession(Dictionary<string, string> data) {
+    await AService.DeleteSessionAsync(int.Parse(data["sessionId"]));
+  }
+
+  private async Task AddTickets(Dictionary<string, string> data) {
+    await AService.AddTicketsAsync(int.Parse(data["sessionId"]), int.Parse(data["ticketCount"]), double.Parse(data["ticketPrice"]));
+  }
+
+  private async Task UpdateTickets(Dictionary<string, string> data) {
+    await AService.UpdateTicketsAsync(int.Parse(data["sessionId"]), int.Parse(data["ticketCount"]), double.Parse(data["ticketPrice"]));
+  }
+
+  private async Task UpdateSession(Dictionary<string, string> data) {
+    await AService.UpdateSessionAsync(int.Parse(data["sessionId"]), DateTime.Parse(data["date"]), int.Parse(data["hallNumber"]));
+  }
+
+  private async Task HandleAddMovie(int movieId)
+  {
+    await AService.CreateMovieAsync(movieId);
+  }
+}

@@ -1,0 +1,91 @@
+@using Cinema.UI.Model
+@namespace Cinema.UI.Components.Admin
+
+<div class="admin-action">
+    <div class="admin-action-title">@Title</div>
+    
+    <div class="admin-action-form">
+        <div class="admin-action-form-group">
+            <label>Movie ID</label>
+            <input type="number" 
+                class="admin-action-form-group-control"
+                @bind="MovieId"
+                placeholder="Enter movie ID"/>
+        </div>
+
+        <div class="admin-action-form-group">
+            <label>Dates</label>
+            @for (int i = 0; i < Dates.Count; i++)
+            {
+                var index = i;
+                <div class="date-input-container">
+                    <input type="datetime-local" 
+                        class="admin-action-form-group-control"
+                        @bind="Dates[index]"
+                        @bind:event="oninput"
+                        @onchange="() => HandleDateChange(index)"
+                        placeholder="Select date and time"/>
+                </div>
+            }
+        </div>
+
+        <div class="admin-action-form-group">
+            <label>Hall number</label>
+            <input type="number" 
+                class="admin-action-form-group-control"
+                @bind="HallNumber"
+                placeholder="Enter hall number"/>
+        </div>
+        
+
+        <div class="buttons">
+            <button @onclick="HandleSubmit">
+                @(SubmitText ?? "Submit")
+            </button>
+        </div>
+    </div>
+</div>
+
+@code {
+    public class SessionData
+    {
+        public int MovieId { get; set; }
+        public DateTime[] Dates { get; set; }
+        public int HallNumber { get; set; }
+    }
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public EventCallback<SessionData> OnSubmit { get; set; }
+
+    [Parameter]
+    public string SubmitText { get; set; }
+
+    private int MovieId { get; set; }
+    private List<DateTime> Dates { get; set; } = new() { DateTime.Now };
+    private int HallNumber { get; set; }
+
+    private void HandleDateChange(int index)
+    {
+        if (index == Dates.Count - 1)
+        {
+            Dates.Add(DateTime.Now);
+            StateHasChanged();
+        }
+    }
+
+    public DateTime[] Date => Dates.ToArray();
+
+    private async Task HandleSubmit()
+    {
+        var sessionData = new SessionData
+        {
+            MovieId = MovieId,
+            Dates = Dates.ToArray(),
+            HallNumber = HallNumber
+        };
+        await OnSubmit.InvokeAsync(sessionData);
+    }
+} 

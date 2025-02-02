@@ -1,0 +1,228 @@
+@use "sass:math";
+
+@function pxToRem($pxValue, $scale: 1) {
+  @return math.div($pxValue, 16px) * $scale * 1rem;
+}
+
+.profile {
+  width: 100%;
+  height: auto;
+
+  padding: pxToRem(50px);
+
+  *::-webkit-scrollbar {
+    width: 0.1852vh;
+    height: 0.1852vh;
+  }
+  *::-webkit-scrollbar-button {
+    width: 0.1852vh;
+    height: 0.1852vh;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: #FFF;
+    border: 0vh none #ffffff;
+    border-radius: 4.3519vh;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: rgba(217, 217, 217, 0.05);
+    border: 0vh none #ffffff;
+    border-radius: 4.6296vh;
+  }
+
+  *::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  &-container {
+    width: 100%;
+    height: 100%;
+
+    padding: pxToRem(60px);
+
+    border-radius: pxToRem(15px);
+    // background: #0A031C;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: pxToRem(60px);
+
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    &-header {
+      width: 100%;
+      height: auto;
+
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+
+      &-about {
+        width: auto;
+        height: auto;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+
+        &-name {
+          color: #FFF;
+          font-size: pxToRem(30px);
+          font-style: normal;
+          font-weight: 500;
+          line-height: normal;
+        }
+
+        &-phone {
+          color: #C9C9C9;
+          font-size: pxToRem(15px);
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+        }
+      }
+
+      &-new {
+        width: pxToRem(590px);
+        height: pxToRem(290px);
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+
+    &-body {
+      width: 100%;
+      height: auto;
+
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: pxToRem(30px);
+      row-gap: pxToRem(30px);
+
+      a {
+        color: none !important;
+        text-decoration: none !important;
+        text-transform: none !important;
+      }
+
+      &-row {
+        width: 100%;
+        height: auto;
+
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1.5fr;
+        gap: pxToRem(30px);
+        row-gap: pxToRem(30px);
+
+        &:nth-child(2) {
+          grid-template-columns: 1.5fr 1fr 1fr 2fr;
+        }
+
+        &-item {
+          width: auto;
+          height: auto;
+  
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          align-items: flex-start;
+  
+          gap: pxToRem(20px);
+  
+          border-radius: pxToRem(8px);
+          background: rgba(255, 255, 255, 0.10);
+          backdrop-filter: blur(1vh);
+  
+          padding: pxToRem(30px) pxToRem(80px) pxToRem(50px) pxToRem(20px);
+  
+          * {
+            text-decoration: none;
+            text-transform: none;
+          };
+  
+          &-icon {
+            width: pxToRem(40px);
+            height: pxToRem(40px);
+  
+            display: flex;
+            justify-content: center;
+            align-items: center;
+  
+            img, svg {
+              width: 100%;
+              height: 100%;
+  
+              fill: #FFF;
+              color: #FFF;
+    
+              * {
+                fill: #FFF;
+                color: #FFF;
+              }
+            }
+          }
+  
+          &-title {
+            color: #EEE;
+            font-size: pxToRem(25px);
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+  
+            text-decoration: none;
+            text-transform: none;
+          }
+        }
+      }
+    }
+
+    &-footer {
+      width: 100%;
+      height: auto;
+
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+
+      a {
+        color: none !important;
+        text-decoration: none !important;
+        text-transform: none !important;
+      }
+
+      &-logout {
+        width: fit-content;
+        height: fit-content;
+
+        padding: pxToRem(16px) pxToRem(150px);
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        border-radius: pxToRem(8px);
+        background: rgba(255, 255, 255, 0.30);
+        backdrop-filter: blur(1vh);
+
+        span {
+          color: #EEE;
+          font-size: pxToRem(18px);
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+        }
+      }
+    }
+  }
+}
