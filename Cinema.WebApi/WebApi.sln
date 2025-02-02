@@ -24,6 +24,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.Domain", "..\Cinema.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.Infrastructure", "..\Cinema.Infrastructure\Cinema.Infrastructure.csproj", "{D01BCAD6-B2E3-487E-BA4F-5DF6693359EA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinema.BlazorUI", "..\Cinema.BlazorUI\Cinema.BlazorUI.csproj", "{A8603800-D0D8-4ACD-BC0B-162123BD58A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,10 @@ Global
 		{D01BCAD6-B2E3-487E-BA4F-5DF6693359EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D01BCAD6-B2E3-487E-BA4F-5DF6693359EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D01BCAD6-B2E3-487E-BA4F-5DF6693359EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8603800-D0D8-4ACD-BC0B-162123BD58A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8603800-D0D8-4ACD-BC0B-162123BD58A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8603800-D0D8-4ACD-BC0B-162123BD58A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8603800-D0D8-4ACD-BC0B-162123BD58A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

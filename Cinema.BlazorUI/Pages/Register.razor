@@ -1,0 +1,108 @@
+@page "/register"
+@using Cinema.BlazorUI.Services
+@using Cinema.BlazorUI.Model
+@inject IAccountManagement Acct
+@inject NavigationManager NavigationManager
+
+<PageTitle>Sign up</PageTitle>
+
+@* <CascadingAuthenticationState> *@
+    <AuthorizeView>
+    <Authorized>
+        <div>
+            <h1>You are already logged in</h1>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="auth">
+            <div class="auth-container">
+                <div class="auth-container-block">
+                        <div class="auth-container-block-form">
+                            <div class="auth-container-block-form-title">Sign up</div>
+                            <div class="auth-container-block-form-item">
+                                <input type="text" placeholder="Email" @bind="email" @bind:event="oninput">
+                            </div>
+                            <div class="auth-container-block-form-item">
+                                <input type="text" placeholder="Phone" @bind="phone" @bind:event="oninput">
+                            </div>
+                            <div class="auth-container-block-form-item">
+                                <input type="text" placeholder="Name" @bind="name" @bind:event="oninput">
+                            </div>
+                            <div class="auth-container-block-form-item">
+                                <input type="password" placeholder="Password" @bind="password" @bind:event="oninput">
+                            </div>
+
+                            @if (errors && errorList.Length > 0)
+                            {
+                                <div class="auth-container-block-form-item">
+                                    @foreach (var error in errorList)
+                                    {
+                                        <div class="auth-container-block-form-item-error">@error</div>
+                                    }
+                                </div>
+                            }
+                            <button class="auth-container-block-button" @onclick="onRegister">Sign up</button>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+@* </CascadingAuthenticationState> *@
+
+@code {
+    private bool success;
+    private bool errors;
+    private bool isLoading = true;
+
+    private string email = string.Empty;
+    private string phone = string.Empty;
+    private string name = string.Empty;
+    private string password = string.Empty;
+
+    private string[] errorList = [];
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Task.Delay(10);
+        }
+    }
+
+    private async Task onRegister()
+    {
+        try 
+        {
+            success = errors = false;
+
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(phone) ||
+                string.IsNullOrEmpty(name) || string.IsNullOrEmpty(password))
+            {
+                errors = true;
+                errorList = new string[] { "All fields are required" };
+                return;
+            }
+
+            var result = await Acct.RegisterAsync(email, password, phone, name);
+
+            if (result.Succeeded)
+            {
+                success = true;
+                NavigationManager.NavigateTo("/login");
+            }
+            else
+            {
+                errors = true;
+                errorList = result.ErrorList;
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            errors = true;
+            errorList = new[] { $"Registration error: {ex.Message}" };
+            StateHasChanged();
+        }
+    }
+}

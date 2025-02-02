@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>0470da18-15a6-42a5-b574-8fcfe8b0e44e</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,7 +30,7 @@
     <ProjectReference Include="..\Cinema.Business\Cinema.Business.csproj" />
     <ProjectReference Include="..\Cinema.Infrastructure\Cinema.Infrastructure.csproj" />
     <ProjectReference Include="..\Cinema.Domain\Cinema.Domain.csproj" />
-    <ProjectReference Include="..\Cinema.UI\Cinema.UI.csproj" />
+    <ProjectReference Include="..\Cinema.UI\Cinema.UI\Cinema.UI.csproj" />
   </ItemGroup>
 
 </Project>
