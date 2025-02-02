@@ -19,19 +19,6 @@ namespace Cinema.WebApi.AdminControllers
         }
 
         /// <summary>
-        /// Додати новий фільм (тільки для адміністратора)
-        /// </summary>
-        [HttpPost("Add")]
-        [ProducesResponseType(typeof(BaseResponse<bool>), (int)HttpStatusCode.Created)]
-        [ProducesResponseType(typeof(BaseResponse<bool>), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> Create([FromBody] AddMovieDTO createMovieDto)
-        {
-            var response = await _movieService.AddMovieAsync(createMovieDto);
-
-            return StatusCode((int)response.StatusCode, response);
-        }
-
-        /// <summary>
         /// Оновити фільм за ID (тільки для адміністратора)
         /// </summary>
         [HttpPut]
@@ -65,12 +52,12 @@ namespace Cinema.WebApi.AdminControllers
         /// <summary>
         /// Додати фільм з TMDB за SearchId.
         /// </summary>
-        [HttpPost("add-from-tmdb/{searchId}")]
+        [HttpPost("[action]/{searchId}")]
         [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.Conflict)]
         [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
-        public async Task<IActionResult> AddMovieFromTmdbAsync(int searchId)
+        public async Task<IActionResult> Add(int searchId)
         {
             var response = await _movieService.AddMovieFromTmdbAsync(searchId);
 

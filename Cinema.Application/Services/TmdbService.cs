@@ -36,16 +36,11 @@ namespace Cinema.Application.Services
             }
 
             var jsonResponse = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"TMDB Response: {jsonResponse}");
 
             var tmdbMovie = JsonSerializer.Deserialize<TmdbMovie>(jsonResponse, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             });
-            Console.WriteLine($"TMDB Release Date: {tmdbMovie.ReleaseDate}");
-            Console.WriteLine($"TMDB Vote Average: {tmdbMovie.VoteAverage}");
-            Console.WriteLine($"TMDB Poster Path: {tmdbMovie.PosterPath}");
-
             return _mapper.Map<MovieEntity>(tmdbMovie);
         }
     }
@@ -62,7 +57,7 @@ namespace Cinema.Application.Services
         public string Overview { get; set; }
 
         [JsonPropertyName("release_date")]
-        public string ReleaseDate { get; set; }  // Строка, бо може бути пустою
+        public string ReleaseDate { get; set; }
 
         [JsonPropertyName("vote_average")]
         public double VoteAverage { get; set; }
