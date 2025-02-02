@@ -17,19 +17,6 @@ namespace Cinema.WebApi.Controllers
         }
 
         /// <summary>
-        /// Додати новий фільм
-        /// </summary>
-        [HttpPost]
-        [ProducesResponseType(typeof(BaseResponse<bool>), (int)HttpStatusCode.Created)]
-        [ProducesResponseType(typeof(BaseResponse<bool>), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> Create([FromBody] AddMovieDTO createMovieDto)
-        {
-            var response = await _movieService.AddMovieAsync(createMovieDto);
-
-            return StatusCode((int)response.StatusCode, response);
-        }
-
-        /// <summary>
         /// Отримати всі фільми
         /// </summary>
         [HttpGet]
@@ -43,28 +30,14 @@ namespace Cinema.WebApi.Controllers
         }
 
         /// <summary>
-        /// Оновити фільм за ID
+        /// Отримати фільм за ID
         /// </summary>
-        [HttpPut("{id}")]
-        [ProducesResponseType(typeof(BaseResponse<bool>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(BaseResponse<bool>), (int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(BaseResponse<bool>), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateMovieDTO updateMovieDto)
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(BaseResponse<GetMovieDTO>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(BaseResponse<GetMovieDTO>), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var response = await _movieService.UpdateMovieAsync(id, updateMovieDto);
-
-            return StatusCode((int)response.StatusCode, response);
-        }
-
-        /// <summary>
-        /// Видалити фільм за ID
-        /// </summary>
-        [HttpDelete("{id}")]
-        [ProducesResponseType(typeof(BaseResponse<bool>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(BaseResponse<bool>), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> Delete([FromRoute] int id)
-        {
-            var response = await _movieService.DeleteMovieAsync(id);
+            var response = await _movieService.GetMovieByIdAsync(id);
 
             return StatusCode((int)response.StatusCode, response);
         }
