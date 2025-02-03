@@ -38,7 +38,7 @@ namespace Cinema.WebApi.AdminControllers
         [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> Update([FromRoute] long id, [FromBody] UpdateTicketDTO updateTicketDto)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateTicketDTO updateTicketDto)
         {
             var response = await _ticketService.UpdateTicketAsync(id, updateTicketDto);
             return StatusCode((int)response.StatusCode, response);
@@ -51,7 +51,7 @@ namespace Cinema.WebApi.AdminControllers
         [Route("[action]/{id}")]
         [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> Delete([FromRoute] long id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var response = await _ticketService.DeleteTicketAsync(id);
             return StatusCode((int)response.StatusCode, response);
