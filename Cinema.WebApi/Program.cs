@@ -91,6 +91,16 @@ public static class Program
 
         builder.Services.AddAuthorization();
 
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            });
+        });
+
         var app = builder.Build();
         app.UseSwagger();
         app.UseSwaggerUI(c =>
@@ -116,7 +126,7 @@ public static class Program
             }
         }
 
-
+        app.UseCors("AllowAll");
         app.MapControllers();
         app.UseHttpsRedirection();
         app.UseAuthentication();

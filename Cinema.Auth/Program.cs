@@ -33,6 +33,16 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("ApiSett
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+options.AddPolicy("AllowAll", builder =>
+{
+    builder.AllowAnyOrigin()    // Allow requests from any origin
+           .AllowAnyMethod()    // Allow any HTTP method
+           .AllowAnyHeader();   // Allow any headers
+});
+});
+
 
 
 var app = builder.Build();

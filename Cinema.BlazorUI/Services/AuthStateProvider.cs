@@ -51,7 +51,7 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        /*
+        
                 var claims = new List<Claim>
                 {
                     new(ClaimTypes.Email, _testUser.Email),
@@ -74,41 +74,41 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
                 _authenticated = true;
 
                 return new AuthenticationState(user);
-        */
+        
 
-        _authenticated = false;
-        var user = Unauthenticated;
+        //_authenticated = false;
+        //var user = Unauthenticated;
 
-        try
-        {
-            var userResponse = await _httpClient.GetAsync("manage/info");
-            userResponse.EnsureSuccessStatusCode();
+        //try
+        //{
+        //    var userResponse = await _httpClient.GetAsync("manage/info");
+        //    userResponse.EnsureSuccessStatusCode();
 
-            var userJson = await userResponse.Content.ReadAsStringAsync();
-            var userInfo = JsonSerializer.Deserialize<UserInfo>(userJson, jsonSerializerOptions);
+        //    var userJson = await userResponse.Content.ReadAsStringAsync();
+        //    var userInfo = JsonSerializer.Deserialize<UserInfo>(userJson, jsonSerializerOptions);
 
-            if (userInfo?.Email != null)
-            {
-                var claims = new List<Claim>
-                {
-                    new(ClaimTypes.Name, userInfo.Name),
-                    new(ClaimTypes.Email, userInfo.Email),
-                    new(ClaimTypes.Role, userInfo.Claims["Role"]),
-                    new("Phone", userInfo.PhoneNumber)
-                };
+        //    if (userInfo?.Email != null)
+        //    {
+        //        var claims = new List<Claim>
+        //        {
+        //            new(ClaimTypes.Name, userInfo.Name),
+        //            new(ClaimTypes.Email, userInfo.Email),
+        //            new(ClaimTypes.Role, userInfo.Claims["Role"]),
+        //            new("Phone", userInfo.PhoneNumber)
+        //        };
 
-                var id = new ClaimsIdentity(claims, nameof(AuthStateProvider));
-                user = new ClaimsPrincipal(id);
-                _authenticated = true;
-            }
-        }
-        catch (Exception)
-        {
-            _authenticated = false;
-            user = Unauthenticated;
-        }
+        //        var id = new ClaimsIdentity(claims, nameof(AuthStateProvider));
+        //        user = new ClaimsPrincipal(id);
+        //        _authenticated = true;
+        //    }
+        //}
+        //catch (Exception)
+        //{
+        //    _authenticated = false;
+        //    user = Unauthenticated;
+        //}
 
-        return new AuthenticationState(user);
+        //return new AuthenticationState(user);
     }
 
     public async Task<FormResult> RegisterAsync(string email, string password, string phone, string name)

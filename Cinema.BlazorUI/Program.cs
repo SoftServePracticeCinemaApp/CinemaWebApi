@@ -26,14 +26,25 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
 builder.Services.AddHttpClient("AuthServiceUrl", opt => 
 {
-    opt.BaseAddress = new Uri(builder.Configuration["AuthServiceUrl"] ?? "http://localhost:5254/");
+    opt.BaseAddress = new Uri(builder.Configuration["AuthServiceUrl"] ?? "http://localhost:7125/");
 })
 .AddHttpMessageHandler<CustomHttpHandler>();
 
 builder.Services.AddHttpClient("WebApiUrl", opt => 
 {
-    opt.BaseAddress = new Uri(builder.Configuration["WebApiUrl"] ?? "https://localhost:7005/");
+    opt.BaseAddress = new Uri(builder.Configuration["WebApiUrl"] ?? "https://localhost:7006/");
 })
 .AddHttpMessageHandler<CustomHttpHandler>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.SetIsOriginAllowed(_ => true)
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .AllowCredentials();
+    });
+});
 
 await builder.Build().RunAsync();
