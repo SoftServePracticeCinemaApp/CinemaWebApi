@@ -29,7 +29,11 @@
                                 <input type="text" placeholder="Name" @bind="name" @bind:event="oninput">
                             </div>
                             <div class="auth-container-block-form-item">
+                                <input type="text" placeholder="Last name" @bind="lastName" @bind:event="oninput">
+                            </div>
+                            <div class="auth-container-block-form-item">
                                 <input type="password" placeholder="Password" @bind="password" @bind:event="oninput">
+
                             </div>
 
                             @if (errors && errorList.Length > 0)
@@ -59,7 +63,7 @@
     private string phone = string.Empty;
     private string name = string.Empty;
     private string password = string.Empty;
-
+    private string lastName = string.Empty;
     private string[] errorList = [];
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -77,14 +81,16 @@
             success = errors = false;
 
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(phone) ||
-                string.IsNullOrEmpty(name) || string.IsNullOrEmpty(password))
+                string.IsNullOrEmpty(name) || string.IsNullOrEmpty(password) ||
+                string.IsNullOrEmpty(lastName))
             {
                 errors = true;
                 errorList = new string[] { "All fields are required" };
                 return;
             }
 
-            var result = await Acct.RegisterAsync(email, password, phone, name);
+
+            var result = await Acct.RegisterAsync(email, password, phone, name, lastName);
 
             if (result.Succeeded)
             {

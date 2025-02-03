@@ -40,6 +40,11 @@ namespace Cinema.Auth.Controllers
 		[HttpPost("register")]
 		public async Task<IActionResult> Register([FromBody] RegistrationRequestDto registrationRequestDto)
 		{
+						Console.WriteLine(registrationRequestDto.Email);
+			System.Console.WriteLine(registrationRequestDto.Name);
+			System.Console.WriteLine(registrationRequestDto.LastName);
+			System.Console.WriteLine(registrationRequestDto.PhoneNumber);
+			System.Console.WriteLine(registrationRequestDto.Role);
 			try
 			{
 				await _authService.Register(registrationRequestDto);
@@ -75,6 +80,7 @@ namespace Cinema.Auth.Controllers
 			try
 			{
 				var assignRoleSuccessful = await _authService.AssignRole(registrationRequestDto.Email, registrationRequestDto.Role.ToUpper());
+
 				if (!assignRoleSuccessful)
 				{
 					return BadRequest("Error occured while assigning the role");

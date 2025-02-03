@@ -8,9 +8,12 @@ using Cinema.Business.Services.IServices;
 using Cinema.Business.Options;
 using Microsoft.EntityFrameworkCore;
 using Cinema.Infrastructure.Utils;
-
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
 
 // Add services to the container.
 var useInMemoryDB = builder.Configuration.GetValue<bool>("UseInMemoryDB");
@@ -55,6 +58,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowAll");
 
 app.UseAuthorization();
 

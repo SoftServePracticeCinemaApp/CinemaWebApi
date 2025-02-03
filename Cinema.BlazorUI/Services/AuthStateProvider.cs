@@ -113,15 +113,23 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
         return new AuthenticationState(user);
     }
 
-    public async Task<FormResult> RegisterAsync(string email, string password, string phone, string name)
+    public async Task<FormResult> RegisterAsync(string email, string password, string phone, string name, string lastName)
     {
         string[] defaultDetail = ["An unknown error prevented registration from succeeding."];
 
         try
         {
             var result = await _httpClient.PostAsJsonAsync("register",
-                  new { email, password, phone, name });
+                  new { 
+                    Email = email,
+                    Name = name,
+                    LastName = lastName,
+                    PhoneNumber = phone,
+                    Password = password,
+                    Role = "User"
+                   });
             if (result.IsSuccessStatusCode)
+
             {
                 return new FormResult { Succeeded = true };
             }

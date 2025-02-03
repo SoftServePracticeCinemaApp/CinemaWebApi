@@ -15,6 +15,7 @@ using Cinema.Application.Interfaces;
 using Cinema.Application.Services;
 using Cinema.Domain.Interfaces;
 using Cinema.Infrastructure.Repositories;
+using System.Globalization;
 
 
 public static class Program
@@ -101,6 +102,12 @@ public static class Program
             });
         });
 
+        CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+        CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
+        // builder.Services.Configure<System.Globalization.CultureInfo>("en-US");
+        // System.Globalization.CultureInfo.DefaultThreadCurrentCulture = new System.Globalization.CultureInfo("en-US");
+        // System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = new System.Globalization.CultureInfo("en-US");
+
         var app = builder.Build();
         app.UseSwagger();
         app.UseSwaggerUI(c =>
@@ -131,6 +138,15 @@ public static class Program
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
+
+        var supportedCultures = new[] { "en-US" };
+        var localizationOptions = new RequestLocalizationOptions()
+            .SetDefaultCulture(supportedCultures[0])
+            .AddSupportedCultures(supportedCultures)
+            .AddSupportedUICultures(supportedCultures);
+
+        app.UseRequestLocalization(localizationOptions);
+
         app.Run();
     }
 

@@ -84,13 +84,20 @@ namespace Cinema.Business.Services
 						PhoneNumber = user.PhoneNumber
 
 					};
+
+					// return userDto;
+					// await AssignRole(user.Email, registrationrequestDto.Role);
 				}
-				throw new Exception(result.Errors.FirstOrDefault().Description);
+				else {
+					throw new Exception(result.Errors.FirstOrDefault().Description);
+				}
 			}
-			catch
+			catch (Exception ex)
 			{
-				throw;
+				Console.WriteLine(ex.Message);
+				throw new Exception(ex.Message);
 			}
+
 		}
 
 		public async Task<bool> AssignRole(string email, string role)
