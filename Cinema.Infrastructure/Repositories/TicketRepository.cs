@@ -21,7 +21,7 @@ public class TicketRepository : ITicketRepository
         .AsNoTracking()
         .ToListAsync();
 
-    public async Task<TicketEntity> GetByIdAsync(long Id)
+    public async Task<TicketEntity> GetByIdAsync(int Id)
     {
         var ticketInDb = await _context.Tickets
             .AsNoTracking()
@@ -53,7 +53,7 @@ public class TicketRepository : ITicketRepository
         return ticketsInDb;
     }
 
-    public async Task DeleteAsync(long Id)
+    public async Task DeleteAsync(int Id)
     {
         var ticketInDb = await _context.Tickets.AsNoTracking().FirstOrDefaultAsync(t => t.Id == Id);
 
@@ -61,7 +61,7 @@ public class TicketRepository : ITicketRepository
         else await Task.Run(() => _context.Remove(ticketInDb));
     }
 
-    public async Task UpdateAsync(long Id, TicketEntity ticketEntity)
+    public async Task UpdateAsync(int Id, TicketEntity ticketEntity)
     {
         var ticketInDb = await _context.Tickets.AsNoTracking().FirstOrDefaultAsync(t => t.Id == Id);
 
@@ -71,7 +71,7 @@ public class TicketRepository : ITicketRepository
         ticketInDb.MovieId = Id;
         ticketInDb.Row = ticketEntity.Row;
     }
-    public async Task<IEnumerable<TicketEntity>> GetBySessionIdAsync(long sessionId)
+    public async Task<IEnumerable<TicketEntity>> GetBySessionIdAsync(int sessionId)
     {
         return await _context.Tickets
             .Where(t => t.SessionId == sessionId)

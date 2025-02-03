@@ -35,7 +35,7 @@ namespace Cinema.WebApi.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(BaseResponse<GetTicketDTO>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(BaseResponse<GetTicketDTO>), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> GetById([FromRoute] long id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var response = await _ticketService.GetTicketByIdAsync(id);
 
@@ -74,7 +74,7 @@ namespace Cinema.WebApi.Controllers
         [HttpGet("session/{sessionId}")]
         [ProducesResponseType(typeof(BaseResponse<List<GetTicketDTO>>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(BaseResponse<List<GetTicketDTO>>), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetBySessionId([FromRoute] long sessionId)
+        public async Task<IActionResult> GetBySessionId([FromRoute] int sessionId)
         {
             var response = await _ticketService.GetTicketsBySessionIdAsync(sessionId);
 

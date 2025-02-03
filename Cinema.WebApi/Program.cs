@@ -30,7 +30,7 @@ public static class Program
         var secret = builder.Configuration.GetValue<string>("ApiSettings:Secret");
         var issuer = builder.Configuration.GetValue<string>("ApiSettings:Issuer");
         var audience = builder.Configuration.GetValue<string>("ApiSettings:Audience");
-        builder.Services.AddInMemoryDataBase();
+
         builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
         builder.Services.AddControllers(options =>
         {
