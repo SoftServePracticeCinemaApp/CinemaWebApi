@@ -61,6 +61,7 @@ namespace Cinema.Auth.Controllers
 				{
 					return BadRequest("Username or password is incorrect");
 				}
+
 				return Ok(loginresponce);
 			}
 			catch (Exception ex)
@@ -75,6 +76,7 @@ namespace Cinema.Auth.Controllers
 			try
 			{
 				var assignRoleSuccessful = await _authService.AssignRole(registrationRequestDto.Email, registrationRequestDto.Role.ToUpper());
+
 				if (!assignRoleSuccessful)
 				{
 					return BadRequest("Error occured while assigning the role");
