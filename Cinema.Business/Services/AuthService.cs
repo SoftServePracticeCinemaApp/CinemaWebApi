@@ -31,8 +31,9 @@ namespace Cinema.Business.Services
 		public async Task<LoginResponceDto> Login(LoginRequestDto loginrequestDto)
 		{
 			var user = await _userRepository.GetAsync(u => u.UserName.ToLower() == loginrequestDto.UserName.ToLower());
+			Console.Write(user);
 			bool isValid = await _userManager.CheckPasswordAsync(user, loginrequestDto.Password);
-
+			Console.Write(isValid);
 			if (!isValid || user == null)
 			{
 				return new LoginResponceDto()
@@ -59,6 +60,7 @@ namespace Cinema.Business.Services
 			};
 			return loginResponceDto;
 		}
+
 
 		public async Task Register(RegistrationRequestDto registrationrequestDto)
 		{
@@ -94,7 +96,6 @@ namespace Cinema.Business.Services
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.Message);
 				throw new Exception(ex.Message);
 			}
 

@@ -23,28 +23,26 @@ namespace Cinema.Auth.Controllers
 		[HttpGet("manage/info")]
 		public async Task<UserInfoDto> GetInfo(string token)
 		{
-			var tokenHandler = new JwtSecurityTokenHandler();
-			var securityToken = (JwtSecurityToken)tokenHandler.ReadToken(token);
-			if (securityToken.ValidTo < DateTime.UtcNow)
-			{
-				var user = new UserInfoDto();
-				user.Name = securityToken.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Name).Value;
-				user.Email = securityToken.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value;
-				user.Role = securityToken.Claims.FirstOrDefault(u => u.Type == ClaimTypes.Role).Value;
-				user.PhoneNumber = securityToken.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.UniqueName).Value;
-				return user;
-			}
-			return null;
+				var tokenHandler = new JwtSecurityTokenHandler();
+				var securityToken = (JwtSecurityToken)tokenHandler.ReadToken(token);
+
+				Console.WriteLine(securityToken.Claims.FirstOrDefault(u => u.Type == ClaimTypes.Role)?.Value);
+
+				if (securityToken.ValidTo > DateTime.UtcNow)
+				{
+						var user = new UserInfoDto();
+						user.Name = securityToken.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Name)?.Value;
+						user.Email = securityToken.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email)?.Value;
+						user.Role = securityToken.Claims.FirstOrDefault(u => u.Type == ClaimTypes.Role)?.Value;
+						user.PhoneNumber = securityToken.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.UniqueName)?.Value;
+						return user;
+				}
+				return null;
 		}
 
 		[HttpPost("register")]
 		public async Task<IActionResult> Register([FromBody] RegistrationRequestDto registrationRequestDto)
 		{
-						Console.WriteLine(registrationRequestDto.Email);
-			System.Console.WriteLine(registrationRequestDto.Name);
-			System.Console.WriteLine(registrationRequestDto.LastName);
-			System.Console.WriteLine(registrationRequestDto.PhoneNumber);
-			System.Console.WriteLine(registrationRequestDto.Role);
 			try
 			{
 				await _authService.Register(registrationRequestDto);
@@ -66,6 +64,7 @@ namespace Cinema.Auth.Controllers
 				{
 					return BadRequest("Username or password is incorrect");
 				}
+
 				return Ok(loginresponce);
 			}
 			catch (Exception ex)

@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using Cinema.BlazorUI.Services;
+using Cinema.BlazorUI.Model.DTO;
 
 namespace Cinema.BlazorUI.Services;
 public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
@@ -83,29 +84,45 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
 
         try
         {
-           var userResponse = await _httpClient.GetAsync("manage/info");
-           userResponse.EnsureSuccessStatusCode();
+            var token = await _localStorageService.GetItemAsync<string>("accessToken");
+            
+            if (string.IsNullOrEmpty(token))
+            {
+                return new AuthenticationState(Unauthenticated);
+            }
+
+            // Add token as query parameter
+            var userResponse = await _httpClient.GetAsync($"manage/info?token={token}");
+            userResponse.EnsureSuccessStatusCode();
 
            var userJson = await userResponse.Content.ReadAsStringAsync();
-           var userInfo = JsonSerializer.Deserialize<UserInfo>(userJson, jsonSerializerOptions);
-
+           var userInfo = JsonSerializer.Deserialize<UserInfoDto>(userJson, jsonSerializerOptions);
            if (userInfo?.Email != null)
            {
+                Console.WriteLine(userInfo.Email);
+                Console.WriteLine(userInfo.Name);
+                Console.WriteLine(userInfo.Role);
+                Console.WriteLine(userInfo.PhoneNumber);
                var claims = new List<Claim>
+
                {
                    new(ClaimTypes.Name, userInfo.Name),
                    new(ClaimTypes.Email, userInfo.Email),
-                   new(ClaimTypes.Role, userInfo.Claims["Role"]),
+                   new(ClaimTypes.Role, userInfo.Role),
                    new("Phone", userInfo.PhoneNumber)
                };
 
                var id = new ClaimsIdentity(claims, nameof(AuthStateProvider));
+               Console.WriteLine(id);
                user = new ClaimsPrincipal(id);
                _authenticated = true;
+
+               Console.WriteLine(userInfo.Email);
            }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Console.WriteLine(ex.Message);
            _authenticated = false;
            user = Unauthenticated;
         }
@@ -176,17 +193,18 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
             var result = await _httpClient.PostAsJsonAsync(
                 "login", new
                 {
-                    email,
-                    password
+                    UserName = email,
+                    Password = password
                 });
 
             if (result.IsSuccessStatusCode)
             {
                 var tokenResponse = await result.Content.ReadAsStringAsync();
                 var tokenInfo = JsonSerializer.Deserialize<TokenInfo>(tokenResponse, jsonSerializerOptions);
-                if (tokenInfo?.AccessToken != null)
+
+                if (tokenInfo?.Token != null)
                 {
-                    await _localStorageService.SetItemAsync("accessToken", tokenInfo.AccessToken);
+                    await _localStorageService.SetItemAsync("accessToken", tokenInfo.Token);
 
                     NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
                     return new FormResult { Succeeded = true };
@@ -241,15 +259,20 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
             Name = user.FindFirst("Name")?.Value ?? string.Empty,
             PhoneNumber = user.FindFirst("Phone")?.Value ?? string.Empty,
             Claims = new Dictionary<string, string>()
+            // Claims = new Dictionary<string, string>()
         };
 
-        foreach (var claim in user.Claims)
-        {
-            if (claim.Type != ClaimTypes.Email)
-            {
-                userInfo.Claims[claim.Type] = claim.Value;
-            }
-        }
+        userInfo.Claims["Role"] = user.FindFirst(ClaimTypes.Role)?.Value ?? string.Empty;
+
+        Console.WriteLine(userInfo.Claims["Role"]);
+
+        // foreach (var claim in user.Claims)
+        // {
+        //     if (claim.Type != ClaimTypes.Email)
+        //     {
+        //         userInfo.Claims[claim.Type] = claim.Value;
+        //     }
+        // }
 
         return userInfo;
     }

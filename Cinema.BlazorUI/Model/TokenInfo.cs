@@ -1,7 +1,10 @@
+using Cinema.BlazorUI.Model.DTO;
+
 namespace Cinema.BlazorUI.Model;
 
 
 public class TokenInfo
 {
-  public required string AccessToken { get; set; }
+  public required UserDto User { get; set; }
+  public required string Token { get; set; }
 }
