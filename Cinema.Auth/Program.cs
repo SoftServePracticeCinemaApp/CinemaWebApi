@@ -25,7 +25,7 @@ if (useInMemoryDB)
 else
 {
 	builder.Services.AddDbContext<CinemaDbContext>(options =>
-		options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaDb"),
+		options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
 		ServiceProviderOptions => ServiceProviderOptions.EnableRetryOnFailure()));
 }
 builder.Services.AddScoped<IUserRepository, UserRepository>();
