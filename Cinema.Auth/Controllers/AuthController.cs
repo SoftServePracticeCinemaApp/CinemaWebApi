@@ -25,12 +25,12 @@ namespace Cinema.Auth.Controllers
 		{
 			var tokenHandler = new JwtSecurityTokenHandler();
 			var securityToken = (JwtSecurityToken)tokenHandler.ReadToken(token);
-			if (securityToken.ValidTo < DateTime.UtcNow)
+			if (securityToken.ValidTo > DateTime.UtcNow)
 			{
 				var user = new UserInfoDto();
 				user.Name = securityToken.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Name).Value;
 				user.Email = securityToken.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value;
-				user.Role = securityToken.Claims.FirstOrDefault(u => u.Type == ClaimTypes.Role).Value;
+				user.Role = securityToken.Claims.FirstOrDefault(u => u.Type == "role").Value;
 				user.PhoneNumber = securityToken.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.UniqueName).Value;
 				return user;
 			}

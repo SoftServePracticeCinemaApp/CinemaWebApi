@@ -69,6 +69,7 @@ namespace Cinema.Business.Services
 				NormalizedEmail = registrationrequestDto.Email.ToUpper(),
 				PhoneNumber = registrationrequestDto.PhoneNumber,
 				Name = registrationrequestDto.Name,
+				LastName = registrationrequestDto.LastName,
 			};
 			try
 			{
@@ -76,14 +77,19 @@ namespace Cinema.Business.Services
 				if (result.Succeeded)
 				{
 					var user = await _userRepository.GetAsync(u => u.Email == registrationrequestDto.Email);
+					if (!string.IsNullOrEmpty(registrationrequestDto.Role))
+					{
+						await AssignRole(user.Email, registrationrequestDto.Role);
+					}
 					UserDto userDto = new()
 					{
 						Email = user.Email,
 						Id = user.Id,
 						Name = user.Name,
-						PhoneNumber = user.PhoneNumber
-
+						PhoneNumber = user.PhoneNumber,
+						LastName = user.LastName
 					};
+					return;
 				}
 				throw new Exception(result.Errors.FirstOrDefault().Description);
 			}
@@ -95,13 +101,16 @@ namespace Cinema.Business.Services
 
 		public async Task<bool> AssignRole(string email, string role)
 		{
-			var user = await _userRepository.GetAsync(u => u.UserName.ToLower() == email.ToLower());
+			var user = await _userManager.FindByEmailAsync(email);
+			
 			if (user != null)
 			{
+
 				if (!_roleManager.RoleExistsAsync(role).GetAwaiter().GetResult())
 				{
 					await _roleManager.CreateAsync(new IdentityRole(role));
 				}
+
 				await _userManager.AddToRoleAsync(user, role);
 				return true;
 			}
