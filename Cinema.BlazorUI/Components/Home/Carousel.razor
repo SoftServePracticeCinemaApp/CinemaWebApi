@@ -1,0 +1,49 @@
+@using Cinema.BlazorUI.Pages.Home
+@namespace Cinema.BlazorUI.Components.Home.Carousel
+
+<div class="homePage-carousel">
+  <div class="carousel-container" style="transform: translateX(-@(currentIndex * 100)%)">
+    @foreach (var movie in Movies) {
+      <div class="homePage-carousel-item">
+        <img src="@movie.ImageUrl" alt="@movie.Title" />
+      </div>
+    }
+  </div>
+  
+  <button class="homePage-carousel-button prev @(currentIndex <= 0 ? "disabled" : "")" 
+          @onclick="Previous" 
+          disabled="@(currentIndex <= 0)">
+    <img src="images/home/arrow.svg" alt="Arrow Left">
+  </button>
+  
+  <button class="homePage-carousel-button next @(currentIndex >= MaxSlides ? "disabled" : "")" 
+          @onclick="Next" 
+          disabled="@(currentIndex >= MaxSlides)">
+    <img src="images/home/arrow.svg" alt="Arrow Right" style="transform: rotate(180deg)">
+  </button>
+</div>
+
+@code {
+  [Parameter]
+  public List<Home.Movie> Movies { get; set; }
+
+  private int currentIndex = 0;
+  private int itemsPerPage = 4;
+
+  private int MaxSlides => Math.Max(0, (Movies?.Count ?? 0) / itemsPerPage - 1);
+
+  private void Next() {
+    Console.WriteLine(currentIndex);
+    Console.WriteLine(MaxSlides);
+    if (currentIndex < MaxSlides) {
+      currentIndex++;
+    }
+  }
+
+  private void Previous() {
+    if (currentIndex > 0) {
+      currentIndex--;
+    }
+  }
+}
+
