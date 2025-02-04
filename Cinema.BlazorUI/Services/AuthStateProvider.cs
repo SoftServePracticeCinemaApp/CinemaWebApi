@@ -91,7 +91,6 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
                 return new AuthenticationState(Unauthenticated);
             }
 
-            // Add token as query parameter
             var userResponse = await _httpClient.GetAsync($"manage/info?token={token}");
             userResponse.EnsureSuccessStatusCode();
 
@@ -99,10 +98,6 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
            var userInfo = JsonSerializer.Deserialize<UserInfoDto>(userJson, jsonSerializerOptions);
            if (userInfo?.Email != null)
            {
-                Console.WriteLine(userInfo.Email);
-                Console.WriteLine(userInfo.Name);
-                Console.WriteLine(userInfo.Role);
-                Console.WriteLine(userInfo.PhoneNumber);
                var claims = new List<Claim>
 
                {
@@ -113,11 +108,9 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
                };
 
                var id = new ClaimsIdentity(claims, nameof(AuthStateProvider));
-               Console.WriteLine(id);
                user = new ClaimsPrincipal(id);
                _authenticated = true;
 
-               Console.WriteLine(userInfo.Email);
            }
         }
         catch (Exception ex)
@@ -225,16 +218,16 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
 
     public async Task LogoutAsync()
     {
-        const string Empty = "{}";
-        var emptyContent = new StringContent(Empty, Encoding.UTF8, "application/json");
+        // const string Empty = "{}";
+        // var emptyContent = new StringContent(Empty, Encoding.UTF8, "application/json");
 
-        var result = await _httpClient.PostAsync("logout", emptyContent);
-        if (result.IsSuccessStatusCode)
-        {
+        // var result = await _httpClient.PostAsync("logout", emptyContent);
+        // if (result.IsSuccessStatusCode)
+        // {
             await _localStorageService.RemoveItemAsync("accessToken");
 
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
-        }
+        // }
     }
 
     public async Task<bool> CheckAuthenticatedAsync()
@@ -243,9 +236,9 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
         return _authenticated;
     }
 
-    public UserInfo GetUserInfo()
+    public async Task<UserInfo> GetUserInfoAsync()
     {
-        var state = GetAuthenticationStateAsync().Result;
+        var state = await GetAuthenticationStateAsync();
         var user = state.User;
 
         if (!user.Identity?.IsAuthenticated ?? true)
@@ -256,24 +249,19 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
         var userInfo = new UserInfo
         {
             Email = user.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty,
-            Name = user.FindFirst("Name")?.Value ?? string.Empty,
+            Name = user.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty,
             PhoneNumber = user.FindFirst("Phone")?.Value ?? string.Empty,
             Claims = new Dictionary<string, string>()
-            // Claims = new Dictionary<string, string>()
         };
 
         userInfo.Claims["Role"] = user.FindFirst(ClaimTypes.Role)?.Value ?? string.Empty;
 
-        Console.WriteLine(userInfo.Claims["Role"]);
-
-        // foreach (var claim in user.Claims)
-        // {
-        //     if (claim.Type != ClaimTypes.Email)
-        //     {
-        //         userInfo.Claims[claim.Type] = claim.Value;
-        //     }
-        // }
-
         return userInfo;
+    }
+
+    [Obsolete("Use GetUserInfoAsync instead")]
+    public UserInfo GetUserInfo()
+    {
+        return GetUserInfoAsync().GetAwaiter().GetResult();
     }
 }

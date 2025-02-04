@@ -31,7 +31,12 @@
                 <div class="profile-container-header">
                   <div class="profile-container-header-about">
                     <div class="profile-container-header-about-name">@user.Name</div>
-                    <div class="profile-container-header-about-phone">+@FormatPhoneNumber(user.PhoneNumber)</div>
+                    <div class="profile-container-header-about-phone">
+                        @if (!string.IsNullOrEmpty(user.PhoneNumber))
+                        {
+                            <text>+@FormatPhoneNumber(user.PhoneNumber)</text>
+                        }
+                    </div>
                   </div>
                   <div class="profile-container-header-new">
                     <img src="images/profile/newMovie.png" alt="">
@@ -88,7 +93,7 @@
                   </div>
                 </div>
                 <div class="profile-container-footer">
-                  <NavLink href="logout" class="profile-container-footer-logout">
+                  <NavLink href="/" class="profile-container-footer-logout" @onclick="Logout">
                     <span>Leave profile</span>
                   </NavLink>
                 </div>
@@ -109,16 +114,39 @@
 </script>
 
 @code {
-    private UserInfo user;
+    private UserInfo user = new();
 
     protected override async Task OnInitializedAsync()
     {
-        user = Acct.GetUserInfo();
+        user = await Acct.GetUserInfoAsync();
     }
-
 
     public string FormatPhoneNumber(string phoneNumber)
     {
-        return String.Format("{0:(###) ###-####}", Convert.ToInt64(phoneNumber));
+        if (string.IsNullOrEmpty(phoneNumber))
+        {
+            return string.Empty;
+        }
+
+        var digitsOnly = new string(phoneNumber.Where(char.IsDigit).ToArray());
+        
+        if (string.IsNullOrEmpty(digitsOnly))
+        {
+            return string.Empty;
+        }
+
+        try
+        {
+            return String.Format("{0:(###) ###-####}", Convert.ToInt64(digitsOnly));
+        }
+        catch
+        {
+            return phoneNumber;
+        }
+    }
+
+    public async void Logout() {
+      await Acct.LogoutAsync();
+      @* NavigationManager.NavigateTo("/"); *@
     }
 }

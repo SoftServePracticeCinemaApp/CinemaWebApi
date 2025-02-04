@@ -21,20 +21,52 @@ namespace Cinema.Auth.Controllers
 		}
 
 		[HttpGet("manage/info")]
-		public async Task<UserInfoDto> GetInfo(string token)
+		public async Task<ActionResult<UserInfoDto>> GetInfo(string token)
 		{
-			var tokenHandler = new JwtSecurityTokenHandler();
-			var securityToken = (JwtSecurityToken)tokenHandler.ReadToken(token);
-			if (securityToken.ValidTo > DateTime.UtcNow)
+			if (string.IsNullOrEmpty(token))
 			{
-				var user = new UserInfoDto();
-				user.Name = securityToken.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Name).Value;
-				user.Email = securityToken.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value;
-				user.Role = securityToken.Claims.FirstOrDefault(u => u.Type == "role").Value;
-				user.PhoneNumber = securityToken.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.UniqueName).Value;
-				return user;
+				return BadRequest("Token is required");
 			}
-			return null;
+
+			try 
+			{
+				var tokenHandler = new JwtSecurityTokenHandler();
+				var securityToken = (JwtSecurityToken)tokenHandler.ReadToken(token);
+				
+				if (securityToken == null)
+				{
+					return BadRequest("Invalid token format");
+				}
+
+				if (securityToken.ValidTo <= DateTime.UtcNow)
+				{
+					return BadRequest("Token has expired");
+				}
+
+				// var allClaims = securityToken.Claims.Select(c => new { c.Type, c.Value }).ToList();
+
+				var user = new UserInfoDto
+				{
+					Name = securityToken.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Name)?.Value,
+					Email = securityToken.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email)?.Value,
+					Role = securityToken.Claims.FirstOrDefault(u => u.Type == "Role" || 
+																   u.Type == "role" ||
+																   u.Type == ClaimTypes.Role ||
+																   u.Type == "roles")?.Value,
+					PhoneNumber = securityToken.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.UniqueName)?.Value
+				};
+
+				if (user.Email == null)
+				{
+					return BadRequest("Token does not contain required user information");
+				}
+
+				return Ok(user);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest($"Error processing token: {ex.Message}");
+			}
 		}
 
 		[HttpPost("register")]
