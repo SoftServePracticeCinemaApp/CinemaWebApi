@@ -8,9 +8,12 @@ using Cinema.Business.Services.IServices;
 using Cinema.Business.Options;
 using Microsoft.EntityFrameworkCore;
 using Cinema.Infrastructure.Utils;
-
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
 
 // Add services to the container.
 var useInMemoryDB = builder.Configuration.GetValue<bool>("UseInMemoryDB");
@@ -22,7 +25,7 @@ if (useInMemoryDB)
 else
 {
 	builder.Services.AddDbContext<CinemaDbContext>(options =>
-		options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaDb"),
+		options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
 		ServiceProviderOptions => ServiceProviderOptions.EnableRetryOnFailure()));
 }
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -32,6 +35,16 @@ builder.Services.AddIdentity<UserEntity, IdentityRole>().AddEntityFrameworkStore
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("ApiSettings:JwtOptions"));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(options =>
+{
+options.AddPolicy("AllowAll", builder =>
+{
+    builder.AllowAnyOrigin()    // Allow requests from any origin
+           .AllowAnyMethod()    // Allow any HTTP method
+           .AllowAnyHeader();   // Allow any headers
+});
+});
 
 
 
@@ -45,6 +58,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowAll");
 
 app.UseAuthorization();
 
