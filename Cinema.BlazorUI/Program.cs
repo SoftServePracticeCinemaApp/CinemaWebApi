@@ -20,6 +20,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
 builder.Services.AddScoped(sp => (IAccountManagement)sp.GetRequiredService<AuthenticationStateProvider>());
 
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IMovieService, MovieService>();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
