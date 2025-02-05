@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Azure;
 using Cinema.Application.DTO.MovieDTOs;
+using Cinema.Application.DTO.SessionDTOs;
 using Cinema.Application.Helpers.Interfaces;
 using Cinema.Application.Interfaces;
 using Cinema.Domain.Entities;
@@ -43,7 +44,31 @@ namespace Cinema.Application.Services
             }
         }
 
+        public async Task<IBaseResponse<List<GetMovieDTO>>> GetFormattedMovies() 
+        {
+            try {
+                var movies = await _unitOfWork.Movie.GetAllAsync();
+
+                if (movies == null || movies.Count == 0)
+                    return _responses.CreateBaseBadRequest<List<GetMovieDTO>>("No movies found.");
+
+                var moviesDto = _mapper.Map<List<GetMovieDTO>>(movies);
+
+                foreach (var movie in moviesDto) {
+                    var sessions = await _unitOfWork.Session.GetByMovieIdAsync(movie.Id);
+                    movie.Sessions = _mapper.Map<List<GetSessionDTO>>(sessions);
+                }
+
+                return _responses.CreateBaseOk(moviesDto, moviesDto.Count);
+            }
+            catch (Exception ex)
+            {
+                return _responses.CreateBaseServerError<List<GetMovieDTO>>(ex.Message);
+            }
+        }
+
         public async Task<IBaseResponse<GetMovieDTO>> GetMovieByIdAsync(int id)
+
         {
             try
             {

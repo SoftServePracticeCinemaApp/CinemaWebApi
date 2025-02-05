@@ -1,3 +1,4 @@
+@using Cinema.BlazorUI.Model
 @using Cinema.BlazorUI.Pages.Home
 @namespace Cinema.BlazorUI.Components.Home.Slider
 
@@ -14,9 +15,10 @@
                     var movie = Movies[i];
                     var position = GetSlidePosition(i);
                     <div class="movie-slide @position">
-                        <img src="@movie.ImageUrl" alt="@movie.Title" />
-                        <img src="@movie.ImageUrl" alt="@movie.Title" />
+                        <img src="https://image.tmdb.org/t/p/original/@movie.PosterPath" alt="@movie.Genre" />
+                        <img src="https://image.tmdb.org/t/p/original/@movie.PosterPath" alt="@movie.Genre" />
                     </div>
+
                 }
             </div>
 
@@ -27,7 +29,7 @@
 
 @code {
     [Parameter]
-    public List<Home.Movie> Movies { get; set; }
+    public List<FormattedMovie> Movies { get; set; }
     private int CurrentIndex = 0;
 
     private void NextSlide()

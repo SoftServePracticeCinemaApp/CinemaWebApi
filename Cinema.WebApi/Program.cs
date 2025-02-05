@@ -178,7 +178,7 @@ private static void SeedData(CinemaDbContext context)
             Overview = "A thief who steals corporate secrets through dream-sharing technology...",
             ReleaseDate = "2010-07-16",
             CinemaRating = 8.5,
-            PosterPath = "/poster/inception.jpg"
+            PosterPath = "/r84x4x93LbZ2gozISTBYVeq0gLZ.jpg"
         },
         new MovieEntity {
             Id = 2,
@@ -187,7 +187,7 @@ private static void SeedData(CinemaDbContext context)
             Overview = "A computer programmer discovers the true nature of his reality...",
             ReleaseDate = "1999-03-31",
             CinemaRating = 7.8,
-            PosterPath = "/poster/matrix.jpg"
+            PosterPath = "/58748AndVH1DitlTbcbLpKHuSS2.jpg"
         }
     };
         context.Movies.AddRange(movies);

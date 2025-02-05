@@ -1,14 +1,18 @@
+@using Cinema.BlazorUI.Model
 @using Cinema.BlazorUI.Pages.Home
 @namespace Cinema.BlazorUI.Components.Home.Carousel
 
 <div class="homePage-carousel">
   <div class="carousel-container" style="transform: translateX(-@(currentIndex * 100)%)">
-    @foreach (var movie in Movies) {
-      <div class="homePage-carousel-item">
-        <img src="@movie.ImageUrl" alt="@movie.Title" />
-      </div>
+    @if (Movies != null && Movies.Count > 0) {
+      @foreach (var movie in Movies) {
+        <div class="homePage-carousel-item">
+          <img src="https://image.tmdb.org/t/p/original/@movie.PosterPath" alt="@movie.Genre" />
+        </div>
+      }
     }
   </div>
+
   
   <button class="homePage-carousel-button prev @(currentIndex <= 0 ? "disabled" : "")" 
           @onclick="Previous" 
@@ -25,7 +29,7 @@
 
 @code {
   [Parameter]
-  public List<Home.Movie> Movies { get; set; }
+  public List<FormattedMovie> Movies { get; set; }
 
   private int currentIndex = 0;
   private int itemsPerPage = 4;
@@ -46,4 +50,3 @@
     }
   }
 }
-

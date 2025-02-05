@@ -7,6 +7,7 @@ namespace Cinema.Application.Interfaces
     public interface IMovieService
     {
         Task<IBaseResponse<List<GetMovieDTO>>> GetAllMoviesAsync();
+        Task<IBaseResponse<List<GetMovieDTO>>> GetFormattedMovies();
         Task<IBaseResponse<GetMovieDTO>> GetMovieByIdAsync(int id);
         Task<IBaseResponse<string>> AddMovieAsync(AddMovieDTO movieDto);
         Task<IBaseResponse<string>> UpdateMovieAsync(int id, UpdateMovieDTO movieDto);
