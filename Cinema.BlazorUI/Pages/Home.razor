@@ -3,6 +3,7 @@
 @using Cinema.BlazorUI.Components.Home.Carousel
 @using Cinema.BlazorUI.Model
 @inject IMovieService movieService
+@inject NavigationManager NavigationManager
 @namespace Cinema.BlazorUI.Pages.Home
 
 <PageTitle>Home</PageTitle>
@@ -23,7 +24,7 @@
         }
         else
         {
-            <Slider Movies="@Movies" />
+            <Slider Movies="@Movies" OnMovieClick="@NavigateToMovie" />
 
             <div class="filters">
                 <div class="item">
@@ -101,13 +102,13 @@
             <div class="type">
                 <div class="title">Today sessions</div>
 
-                <Carousel Movies="@TodayMovies" />
+                <Carousel Movies="@TodayMovies" OnMovieClick="@NavigateToMovie" />
             </div>
 
             <div class="type">
                 <div class="title">Movies</div>
 
-                <Carousel Movies="@FilteredMovies" />
+                <Carousel Movies="@FilteredMovies" OnMovieClick="@NavigateToMovie" />
             </div>
         }
 
@@ -256,5 +257,11 @@
                 break;
         }
         FilterMovies();
+    }
+
+    private void NavigateToMovie(int id)
+    {
+        Console.WriteLine($"Navigating to movie with id: {id}");
+        NavigationManager.NavigateTo($"/movie/{id}");
     }
 }
