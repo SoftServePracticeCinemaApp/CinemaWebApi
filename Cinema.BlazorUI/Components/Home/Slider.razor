@@ -14,7 +14,7 @@
                 {
                     var movie = Movies[i];
                     var position = GetSlidePosition(i);
-                    <div class="movie-slide @position">
+                    <div class="movie-slide @position" @onclick="() => OnMovieClicked(movie.Id)">
                         <img src="https://image.tmdb.org/t/p/original/@movie.PosterPath" alt="@movie.Genre" />
                         <img src="https://image.tmdb.org/t/p/original/@movie.PosterPath" alt="@movie.Genre" />
                     </div>
@@ -30,6 +30,8 @@
 @code {
     [Parameter]
     public List<FormattedMovie> Movies { get; set; }
+    [Parameter]
+    public EventCallback<int> OnMovieClick { get; set; }
     private int CurrentIndex = 0;
 
     private void NextSlide()
@@ -54,5 +56,10 @@
             var x when x == Movies.Count - 2 => "prev-2",
             _ => "hidden"
         };
+    }
+
+    private async Task OnMovieClicked(int movieId)
+    {
+        await OnMovieClick.InvokeAsync(movieId);
     }
 }

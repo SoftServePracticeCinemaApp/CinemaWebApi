@@ -1,0 +1,86 @@
+@page "/movie/{Id:int}"
+@using Cinema.BlazorUI.Model
+@using Cinema.BlazorUI.Model.TMDb
+@inject IMovieService movieService
+@inject NavigationManager NavigationManager
+
+<PageTitle>@(movie?.Title ?? "Movie")</PageTitle>
+
+@if (movie == null)
+{
+  <div class="loading-container">
+    <p>Loading movie...</p>
+  </div>
+}
+else
+{
+  <div class="movie-page">
+    <div class="movie-header">
+      <div class="movie-poster">
+        <img src="https://image.tmdb.org/t/p/original/@movie.PosterPath" alt="@movie.Title" />
+      </div>
+      <div class="movie-info">
+        <div class="movie-title">@movie.Title</div>
+        <div class="movie-details">
+          <div class="rating">@(movieData.VoteAverage.ToString("0.0"))</div>
+          <div class="genre">@movie.Genre</div>
+          <div class="duration">@(movieData.Runtime / 60):@(movieData.Runtime % 60)</div>
+          <div class="adult">@(movieData.Adult ? "18+" : "16+")</div>
+        </div>
+        <div class="movie-overview">
+          <span>@movieData.Overview</span>
+        </div>
+        <div class="sessions">
+          <h2>Available Sessions</h2>
+          @if (movie.Sessions?.Any() == true)
+          {
+            <div class="sessions-grid">
+              @foreach (var session in movie.Sessions.OrderBy(s => s.Date))
+              {
+                <div class="session-item">
+                  <span class="date">@session.Date.ToString("dd.MM.yyyy")</span>
+                  <span class="time">@session.Date.ToString("HH:mm")</span>
+                  <button class="btn-book" @onclick="() => BookSession(session.Id)">
+                    Book Tickets
+                  </button>
+                </div>
+              }
+            </div>
+          }
+          else
+          {
+            <p>No available sessions</p>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+@code {
+  [Parameter]
+  public int Id { get; set; }
+
+  private FormattedMovie? movie;
+  private MovieResult? movieData;
+
+  protected override async Task OnInitializedAsync()
+  {
+    try
+    {
+      var movies = await movieService.GetMoviesAsync();
+      movie = movies.FirstOrDefault(m => m.Id == Id);
+      if (movie != null) movieData = await movieService.GetMovieDataAsync(movie.SearchId);
+
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"Error loading movie: {ex.Message}");
+    }
+  }
+
+  private void BookSession(int sessionId)
+  {
+    NavigationManager.NavigateTo($"/booking/{sessionId}");
+  }
+}

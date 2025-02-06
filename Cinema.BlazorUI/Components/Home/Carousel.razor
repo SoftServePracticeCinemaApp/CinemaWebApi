@@ -6,7 +6,7 @@
   <div class="carousel-container" style="transform: translateX(-@(currentIndex * 100)%)">
     @if (Movies != null && Movies.Count > 0) {
       @foreach (var movie in Movies) {
-        <div class="homePage-carousel-item">
+        <div class="homePage-carousel-item" @onclick="() => OnMovieClicked(movie.Id)">
           <img src="https://image.tmdb.org/t/p/original/@movie.PosterPath" alt="@movie.Genre" />
         </div>
       }
@@ -31,6 +31,9 @@
   [Parameter]
   public List<FormattedMovie> Movies { get; set; }
 
+  [Parameter]
+  public EventCallback<int> OnMovieClick { get; set; }
+
   private int currentIndex = 0;
   private int itemsPerPage = 4;
 
@@ -48,5 +51,10 @@
     if (currentIndex > 0) {
       currentIndex--;
     }
+  }
+
+  private async Task OnMovieClicked(int movieId)
+  {
+    await OnMovieClick.InvokeAsync(movieId);
   }
 }

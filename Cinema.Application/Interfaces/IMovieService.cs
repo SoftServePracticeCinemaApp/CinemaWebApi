@@ -8,6 +8,7 @@ namespace Cinema.Application.Interfaces
     {
         Task<IBaseResponse<List<GetMovieDTO>>> GetAllMoviesAsync();
         Task<IBaseResponse<List<GetMovieDTO>>> GetFormattedMovies();
+        Task<IBaseResponse<GetMovieDTO>> GetMovieDataByIdAsync(int id);
         Task<IBaseResponse<GetMovieDTO>> GetMovieByIdAsync(int id);
         Task<IBaseResponse<string>> AddMovieAsync(AddMovieDTO movieDto);
         Task<IBaseResponse<string>> UpdateMovieAsync(int id, UpdateMovieDTO movieDto);

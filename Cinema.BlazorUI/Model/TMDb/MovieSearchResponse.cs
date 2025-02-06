@@ -27,5 +27,16 @@ namespace Cinema.BlazorUI.Model.TMDb
         public double Popularity { get; set; }
         [JsonPropertyName("vote_count")]
         public int VoteCount { get; set; }
+
+        [JsonPropertyName("genres")]
+        public List<MovieGenres> Genres { get; set; }
+
+        [JsonPropertyName("runtime")]
+        public int Runtime { get; set; }
     }
 } 
+
+public class MovieGenres {
+    public int Id { get; set; }
+    public string Name { get; set; }
+}
