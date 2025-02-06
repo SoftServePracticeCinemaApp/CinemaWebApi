@@ -49,6 +49,18 @@ namespace Cinema.WebApi.Controllers
         }
 
         /// <summary>
+        /// Get movie data by ID
+        /// </summary>
+        [HttpGet("formatted/{id}")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(BaseResponse<GetMovieDTO>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(BaseResponse<GetMovieDTO>), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetMovieDataById([FromRoute] int id) {
+            var response = await _movieService.GetMovieDataByIdAsync(id);
+            return StatusCode((int)response.StatusCode, response);
+        }
+
+        /// <summary>
         /// Отримати фільм за ID
         /// </summary>
         [HttpGet("{id}")]

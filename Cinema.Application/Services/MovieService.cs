@@ -67,6 +67,23 @@ namespace Cinema.Application.Services
             }
         }
 
+        public async Task<IBaseResponse<GetMovieDTO>> GetMovieDataByIdAsync(int id)
+        {
+            try {
+                var movie = await _unitOfWork.Movie.GetByIdAsync(id);
+
+                if (movie == null)
+                    return _responses.CreateBaseNotFound<GetMovieDTO>($"Movie with id {id} not found.");
+
+                var movieDto = _mapper.Map<GetMovieDTO>(movie);
+                return _responses.CreateBaseOk(movieDto, 1);
+            }
+            catch (Exception ex)
+            {
+                return _responses.CreateBaseServerError<GetMovieDTO>(ex.Message);
+            }
+        }
+
         public async Task<IBaseResponse<GetMovieDTO>> GetMovieByIdAsync(int id)
 
         {
