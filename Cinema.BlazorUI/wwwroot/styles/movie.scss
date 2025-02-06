@@ -37,7 +37,7 @@
   }
 
   .movie-info {
-    max-width: 50%;
+    // max-width: 50%;
     flex: 1;
 
     display: flex;
@@ -115,7 +115,7 @@
 
     .sessions-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(pxToRem(200px), 1fr));
       gap: 1rem;
     }
 
@@ -157,5 +157,5 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 400px;
+  min-height: pxToRem(400px);
 }
