@@ -7,6 +7,7 @@ public class TicketEntity
     public string? UserId { get; set; }
     public long MovieId { get; set; }
     public int Row {  get; set; }
+    public bool isBooked { get; set; }
     public UserEntity? User { get; set; }
     public SessionEntity? Session { get; set; }
     public MovieEntity? Movie { get; set; }

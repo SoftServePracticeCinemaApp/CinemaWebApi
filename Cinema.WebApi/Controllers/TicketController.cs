@@ -133,5 +133,17 @@ namespace Cinema.WebApi.Controllers
 
             return StatusCode((int)response.StatusCode, response);
         }
+
+        /// <summary>
+        /// Забронювати квиток
+        /// </summary>
+        [HttpPatch("book/{ticketId}")]
+        [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> BookTicket(long ticketId)
+        {
+            var response = await _ticketService.BookTicketAsync(ticketId);
+            return StatusCode((int)response.StatusCode, response);
+        }
     }
 }

@@ -37,6 +37,11 @@ namespace Cinema.Application.Services
             }
         }
 
+        public async Task BookTicket(long ticketId)
+        {
+
+        }
+
         public async Task<IBaseResponse<GetTicketDTO>> GetTicketByIdAsync(long id)
         {
             try
@@ -177,6 +182,20 @@ namespace Cinema.Application.Services
             catch (Exception ex)
             {
                 return _responses.CreateBaseServerError<List<GetTicketDTO>>(ex.Message);
+            }
+        }
+
+        public async Task<IBaseResponse<string>> BookTicketAsync(long ticketId)
+        {
+            try
+            {
+                await _unitOfWork.Ticket.UpdateTicketBookStatus(ticketId, true);
+                await _unitOfWork.CompleteAsync();
+                return _responses.CreateBaseOk("Ticket booked successfully", 1);
+            }
+            catch (Exception ex) 
+            {
+                return _responses.CreateBaseBadRequest<string>(ex.Message);
             }
         }
     }
