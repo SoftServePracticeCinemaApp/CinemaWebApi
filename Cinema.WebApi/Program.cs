@@ -16,11 +16,13 @@ using Cinema.Application.Services;
 using Cinema.Domain.Interfaces;
 using Cinema.Infrastructure.Repositories;
 using System.Globalization;
+using Cinema.Infrastructure.Configuration;
+using Microsoft.AspNetCore.Identity;
 
 
 public static class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
         var useInMemoryDB = builder.Configuration.GetValue<bool>("UseInMemoryDB");
@@ -108,6 +110,12 @@ public static class Program
         // System.Globalization.CultureInfo.DefaultThreadCurrentCulture = new System.Globalization.CultureInfo("en-US");
         // System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = new System.Globalization.CultureInfo("en-US");
 
+        builder.Services.AddIdentity<UserEntity, IdentityRole>()
+            .AddEntityFrameworkStores<CinemaDbContext>()
+            .AddDefaultTokenProviders();
+
+        builder.Services.AddScoped<RoleSeeder>();
+
         var app = builder.Build();
         app.UseSwagger();
         app.UseSwaggerUI(c =>
@@ -146,6 +154,13 @@ public static class Program
             .AddSupportedUICultures(supportedCultures);
 
         app.UseRequestLocalization(localizationOptions);
+
+        using (var scope = app.Services.CreateScope())
+        {
+            var roleSeeder = scope.ServiceProvider.GetRequiredService<RoleSeeder>();
+            await roleSeeder.SeedRolesAsync();
+            await roleSeeder.AssignAdminRoleAsync("admin@example.com");  
+        }
 
         app.Run();
     }
