@@ -15,5 +15,6 @@ namespace Cinema.Application.Interfaces
         Task<IBaseResponse<string>> DeleteMovieAsync(int id);
         Task<IBaseResponse<List<GetMovieDTO>>> GetTopRatedMoviesAsync(int take);
         Task<IBaseResponse<string>> AddMovieFromTmdbAsync(int searchId);
+        Task<IBaseResponse<List<GetMovieDTO>>> GetAllMoviesWithPaginationAsync(int take, int skip, string sortBy, bool ascending);
     }
 }

@@ -6,7 +6,10 @@ using Cinema.Application.Helpers.Interfaces;
 using Cinema.Application.Interfaces;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Interfaces;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 using System.Net;
+using System.Text;
 using System.Text.Json;
 
 namespace Cinema.Application.Services
@@ -17,20 +20,48 @@ namespace Cinema.Application.Services
         private readonly IMapper _mapper; 
         private readonly IResponses _responses;
         private readonly TmdbService _tmdbService;
+        private readonly IDistributedCache _cache;
+        private readonly string _cacheKey = "movies_cache";
+        private readonly int _cacheExpirationTime = 10;
 
-        public MovieService(IResponses responses, IUnitOfWork unitOfWork, IMapper mapper, TmdbService tmdbService)
+        public MovieService(IResponses responses, IUnitOfWork unitOfWork, IMapper mapper, TmdbService tmdbService, IDistributedCache cache)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _responses = responses;
             _tmdbService = tmdbService;
+            _cache = cache;
         }
 
         public async Task<IBaseResponse<List<GetMovieDTO>>> GetAllMoviesAsync()
         {
             try
             {
-                var movies = await _unitOfWork.Movie.GetAllAsync();
+                string serializedMovies;
+                List<MovieEntity> movies;
+
+                var cachedMovies = await _cache.GetAsync(_cacheKey);
+                if (cachedMovies != null)
+                {
+                    serializedMovies = Encoding.UTF8.GetString(cachedMovies);
+                    movies = JsonConvert.DeserializeObject<List<MovieEntity>>(serializedMovies);
+                }
+                else
+                {
+                    movies = await _unitOfWork.Movie.GetAllAsync();
+
+                    if (movies != null && movies.Count > 0)
+                    {
+                        serializedMovies = JsonConvert.SerializeObject(movies, new JsonSerializerSettings
+                        {
+                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                        });
+
+                        cachedMovies = Encoding.UTF8.GetBytes(serializedMovies);
+                        await _cache.SetAsync(_cacheKey, cachedMovies, new DistributedCacheEntryOptions()
+                            .SetAbsoluteExpiration(TimeSpan.FromMinutes(_cacheExpirationTime)));
+                    }
+                }
 
                 if (movies == null || movies.Count == 0)
                     return _responses.CreateBaseBadRequest<List<GetMovieDTO>>("No movies found.");
@@ -205,5 +236,36 @@ namespace Cinema.Application.Services
                 return _responses.CreateBaseServerError<string>(ex.Message);
             }
         }
+        public async Task<IBaseResponse<List<GetMovieDTO>>> GetAllMoviesWithPaginationAsync(int take, int skip, string sortBy, bool ascending)
+        {
+            if (take <= 0 || skip < 0)
+            {
+                return _responses.CreateBaseBadRequest<List<GetMovieDTO>>("Invalid pagination parameters.");
+            }
+
+            var validSortFields = new List<string> { "Title", "Release_date", "Rating" };
+            if (!validSortFields.Contains(sortBy))
+            {
+                return _responses.CreateBaseBadRequest<List<GetMovieDTO>>($"Invalid sort field. Valid fields are: {string.Join(", ", validSortFields)}.");
+            }
+
+            try
+            {
+                var movies = await _unitOfWork.Movie.GetAllWithPaginationAsync(take, skip, sortBy, ascending);
+
+                if (movies == null || movies.Count == 0)
+                {
+                    return _responses.CreateBaseBadRequest<List<GetMovieDTO>>("No movies found.");
+                }
+
+                var moviesDto = _mapper.Map<List<GetMovieDTO>>(movies);
+                return _responses.CreateBaseOk(moviesDto, moviesDto.Count);
+            }
+            catch (Exception ex)
+            {
+                return _responses.CreateBaseServerError<List<GetMovieDTO>>(ex.Message);
+            }
+        }
+
     }
 }

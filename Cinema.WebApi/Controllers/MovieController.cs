@@ -57,6 +57,7 @@ namespace Cinema.WebApi.Controllers
         [ProducesResponseType(typeof(BaseResponse<GetMovieDTO>), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetMovieDataById([FromRoute] int id) {
             var response = await _movieService.GetMovieDataByIdAsync(id);
+
             return StatusCode((int)response.StatusCode, response);
         }
 
@@ -70,6 +71,21 @@ namespace Cinema.WebApi.Controllers
         {
             var response = await _movieService.GetMovieByIdAsync(id);
 
+            return StatusCode((int)response.StatusCode, response);
+        }
+
+        [HttpGet("formatted_with_pagination")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(BaseResponse<List<GetMovieDTO>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(BaseResponse<List<GetMovieDTO>>), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetMovieWithPagination([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] string sortBy = "release_date", [FromQuery] bool ascending = false)
+        {
+            var response = await _movieService.GetAllMoviesWithPaginationAsync(page, pageSize, sortBy, ascending);
+
+            if ((int)response.StatusCode == (int)HttpStatusCode.OK)
+            {
+                return Ok(response);
+            }
             return StatusCode((int)response.StatusCode, response);
         }
     }
