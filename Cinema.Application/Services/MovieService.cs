@@ -251,11 +251,24 @@ namespace Cinema.Application.Services
 
             try
             {
-                var movies = await _unitOfWork.Movie.GetAllWithPaginationAsync(take, skip, sortBy, ascending);
+                string cacheKey = $"movies_{take}_{skip}_{sortBy}_{ascending}";
+                var cachedMovies = await _cache.GetStringAsync(cacheKey);
 
-                if (movies == null || movies.Count == 0)
+                List<MovieEntity> movies;
+                if (!string.IsNullOrEmpty(cachedMovies))
                 {
-                    return _responses.CreateBaseBadRequest<List<GetMovieDTO>>("No movies found.");
+                    movies = JsonConvert.DeserializeObject<List<MovieEntity>>(cachedMovies);
+                }
+                else
+                {
+                    movies = await _unitOfWork.Movie.GetAllWithPaginationAsync(take, skip, sortBy, ascending);
+                    if (movies == null || movies.Count == 0)
+                    {
+                        return _responses.CreateBaseBadRequest<List<GetMovieDTO>>("No movies found.");
+                    }
+
+                    await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(movies),
+                        new DistributedCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(_cacheExpirationTime)));
                 }
 
                 var moviesDto = _mapper.Map<List<GetMovieDTO>>(movies);
