@@ -69,6 +69,8 @@ public static class Program
 
         builder.Services.AddScoped<IHallRepository, HallRepository>();
 
+        builder.Services.AddDistributedMemoryCache();
+
         builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
