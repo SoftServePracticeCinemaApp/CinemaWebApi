@@ -36,6 +36,7 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("ApiSett
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 builder.Services.AddCors(options =>
 {
 options.AddPolicy("AllowAll", builder =>
@@ -45,8 +46,6 @@ options.AddPolicy("AllowAll", builder =>
            .AllowAnyHeader();   // Allow any headers
 });
 });
-
-
 
 var app = builder.Build();
 

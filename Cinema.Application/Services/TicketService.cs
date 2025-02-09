@@ -42,6 +42,7 @@ namespace Cinema.Application.Services
 
         }
 
+
         public async Task<IBaseResponse<GetTicketDTO>> GetTicketByIdAsync(int id)
         {
             try
@@ -193,6 +194,7 @@ namespace Cinema.Application.Services
                 await _unitOfWork.CompleteAsync();
                 return _responses.CreateBaseOk("Ticket booked successfully", 1);
             }
+
             catch (Exception ex)
             {
                 return _responses.CreateBaseBadRequest<string>(ex.Message);
