@@ -6,7 +6,7 @@ namespace Cinema.Application.Interfaces
 {
     public interface IHallService
     {
-        Task<IBaseResponse<GetHallDto>> GetHallByIdAsync(int id);
+        Task<IBaseResponse<GetHallDTO>> GetHallByIdAsync(int id);
         Task<IBaseResponse<string>> UpdateHallSeatsAsync(int id, UpdateHallDTO hallDto);
     }
 }

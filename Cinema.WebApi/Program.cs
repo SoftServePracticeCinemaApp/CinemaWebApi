@@ -70,6 +70,8 @@ public static class Program
         builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 
         builder.Services.AddScoped<IHallRepository, HallRepository>();
+        builder.Services.AddScoped<IHallService, HallService>();
+
 
         builder.Services.AddAuthentication(options =>
         {

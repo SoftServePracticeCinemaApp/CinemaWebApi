@@ -1,4 +1,4 @@
-﻿namespace Cinema.Application.DTO.HallEntityDTOs
+﻿namespace Cinema.Application.DTO.HallDTOs
 {
     public class UpdateHallDTO
     {

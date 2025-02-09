@@ -1,4 +1,4 @@
-﻿using Cinema.Application.DTO.HallEntityDTOs;
+﻿using Cinema.Application.DTO.HallDTOs;
 
 namespace Cinema.Application.DTO.SessionDTOs
 {
