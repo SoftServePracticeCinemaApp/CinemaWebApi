@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Cinema.Domain.Entities;
-using Cinema.Application.DTO.HallEntityDTOs;
+using Cinema.Application.DTO.HallDTOs;
 using Cinema.Application.DTO.MovieDTOs;
 using Cinema.Application.DTO.SessionDTOs;
 using Cinema.Application.DTO.TicketDTOs;
