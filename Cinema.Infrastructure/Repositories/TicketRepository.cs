@@ -45,6 +45,7 @@ public class TicketRepository : ITicketRepository
     {
         var ticketsInDb = await _context.Tickets
             .AsNoTracking()
+            .AsNoTracking()
             .Where(t => t.UserId == UserId)
             .ToListAsync();
 
@@ -74,6 +75,7 @@ public class TicketRepository : ITicketRepository
     public async Task<IEnumerable<TicketEntity>> GetBySessionIdAsync(int sessionId)
     {
         return await _context.Tickets
+            .AsNoTracking()
             .Where(t => t.SessionId == sessionId)
             .Include(t => t.User)
             .Include(t => t.Movie)
@@ -83,9 +85,18 @@ public class TicketRepository : ITicketRepository
     public async Task<IEnumerable<TicketEntity>> GetTicketsForHallAsync(int hallId)
     {
         return await _context.Tickets
+            .AsNoTracking()
             .Where(t => t.Session != null && t.Session.HallId == hallId)
             .Include(t => t.Session)
             .Include(t => t.Movie)
             .ToListAsync();
+    }
+
+    public async Task UpdateTicketBookStatus(long ticketId, bool isBooked)
+    {
+        var ticketInDb = await _context.Tickets.AsNoTracking().FirstOrDefaultAsync(t => t.Id == ticketId);
+        if (ticketInDb == null) throw new ArgumentException($"Ticket with Id {ticketId} not found");
+
+        ticketInDb.isBooked = isBooked;
     }
 }

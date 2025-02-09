@@ -17,5 +17,6 @@ namespace Cinema.Application.Interfaces
         Task<IBaseResponse<List<GetTicketDTO>>> GetTicketsByUserIdAsync(string userId);
         Task<IBaseResponse<List<GetTicketDTO>>> GetTicketsBySessionIdAsync(int sessionId);
         Task<IBaseResponse<List<GetTicketDTO>>> GetTicketsForHallAsync(int hallId);
+        Task<IBaseResponse<string>> BookTicketAsync(long ticketId);
     }
 }
