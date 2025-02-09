@@ -15,6 +15,7 @@ using Cinema.Application.Interfaces;
 using Cinema.Application.Services;
 using Cinema.Domain.Interfaces;
 using Cinema.Infrastructure.Repositories;
+using System.Globalization;
 
 
 public static class Program
@@ -30,7 +31,7 @@ public static class Program
         var secret = builder.Configuration.GetValue<string>("ApiSettings:Secret");
         var issuer = builder.Configuration.GetValue<string>("ApiSettings:Issuer");
         var audience = builder.Configuration.GetValue<string>("ApiSettings:Audience");
-        builder.Services.AddInMemoryDataBase();
+
         builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
         builder.Services.AddControllers(options =>
         {
@@ -50,6 +51,9 @@ public static class Program
                 ServiceProviderOptions => ServiceProviderOptions.EnableRetryOnFailure()));
         }
 
+        builder.Services.Configure<TmdbSettings>(builder.Configuration.GetSection("TMDB"));
+        builder.Services.AddHttpClient<TmdbService>();
+        builder.Services.AddScoped<TmdbService>();
 
         builder.Services.AddScoped<IResponses, Responses>();
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -64,6 +68,8 @@ public static class Program
         builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 
         builder.Services.AddScoped<IHallRepository, HallRepository>();
+
+        builder.Services.AddDistributedMemoryCache();
 
         builder.Services.AddAuthentication(options =>
         {
@@ -87,6 +93,22 @@ public static class Program
 
 
         builder.Services.AddAuthorization();
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            });
+        });
+
+        CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+        CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
+        // builder.Services.Configure<System.Globalization.CultureInfo>("en-US");
+        // System.Globalization.CultureInfo.DefaultThreadCurrentCulture = new System.Globalization.CultureInfo("en-US");
+        // System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = new System.Globalization.CultureInfo("en-US");
 
         var app = builder.Build();
         app.UseSwagger();
@@ -113,30 +135,35 @@ public static class Program
             }
         }
 
-
+        app.UseCors("AllowAll");
         app.MapControllers();
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
+
+        var supportedCultures = new[] { "en-US" };
+        var localizationOptions = new RequestLocalizationOptions()
+            .SetDefaultCulture(supportedCultures[0])
+            .AddSupportedCultures(supportedCultures)
+            .AddSupportedUICultures(supportedCultures);
+
+        app.UseRequestLocalization(localizationOptions);
+
         app.Run();
     }
 
 
- private static void SeedData(CinemaDbContext context)
+private static void SeedData(CinemaDbContext context)
     {
         var name = "John";
         var lastName = "Doe";
 
-        // Додавання користувачів
-
         context.Users.AddRange(
-            new UserEntity { Id = "1",  Name = "JonDoe", LastName = "Doe", UserName = $"{name} {lastName}", Tickets = [] },
+            new UserEntity { Id = "1", Name = "JonDoe", LastName = "Doe", UserName = $"{name} {lastName}", Tickets = [] },
             new UserEntity { Id = "2", Name = "JonDoe", LastName = "Doe", UserName = $"{name} {lastName}", Tickets = [] }
         );
-
         context.SaveChanges();
 
-        // Додавання залів
         var halls = new List<HallEntity>
     {
         new HallEntity { Id = 1, Seats = new List<List<int>> { new List<int> { 1, 2, 3 }, new List<int> { 4, 5, 6 } } },
@@ -144,15 +171,29 @@ public static class Program
     };
         context.Halls.AddRange(halls);
 
-        // Додавання фільмів
         var movies = new List<MovieEntity>
     {
-        new MovieEntity { Id = 1, SearchId = 101, CinemaRating = 8.5 },
-        new MovieEntity { Id = 2, SearchId = 102, CinemaRating = 7.8 }
+        new MovieEntity {
+            Id = 1,
+            SearchId = 101,
+            Title = "Inception",
+            Overview = "A thief who steals corporate secrets through dream-sharing technology...",
+            ReleaseDate = "2010-07-16",
+            CinemaRating = 8.5,
+            PosterPath = "/r84x4x93LbZ2gozISTBYVeq0gLZ.jpg"
+        },
+        new MovieEntity {
+            Id = 2,
+            SearchId = 102,
+            Title = "The Matrix",
+            Overview = "A computer programmer discovers the true nature of his reality...",
+            ReleaseDate = "1999-03-31",
+            CinemaRating = 7.8,
+            PosterPath = "/58748AndVH1DitlTbcbLpKHuSS2.jpg"
+        }
     };
         context.Movies.AddRange(movies);
 
-        // Додавання сеансів
         var sessions = new List<SessionEntity>
     {
         new SessionEntity { Id = 1, MovieId = 1, Date = DateTime.Now.AddDays(1), HallId = 1 },
@@ -160,7 +201,6 @@ public static class Program
     };
         context.Sessions.AddRange(sessions);
 
-        // Додавання квитків
         var tickets = new List<TicketEntity>
     {
         new TicketEntity { Id = 1, SessionId = 1, UserId = "1", MovieId = 1, Row = 1 },

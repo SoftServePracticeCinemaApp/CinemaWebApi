@@ -1,5 +1,6 @@
 ﻿using Cinema.Application.Enums;
 using Cinema.Application.Helpers.Interfaces;
+using System.Net;
 
 namespace Cinema.Application.Helpers
 {
@@ -68,6 +69,16 @@ namespace Cinema.Application.Helpers
                 Data = default!,
                 Description = "Server error, catch exception: " + exceptionMessage,
                 StatusCode = StatusCode.InternalServerError
+            };
+        }
+        public IBaseResponse<T> CreateBaseConflict<T>(string message)
+        {
+            return new BaseResponse<T>()
+            {
+                ResultsCount = 0,
+                Data = default!,
+                Description = "Conflict: " + message,
+                StatusCode = StatusCode.Conflict
             };
         }
     }

@@ -17,19 +17,6 @@ namespace Cinema.WebApi.Controllers
         }
 
         /// <summary>
-        /// Додати новий квиток
-        /// </summary>
-        [HttpPost]
-        [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.Created)]
-        [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> Create([FromBody] AddTicketDTO createTicketDto)
-        {
-            var response = await _ticketService.AddTicketAsync(createTicketDto);
-
-            return StatusCode((int)response.StatusCode, response);
-        }
-
-        /// <summary>
         /// Отримати всі квитки
         /// </summary>
         [HttpGet]
@@ -48,36 +35,9 @@ namespace Cinema.WebApi.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(BaseResponse<GetTicketDTO>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(BaseResponse<GetTicketDTO>), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> GetById([FromRoute] long id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var response = await _ticketService.GetTicketByIdAsync(id);
-
-            return StatusCode((int)response.StatusCode, response);
-        }
-
-        /// <summary>
-        /// Оновити квиток за ID
-        /// </summary>
-        [HttpPut("{id}")]
-        [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> Update([FromRoute] long id, [FromBody] UpdateTicketDTO updateTicketDto)
-        {
-            var response = await _ticketService.UpdateTicketAsync(id, updateTicketDto);
-
-            return StatusCode((int)response.StatusCode, response);
-        }
-
-        /// <summary>
-        /// Видалити квиток за ID
-        /// </summary>
-        [HttpDelete("{id}")]
-        [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> Delete([FromRoute] long id)
-        {
-            var response = await _ticketService.DeleteTicketAsync(id);
 
             return StatusCode((int)response.StatusCode, response);
         }
@@ -114,7 +74,7 @@ namespace Cinema.WebApi.Controllers
         [HttpGet("session/{sessionId}")]
         [ProducesResponseType(typeof(BaseResponse<List<GetTicketDTO>>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(BaseResponse<List<GetTicketDTO>>), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetBySessionId([FromRoute] long sessionId)
+        public async Task<IActionResult> GetBySessionId([FromRoute] int sessionId)
         {
             var response = await _ticketService.GetTicketsBySessionIdAsync(sessionId);
 

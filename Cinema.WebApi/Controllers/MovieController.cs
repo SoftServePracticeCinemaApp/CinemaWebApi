@@ -1,5 +1,6 @@
 ﻿using Cinema.Application.DTO.MovieDTOs;
 using Cinema.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -17,19 +18,6 @@ namespace Cinema.WebApi.Controllers
         }
 
         /// <summary>
-        /// Додати новий фільм
-        /// </summary>
-        [HttpPost]
-        [ProducesResponseType(typeof(BaseResponse<bool>), (int)HttpStatusCode.Created)]
-        [ProducesResponseType(typeof(BaseResponse<bool>), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> Create([FromBody] AddMovieDTO createMovieDto)
-        {
-            var response = await _movieService.AddMovieAsync(createMovieDto);
-
-            return StatusCode((int)response.StatusCode, response);
-        }
-
-        /// <summary>
         /// Отримати всі фільми
         /// </summary>
         [HttpGet]
@@ -43,29 +31,61 @@ namespace Cinema.WebApi.Controllers
         }
 
         /// <summary>
-        /// Оновити фільм за ID
+        /// Get all formatted movies for home page
         /// </summary>
-        [HttpPut("{id}")]
-        [ProducesResponseType(typeof(BaseResponse<bool>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(BaseResponse<bool>), (int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(BaseResponse<bool>), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateMovieDTO updateMovieDto)
+        [HttpGet("formatted")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(BaseResponse<List<GetMovieDTO>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(BaseResponse<List<GetMovieDTO>>), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetFormattedMovies()
         {
-            var response = await _movieService.UpdateMovieAsync(id, updateMovieDto);
+            var response = await _movieService.GetFormattedMovies();
+            
+            if ((int)response.StatusCode == (int)HttpStatusCode.OK)
+            {
+                return Ok(response.Data);
+            }
+            return StatusCode((int)response.StatusCode, response);
+        }
+
+        /// <summary>
+        /// Get movie data by ID
+        /// </summary>
+        [HttpGet("formatted/{id}")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(BaseResponse<GetMovieDTO>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(BaseResponse<GetMovieDTO>), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetMovieDataById([FromRoute] int id) {
+            var response = await _movieService.GetMovieDataByIdAsync(id);
 
             return StatusCode((int)response.StatusCode, response);
         }
 
         /// <summary>
-        /// Видалити фільм за ID
+        /// Отримати фільм за ID
         /// </summary>
-        [HttpDelete("{id}")]
-        [ProducesResponseType(typeof(BaseResponse<bool>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(BaseResponse<bool>), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(BaseResponse<GetMovieDTO>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(BaseResponse<GetMovieDTO>), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var response = await _movieService.DeleteMovieAsync(id);
+            var response = await _movieService.GetMovieByIdAsync(id);
 
+            return StatusCode((int)response.StatusCode, response);
+        }
+
+        [HttpGet("formatted_with_pagination")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(BaseResponse<List<GetMovieDTO>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(BaseResponse<List<GetMovieDTO>>), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetMovieWithPagination([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] string sortBy = "release_date", [FromQuery] bool ascending = false)
+        {
+            var response = await _movieService.GetAllMoviesWithPaginationAsync(page, pageSize, sortBy, ascending);
+
+            if ((int)response.StatusCode == (int)HttpStatusCode.OK)
+            {
+                return Ok(response);
+            }
             return StatusCode((int)response.StatusCode, response);
         }
     }

@@ -63,4 +63,41 @@ public class MovieRepository : IMovieRepository
             .Take(take)
             .ToListAsync();
     }
+    public async Task<MovieEntity> GetBySearchIdAsync(int searchId)
+    {
+        var movie = await _context.Movies
+            .AsNoTracking()
+            .FirstOrDefaultAsync(m => m.SearchId == searchId);
+
+        return movie;
+    }
+
+    public async Task<List<MovieEntity>> GetAllWithPaginationAsync(int take, int skip, string sortBy, bool ascending)
+    {
+        IQueryable<MovieEntity> query = _context.Movies.AsQueryable();
+
+        if (string.IsNullOrEmpty(sortBy))
+        {
+            sortBy = "release_date";
+        }
+
+        switch (sortBy.ToLower())
+        {
+            case "title":
+                query = ascending ? query.OrderBy(m => m.Title) : query.OrderByDescending(m => m.Title);
+                break;
+            case "rating":
+                query = ascending ? query.OrderBy(m => m.CinemaRating) : query.OrderByDescending(m => m.CinemaRating);
+                break;
+            case "release_date":
+                query = ascending ? query.OrderBy(m => m.ReleaseDate) : query.OrderByDescending(m => m.ReleaseDate);
+                break;
+            default:
+                return new List<MovieEntity>();
+        }
+
+        var movies = await query.Skip(skip).Take(take).ToListAsync();
+
+        return movies;
+    }
 }
