@@ -8,7 +8,7 @@ public interface IAdminService
   Task<FormResult> DeleteMovieAsync(int movieId);
   Task<FormResult> DeleteSessionAsync(int sessionId);
   Task<FormResult> AddTicketsAsync(int sessionId, int numberOfTickets, double price);
-  Task<FormResult> CreateSessionAsync(int movieId, List<DateTime> dates, int hallNumber);
+  Task<FormResult> CreateSessionAsync(int movieId, List<Components.Admin.CreateSession.SessionInfo> sessions);
   Task<FormResult> UpdateSessionAsync(int sessionId, DateTime date, int hallNumber);
   Task<FormResult> UpdateMovieAsync(int movieId, int searchId, double cinemaRating);
   Task<FormResult> DeleteTicketAsync(int ticketId);

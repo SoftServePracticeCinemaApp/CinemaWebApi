@@ -14,30 +14,58 @@
                 placeholder="Enter movie ID"/>
         </div>
 
-        <div class="admin-action-form-group">
-            <label>Dates</label>
-            @for (int i = 0; i < Dates.Count; i++)
+        <div class="admin-action-form-block">
+            @* <label>Dates</label> *@
+            @for (int i = 0; i < Sessions.Count; i++)
             {
                 var index = i;
-                <div class="date-input-container">
+
+                <div class="admin-action-form-block-small">
+                    <label for="">Dates</label>
                     <input type="datetime-local" 
-                        class="admin-action-form-group-control"
-                        @bind="Dates[index]"
+                        class="admin-action-form-block-small-control"
+                        @bind="Sessions[index].Date"
                         @bind:event="oninput"
-                        @onchange="() => HandleDateChange(index)"
+                        @onchange="() => HandleSessionChange(index)"
                         placeholder="Select date and time"/>
                 </div>
+
+                <div class="admin-action-form-block-small">
+                    <label for="">Hall number</label>
+                    <input type="number" 
+                        class="admin-action-form-block-small-control"
+                        @bind="Sessions[index].HallNumber"
+                        placeholder="Enter hall number"/>
+                </div>
+
+                <div class="admin-action-form-block-small">
+                    <label for="">Ticket price</label>
+                    <input type="number" 
+                        class="admin-action-form-block-small-control"
+                        @bind="Sessions[index].TicketPrice"
+                        placeholder="Enter ticket price"/>
+                </div>
+                @* <div class="session-input-container">
+                    <input type="datetime-local" 
+
+                        class="admin-action-form-group-control"
+                        @bind="Sessions[index].Date"
+                        @bind:event="oninput"
+                        @onchange="() => HandleSessionChange(index)"
+                        placeholder="Select date and time"/>
+                    
+                    <input type="number" 
+                        class="admin-action-form-group-control"
+                        @bind="Sessions[index].HallNumber"
+                        placeholder="Enter hall number"/>
+                        
+                    <input type="number" 
+                        class="admin-action-form-group-control"
+                        @bind="Sessions[index].TicketPrice"
+                        placeholder="Enter ticket price"/>
+                </div> *@
             }
         </div>
-
-        <div class="admin-action-form-group">
-            <label>Hall number</label>
-            <input type="number" 
-                class="admin-action-form-group-control"
-                @bind="HallNumber"
-                placeholder="Enter hall number"/>
-        </div>
-        
 
         <div class="buttons">
             <button @onclick="HandleSubmit">
@@ -51,8 +79,14 @@
     public class SessionData
     {
         public int MovieId { get; set; }
-        public DateTime[] Dates { get; set; }
+        public SessionInfo[] Sessions { get; set; }
+    }
+
+    public class SessionInfo
+    {
+        public DateTime Date { get; set; }
         public int HallNumber { get; set; }
+        public double TicketPrice { get; set; }
     }
 
     [Parameter]
@@ -65,27 +99,36 @@
     public string SubmitText { get; set; }
 
     private int MovieId { get; set; }
-    private List<DateTime> Dates { get; set; } = new() { DateTime.Now };
-    private int HallNumber { get; set; }
+    private List<SessionInfo> Sessions { get; set; } = new() 
+    { 
+        new SessionInfo 
+        { 
+            Date = DateTime.Now,
+            HallNumber = 1,
+            TicketPrice = 0
+        } 
+    };
 
-    private void HandleDateChange(int index)
+    private void HandleSessionChange(int index)
     {
-        if (index == Dates.Count - 1)
+        if (index == Sessions.Count - 1)
         {
-            Dates.Add(DateTime.Now);
+            Sessions.Add(new SessionInfo 
+            { 
+                Date = DateTime.Now,
+                HallNumber = 1,
+                TicketPrice = 0
+            });
             StateHasChanged();
         }
     }
-
-    public DateTime[] Date => Dates.ToArray();
 
     private async Task HandleSubmit()
     {
         var sessionData = new SessionData
         {
             MovieId = MovieId,
-            Dates = Dates.ToArray(),
-            HallNumber = HallNumber
+            Sessions = Sessions.ToArray()
         };
         await OnSubmit.InvokeAsync(sessionData);
     }

@@ -46,15 +46,16 @@ public class AdminService : IAdminService
         return await HandleResponse(response, "Failed to add tickets, check session ID");
     }
 
-    public async Task<FormResult> CreateSessionAsync(int movieId, List<DateTime> dates, int hallNumber)
+    public async Task<FormResult> CreateSessionAsync(int movieId, List<Components.Admin.CreateSession.SessionInfo> sessions)
     {
-        foreach (DateTime date in dates) 
+        foreach (var session in sessions) 
         {
             var response = await _httpClient.PostAsJsonAsync("api/admin/Sessions/Add", new
             {
                 movieId = movieId,
-                date = date,
-                hallId = hallNumber
+                date = session.Date,
+                hallId = session.HallNumber,
+                ticketPrice = session.TicketPrice
             });
             var result = await HandleResponse(response, "Failed to create session");
             if (!result.Succeeded)
