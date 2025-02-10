@@ -88,14 +88,14 @@
           font-family: Poppins;
           font-size: pxToRem(16px);
           font-style: normal;
-          font-weight: 600;
-          line-height: normal;
+          font-weight: 500;
+          line-height: pxToRem(16px);
   
           border-radius: pxToRem(3px);
           background: rgba(235, 235, 235, 0.30);
           backdrop-filter: blur(12.5px);
   
-          padding: pxToRem(2px) pxToRem(4px);
+          padding: pxToRem(4px) pxToRem(6px);
         }
   
         .genre, .duration, .adult {
