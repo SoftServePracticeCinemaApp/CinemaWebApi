@@ -20,48 +20,20 @@ namespace Cinema.Application.Services
         private readonly IMapper _mapper; 
         private readonly IResponses _responses;
         private readonly TmdbService _tmdbService;
-        private readonly IDistributedCache _cache;
-        private readonly string _cacheKey = "movies_cache";
-        private readonly int _cacheExpirationTime = 10;
 
-        public MovieService(IResponses responses, IUnitOfWork unitOfWork, IMapper mapper, TmdbService tmdbService, IDistributedCache cache)
+        public MovieService(IResponses responses, IUnitOfWork unitOfWork, IMapper mapper, TmdbService tmdbService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _responses = responses;
             _tmdbService = tmdbService;
-            _cache = cache;
         }
 
         public async Task<IBaseResponse<List<GetMovieDTO>>> GetAllMoviesAsync()
         {
             try
             {
-                string serializedMovies;
-                List<MovieEntity> movies;
-
-                var cachedMovies = await _cache.GetAsync(_cacheKey);
-                if (cachedMovies != null)
-                {
-                    serializedMovies = Encoding.UTF8.GetString(cachedMovies);
-                    movies = JsonConvert.DeserializeObject<List<MovieEntity>>(serializedMovies);
-                }
-                else
-                {
-                    movies = await _unitOfWork.Movie.GetAllAsync();
-
-                    if (movies != null && movies.Count > 0)
-                    {
-                        serializedMovies = JsonConvert.SerializeObject(movies, new JsonSerializerSettings
-                        {
-                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                        });
-
-                        cachedMovies = Encoding.UTF8.GetBytes(serializedMovies);
-                        await _cache.SetAsync(_cacheKey, cachedMovies, new DistributedCacheEntryOptions()
-                            .SetAbsoluteExpiration(TimeSpan.FromMinutes(_cacheExpirationTime)));
-                    }
-                }
+                var movies = await _unitOfWork.Movie.GetAllAsync();
 
                 if (movies == null || movies.Count == 0)
                     return _responses.CreateBaseBadRequest<List<GetMovieDTO>>("No movies found.");
@@ -251,24 +223,11 @@ namespace Cinema.Application.Services
 
             try
             {
-                string cacheKey = $"movies_{take}_{skip}_{sortBy}_{ascending}";
-                var cachedMovies = await _cache.GetStringAsync(cacheKey);
+                var movies = await _unitOfWork.Movie.GetAllWithPaginationAsync(take, skip, sortBy, ascending);
 
-                List<MovieEntity> movies;
-                if (!string.IsNullOrEmpty(cachedMovies))
+                if (movies == null || movies.Count == 0)
                 {
-                    movies = JsonConvert.DeserializeObject<List<MovieEntity>>(cachedMovies);
-                }
-                else
-                {
-                    movies = await _unitOfWork.Movie.GetAllWithPaginationAsync(take, skip, sortBy, ascending);
-                    if (movies == null || movies.Count == 0)
-                    {
-                        return _responses.CreateBaseBadRequest<List<GetMovieDTO>>("No movies found.");
-                    }
-
-                    await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(movies),
-                        new DistributedCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(_cacheExpirationTime)));
+                    return _responses.CreateBaseBadRequest<List<GetMovieDTO>>("No movies found.");
                 }
 
                 var moviesDto = _mapper.Map<List<GetMovieDTO>>(movies);
@@ -279,6 +238,7 @@ namespace Cinema.Application.Services
                 return _responses.CreateBaseServerError<List<GetMovieDTO>>(ex.Message);
             }
         }
+
 
     }
 }
