@@ -39,7 +39,6 @@ namespace Cinema.Infrastructure.Utils
             CreateMap<TicketEntity, UpdateTicketDTO>().ReverseMap();
 
             CreateMap<TmdbMovie, MovieEntity>()
-                .ForMember(dest => dest.SearchId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                 .ForMember(dest => dest.Overview, opt => opt.MapFrom(src => src.Overview ?? string.Empty))
                 .ForMember(dest => dest.ReleaseDate, opt => opt.MapFrom(src => ParseReleaseDate(src.ReleaseDate)))
