@@ -82,4 +82,63 @@ public class MovieService : IMovieService
             return new MovieResult();
         }
     }
+
+    public async Task<string> GetMovieTrailerAsync(int id)
+    {
+        var options = new RestClientOptions($"https://api.themoviedb.org/3/movie/{id}/videos?language=en-US");
+        var client = new RestClient(options);
+        var request = new RestRequest("");
+        request.AddHeader("accept", "application/json");
+        request.AddHeader("Authorization", $"Bearer {_movieApiKey}");
+
+        try {
+            var response = await client.GetAsync(request);
+            if (response.IsSuccessful && !string.IsNullOrEmpty(response.Content))
+            {
+                var result = JsonSerializer.Deserialize<MovieTrailerResponse>(response.Content, _jsonSerializerOptions);
+                if (result?.Results?.Any() == true)
+                {
+                    var trailer = result.Results.FirstOrDefault(v => v.Type.Equals("Trailer", StringComparison.OrdinalIgnoreCase));
+                    if (trailer != null)
+                    {
+                        return $"https://www.youtube.com/embed/{trailer.Key}";
+                    }
+                }
+                return "";
+            }
+            return "";
+        }
+        catch (Exception ex) {
+            Console.WriteLine($"Error getting movie trailer: {ex.Message}");
+            return "";
+        }
+    }
+
+    public async Task<List<string>> GetMovieActorsAsync(int id)
+    {
+        var options = new RestClientOptions($"https://api.themoviedb.org/3/movie/{id}/credits?language=en-US");
+        var client = new RestClient(options);
+        var request = new RestRequest("");
+        request.AddHeader("accept", "application/json");
+        request.AddHeader("Authorization", $"Bearer {_movieApiKey}");
+    
+        try {
+            var response = await client.GetAsync(request);
+            if (response.IsSuccessful && !string.IsNullOrEmpty(response.Content))
+            {
+                var result = JsonSerializer.Deserialize<MovieCreditsResponse>(response.Content, _jsonSerializerOptions);
+
+                return result?.Cast?.Select(c => c.Name).ToList() ?? new List<string>();
+            }
+            return new List<string>();
+        }
+
+        catch (Exception ex) {
+            Console.WriteLine($"Error getting movie actors: {ex.Message}");
+            return new List<string>();
+        }
+    }
+
+
+
 }
