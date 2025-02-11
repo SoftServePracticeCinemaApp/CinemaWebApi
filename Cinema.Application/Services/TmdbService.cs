@@ -47,8 +47,6 @@ namespace Cinema.Application.Services
 
     public class TmdbMovie
     {
-        [JsonPropertyName("id")]
-        public int Id { get; set; }
 
         [JsonPropertyName("title")]
         public string Title { get; set; }
