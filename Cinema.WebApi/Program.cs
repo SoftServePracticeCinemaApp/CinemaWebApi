@@ -147,7 +147,7 @@ public static class Program
 
         app.UseCors("AllowAll");
         app.MapControllers();
-        app.UseHttpsRedirection();
+        //app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
 
