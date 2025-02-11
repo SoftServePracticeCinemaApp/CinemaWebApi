@@ -213,8 +213,8 @@ private static void SeedData(CinemaDbContext context)
 
         var sessions = new List<SessionEntity>
     {
-        new SessionEntity { Id = 1, MovieId = 1, Date = DateTime.Now.AddDays(1), HallId = 1 },
-        new SessionEntity { Id = 2, MovieId = 2, Date = DateTime.Now.AddDays(2), HallId = 2 }
+        new SessionEntity { Id = 1, MovieId = 1, Date = DateTime.Now.AddDays(1), HallId = 1, TicketPrice = 2.3 },
+        new SessionEntity { Id = 2, MovieId = 2, Date = DateTime.Now.AddDays(2), HallId = 2, TicketPrice = 3.3 }
     };
         context.Sessions.AddRange(sessions);
 
