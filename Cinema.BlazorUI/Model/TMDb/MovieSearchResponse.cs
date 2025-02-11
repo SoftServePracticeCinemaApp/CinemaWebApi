@@ -37,6 +37,8 @@ namespace Cinema.BlazorUI.Model.TMDb
 } 
 
 public class MovieGenres {
+    [JsonPropertyName("id")]
     public int Id { get; set; }
+    [JsonPropertyName("name")]
     public string Name { get; set; }
 }

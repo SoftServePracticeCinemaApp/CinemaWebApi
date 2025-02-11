@@ -145,6 +145,62 @@
       flex-direction: column;
       gap: pxToRem(10px);
 
+      &-block {
+        width: 100%;
+        height: auto;
+
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+
+        gap: pxToRem(10px);
+
+        &-small {
+          width: 100%;
+          height: auto;
+
+          display: flex;
+          flex-direction: column;
+          gap: pxToRem(5px);
+          justify-content: flex-start;
+          align-items: flex-start;
+
+          label {
+            color: #FFF;
+            font-size: pxToRem(16px);
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
+          }
+  
+          input {
+            width: 100%;
+            height: auto;
+  
+            padding: pxToRem(10px);
+  
+            border: none;
+            outline: none;
+            border-radius: pxToRem(8px);
+            background: rgba(255, 255, 255, 0.30);
+            backdrop-filter: blur(1vh);
+  
+            color: #FFF;
+            font-size: pxToRem(16px);
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+  
+            &::placeholder {
+              color: #dadada;
+              font-size: pxToRem(16px);
+              font-style: normal;
+              font-weight: 400;
+              line-height: normal;
+            }
+          }
+        }
+      }
+
       &-group {
         width: 100%;
         display: flex;

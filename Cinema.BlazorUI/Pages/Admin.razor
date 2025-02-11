@@ -41,12 +41,12 @@
                 <button @onclick="@(e => onChangePage("deleteSession"))">
                   Delete session
                 </button>
-                <button @onclick="@(e => onChangePage("addTickets"))">
+                @* <button @onclick="@(e => onChangePage("addTickets"))">
                   Add tickets
                 </button>
                 <button @onclick="@(e => onChangePage("updateTickets"))">
                   Update tickets
-                </button>
+                </button> *@
               </div>
               <div class="admin-container-body-content">
                 @* @if (page == "createMovie")
@@ -190,9 +190,9 @@
   private UserInfo user;
   private string page = "";
 
-  protected override void OnInitialized()
+  protected override async Task OnInitializedAsync()
   {
-    user = Acct.GetUserInfo();
+    user = await Acct.GetUserInfoAsync();
   }
 
   private void onChangePage(string value)
@@ -202,7 +202,7 @@
 
   private async Task HandleCreateSession(CreateSession.SessionData data)
   {
-    await AService.CreateSessionAsync(data.MovieId, data.Dates.ToList(), data.HallNumber);
+    await AService.CreateSessionAsync(data.MovieId, data.Sessions.ToList());
   }
   private async Task DeleteMovie(Dictionary<string, string> data) {
     await AService.DeleteMovieAsync(int.Parse(data["movieId"]));
