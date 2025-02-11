@@ -158,7 +158,8 @@ public class AdminService : IAdminService
 
     public async Task<FormResult> CreateMovieAsync(int movieId)
     {
-        var response = await _httpClient.PostAsJsonAsync("api/admin/Movies/Add", new { searchId = movieId });
+        var response = await _httpClient.PostAsJsonAsync("/api/admin/Movies/Add", movieId);
+
         return await HandleResponse(response, "Failed to create movie");
     }
 

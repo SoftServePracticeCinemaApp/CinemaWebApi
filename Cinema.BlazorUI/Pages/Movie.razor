@@ -24,7 +24,12 @@ else
           <div class="movie-title">@movie.Title</div>
           <div class="movie-details">
             <div class="rating">@(movieData.VoteAverage.ToString("0.0"))</div>
-            <div class="genre">@movieData.Genres.FirstOrDefault()?.Name</div>
+                        <div class="genre">
+                            @if (movieData?.Genres != null && movieData.Genres.Any())
+                            {
+                                @movieData.Genres.FirstOrDefault()?.Name
+                            }
+                        </div>
             <div class="duration">@(movieData.Runtime / 60):@(movieData.Runtime % 60)</div>
             <div class="adult">@(movieData.Adult ? "18+" : "16+")</div>
           </div>

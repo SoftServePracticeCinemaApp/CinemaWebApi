@@ -57,7 +57,7 @@ namespace Cinema.WebApi.AdminControllers
         [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.Conflict)]
         [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
-        public async Task<IActionResult> Add(int searchId)
+        public async Task<IActionResult> Add([FromBody]int searchId)
         {
             var response = await _movieService.AddMovieFromTmdbAsync(searchId);
 
