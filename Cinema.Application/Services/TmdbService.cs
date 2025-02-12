@@ -41,7 +41,9 @@ namespace Cinema.Application.Services
             {
                 PropertyNameCaseInsensitive = true
             });
-            return _mapper.Map<MovieEntity>(tmdbMovie);
+            var movieEntity = _mapper.Map<MovieEntity>(tmdbMovie);
+            movieEntity.SearchId = searchId; 
+            return movieEntity;
         }
     }
 
