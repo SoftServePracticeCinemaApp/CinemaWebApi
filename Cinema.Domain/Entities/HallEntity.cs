@@ -12,4 +12,6 @@ public class HallEntity
         get => SeatsJson == null ? new List<List<int>>() : JsonSerializer.Deserialize<List<List<int>>>(SeatsJson);
         set => SeatsJson = JsonSerializer.Serialize(value);
     }
+
+    public ICollection<SessionEntity> Sessions { get; set; }
 }

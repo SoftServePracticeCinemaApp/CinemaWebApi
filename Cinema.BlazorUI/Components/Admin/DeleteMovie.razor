@@ -1,0 +1,70 @@
+@using Cinema.BlazorUI.Model
+@using Cinema.BlazorUI.Model.TMDb
+@inject IAdminService AService
+@inject IMovieService MService
+@namespace Cinema.BlazorUI.Components.Admin
+
+<div class="admin-action">
+    <div class="admin-action-title">@Title</div>
+
+    <div class="admin-action-form">
+        @if (movies != null && movies.Any())
+        {
+            <div class="movie-results">
+                @foreach (var movie in movies)
+                {
+                    <div class="movie-item">
+                        <div class="movie-item-image">
+                            <img src="https://image.tmdb.org/t/p/w185/@movie.PosterPath" alt="@movie.Title" />
+                        </div>
+                        <div class="movie-item-info">
+                            <div class="movie-item-info-title">@movie.Title</div>
+                            <button class="movie-item-info-button" @onclick="() => DeleteMovieById(movie.Id)">@SubmitText</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p>No movies available.</p>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public string SubmitText { get; set; }
+
+    private List<FormattedMovie>? movies;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            movies = await MService.GetMoviesAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading movies: {ex.Message}");
+            movies = new List<FormattedMovie>();
+        }
+    }
+
+    private async Task DeleteMovieById(int id)
+    {
+        try
+        {
+            await AService.DeleteMovieAsync(id);
+            movies = await MService.GetMoviesAsync();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting movie: {ex.Message}");
+        }
+    }
+}

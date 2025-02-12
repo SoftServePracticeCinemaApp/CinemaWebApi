@@ -65,14 +65,8 @@
                   <AddMovie Title="Add Movie" OnSubmit="@HandleAddMovie" SubmitText="Add Movie" />
                 }
                 else if (page == "deleteMovie") {
-                  <AdminAction
-                    Title="Delete Movie"
-                    Inputs="@(new List<AdminAction.InputField> {
-                      new() { Label = "Movie ID", Type = "number", Placeholder = "Enter a movie ID" },
-                    })"
-                    SubmitText="Delete"                  
-                    OnSubmit="@(async (data) => await DeleteMovie(data))"
-                  />
+                                    <DeleteMovie Title="Delete Movie" SubmitText="Delete Movie" />
+                  
                 }
                 else if (page == "deleteSession") {
                   <AdminAction 
