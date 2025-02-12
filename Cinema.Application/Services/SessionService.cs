@@ -59,7 +59,7 @@ namespace Cinema.Application.Services
         {
             try
             {
-                var session = _mapper.Map<SessiongEntity>(sessionDto);
+                var session = _mapper.Map<SessionEntity>(sessionDto);
 
                 await _unitOfWork.Session.AddAsync(session);
                 await _unitOfWork.CompleteAsync();
