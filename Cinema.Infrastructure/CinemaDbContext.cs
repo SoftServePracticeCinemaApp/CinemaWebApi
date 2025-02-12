@@ -14,7 +14,7 @@ public class CinemaDbContext(DbContextOptions<CinemaDbContext> options) : Identi
     public DbSet<UserEntity> Users { get; set; }
     public DbSet<HallEntity> Halls { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder builder)
+  protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<TicketEntity>()
         .HasOne(t => t.Session)

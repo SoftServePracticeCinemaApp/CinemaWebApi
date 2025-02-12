@@ -19,14 +19,16 @@ namespace Cinema.Infrastructure.Configuration
                     Id = 1,
                     MovieId = 1,
                     Date = DateTime.Now.AddDays(1),
-                    HallId = 1
+                    HallId = 1,
+                    TicketPrice = 1,
                 },
                 new SessionEntity
                 {
                     Id = 2,
                     MovieId = 2,
                     Date = DateTime.Now.AddDays(2),
-                    HallId = 2
+                    HallId = 2,
+                    TicketPrice = 2, 
                 }
             );
         }
