@@ -1,4 +1,4 @@
-@page "/admin"
+﻿@page "/admin"
 @using Cinema.BlazorUI.Model
 @using Cinema.BlazorUI.Services
 @using Cinema.BlazorUI.Services.Interfaces
@@ -6,10 +6,12 @@
 @inject IAdminService AService
 @inject NavigationManager NavigationManager
 @using Cinema.BlazorUI.Components.Admin
+<ModalComponent @ref="modal" />
 
 @namespace Cinema.BlazorUI.Pages.Admin
-
+@using Cinema.BlazorUI.Components
 <PageTitle>Admin</PageTitle>
+
 
 <CascadingAuthenticationState>
   <AuthorizeView>
@@ -186,6 +188,11 @@
   </AuthorizeView>
 </CascadingAuthenticationState>
 
+
+
+
+
+
 @code {
   private UserInfo user;
   private string page = "";
@@ -223,9 +230,22 @@
   private async Task UpdateSession(Dictionary<string, string> data) {
     await AService.UpdateSessionAsync(int.Parse(data["sessionId"]), DateTime.Parse(data["date"]), int.Parse(data["hallNumber"]));
   }
+    private ModalComponent modal;
 
-  private async Task HandleAddMovie(int movieId)
-  {
-    await AService.CreateMovieAsync(movieId);
-  }
+
+    private async Task HandleAddMovie(int movieId)
+    {
+        var result = await AService.CreateMovieAsync(movieId);
+
+        if (result.Succeeded) // Assume result is a success flag from CreateMovieAsync
+        {
+            modal.ShowModal("Movie added successfully!", "success");
+        }
+        else
+        {
+            modal.ShowModal("Failed to add movie.", "failure");
+        }
+    }
+
 }
+
