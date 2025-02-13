@@ -51,6 +51,8 @@ namespace Cinema.WebApi.Controllers
             return StatusCode((int)response.StatusCode, response);
         }
 
+        
+
         /// <summary>
         /// Отримати сеанс по ID фільму
         /// </summary>

@@ -1,0 +1,139 @@
+﻿@using Cinema.BlazorUI.Model
+@using Cinema.BlazorUI.Model.TMDb
+@inject IMovieService MService
+@inject IHallService HallService
+@inject IAdminService AService
+@namespace Cinema.BlazorUI.Components.Admin
+
+<div class="admin-action">
+    <div class="admin-action-title">@Title</div>
+
+    <div class="admin-action-form">
+        <div class="admin-action-form-group">
+            <label>Select Movie</label>
+            @if (movies != null && movies.Any())
+            {
+                <select class="admin-action-form-group-control" @bind="MovieId">
+                    <option value="0">Select a movie...</option>
+                    @foreach (var movie in movies)
+                    {
+                        <option value="@movie.Id">@movie.Title</option>
+                    }
+                </select>
+            }
+            else
+            {
+                <p>Loading movies...</p>
+            }
+        </div>
+
+        <div class="admin-action-form-block">
+            <div class="admin-action-form-block-small">
+                <label>Select Date and Time</label>
+                <input type="datetime-local"
+                       class="admin-action-form-block-small-control"
+                       @bind="SelectedDate"
+                       @bind:event="oninput" />
+            </div>
+
+            <div class="admin-action-form-block-small">
+                <label>Select Hall</label>
+                @if (halls != null && halls.Any())
+                {
+                    <select class="admin-action-form-block-small-control" @bind="HallNumber">
+                        <option value="0">Select a hall...</option>
+                        @foreach (var hall in halls)
+                        {
+                            <option value="@hall.Id">Hall @hall.Id</option>
+                        }
+                    </select>
+                }
+                else
+                {
+                    <p>Loading halls...</p>
+                }
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button @onclick="HandleSubmit"
+                    disabled="@(MovieId == 0 || HallNumber == 0)">
+                @(SubmitText ?? "Get Session ID")
+            </button>
+        </div>
+
+        @if (SessionId.HasValue)
+        {
+            <div class="admin-action-result">
+                <p>Session ID: @SessionId</p>
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <div class="admin-action-error">
+                <p>@ErrorMessage</p>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public string SubmitText { get; set; }
+
+    private int MovieId { get; set; }
+    private int HallNumber { get; set; }
+    private DateTime SelectedDate { get; set; } = DateTime.Now;
+    private int? SessionId { get; set; }
+    private string ErrorMessage { get; set; }
+    private List<FormattedMovie>? movies;
+    private List<FormattedHall>? halls;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var moviesTask = MService.GetMoviesAsync();
+            var hallsTask = HallService.GetHallsAsync();
+
+            await Task.WhenAll(moviesTask, hallsTask);
+
+            movies = await moviesTask;
+            halls = await hallsTask;
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = "Error loading data";
+            movies = new List<FormattedMovie>();
+            halls = new List<FormattedHall>();
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        if (MovieId == 0 || HallNumber == 0) return;
+
+        try
+        {
+            var session = await AService.GetSessionAsync(MovieId, SelectedDate, HallNumber);
+            if (session != null)
+            {
+                SessionId = session.Id;
+                ErrorMessage = string.Empty;
+            }
+            else
+            {
+                SessionId = null;
+                ErrorMessage = "No session found with the specified criteria";
+            }
+        }
+        catch (Exception ex)
+        {
+            SessionId = null;
+            ErrorMessage = "Error retrieving session ID";
+        }
+    }
+}

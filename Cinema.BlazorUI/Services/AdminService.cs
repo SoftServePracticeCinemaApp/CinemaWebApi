@@ -1,9 +1,11 @@
-using Cinema.BlazorUI.Services.Interfaces;
+﻿using Cinema.BlazorUI.Services.Interfaces;
 using Cinema.BlazorUI.Model;
 using System.Text.Json;
 using RestSharp;
 using Cinema.BlazorUI.Model.TMDb;
+using Cinema.BlazorUI.Model.DTO;
 using System.Net.Http.Json;
+using static Cinema.BlazorUI.Components.Admin.CreateSession;
 
 namespace Cinema.BlazorUI.Services;
 
@@ -66,13 +68,13 @@ public class AdminService : IAdminService
         return new FormResult { Succeeded = true };
     }
 
-    public async Task<FormResult> UpdateSessionAsync(int sessionId, DateTime date, int hallNumber)
+    public async Task<FormResult> UpdateSessionAsync(int sessionId, DateTime date, int hallNumber, int ticketPrice)
     {
-        var response = await _httpClient.PutAsJsonAsync("api/admin/Sessions/Update", new
+        var response = await _httpClient.PutAsJsonAsync($"api/admin/Sessions/Update/{sessionId}", new UpdateSessionDTO
         {
-            sessionId = sessionId,
-            date = date,
-            hallId = hallNumber
+            Date = date,
+            HallId = hallNumber,
+            TicketPrice = ticketPrice
         });
         return await HandleResponse(response, "Failed to update session");
     }
@@ -148,6 +150,30 @@ public class AdminService : IAdminService
         catch (Exception ex) {
             Console.WriteLine($"Error getting movie: {ex.Message}");
             return new List<MovieResult>();
+        }
+    }
+
+    public async Task<FromattedSession> GetSessionAsync(int movieId, DateTime date, int hallNumber)
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync($"api/admin/Sessions/Get?movieId={movieId}&date={date:yyyy-MM-ddTHH:mm:ss}&hallId={hallNumber}");
+            if (response.IsSuccessStatusCode)
+            {
+                // Отримуємо JSON і парсимо як dynamic щоб дістатись до поля data
+                var jsonDoc = await response.Content.ReadFromJsonAsync<JsonDocument>(_jsonSerializerOptions);
+                var dataElement = jsonDoc.RootElement.GetProperty("data");
+
+                // Серіалізуємо тільки дані з поля data в нашу модель
+                var session = dataElement.Deserialize<FromattedSession>(_jsonSerializerOptions);
+                return session;
+            }
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error getting session: {ex.Message}");
+            return null;
         }
     }
 

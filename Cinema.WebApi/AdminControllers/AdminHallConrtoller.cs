@@ -6,15 +6,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace Cinema.WebApi.Controllers
+namespace Cinema.WebApi.AdminControllers
 {
-    [Route("api/[controller]")]
+    [Route("api/admin/Hall")]
     [ApiController]
-    public class HallController : ControllerBase
+    public class AdminHallController : ControllerBase
     {
         private readonly IHallService _hallService;
 
-        public HallController(IHallService hallService)
+        public AdminHallController(IHallService hallService)
         {
             _hallService = hallService;
         }
