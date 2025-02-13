@@ -8,6 +8,8 @@ namespace Cinema.Application.Interfaces
     {
         Task<IBaseResponse<GetHallDTO>> GetHallByIdAsync(int id);
         Task<IBaseResponse<string>> UpdateHallSeatsAsync(int id, UpdateHallDTO hallDto);
+
+        Task<IBaseResponse<List<GetHallDTO>>> GetFormattedHalls();
     }
 }
 

@@ -1,6 +1,8 @@
 using Cinema.Application.DTO.HallDTOs;
+using Cinema.Application.DTO.MovieDTOs;
 using Cinema.Application.Helpers.Interfaces;
 using Cinema.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -26,6 +28,21 @@ namespace Cinema.WebApi.Controllers
         public async Task<IActionResult> GetHallById(int id)
         {
             var response = await _hallService.GetHallByIdAsync(id);
+            return StatusCode((int)response.StatusCode, response);
+        }
+
+        [HttpGet("formatted")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(BaseResponse<List<GetMovieDTO>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(BaseResponse<List<GetMovieDTO>>), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetFormattedHalls()
+        {
+            var response = await _hallService.GetFormattedHalls();
+
+            if ((int)response.StatusCode == (int)HttpStatusCode.OK)
+            {
+                return Ok(response.Data);
+            }
             return StatusCode((int)response.StatusCode, response);
         }
 
