@@ -9,4 +9,5 @@ public class SessionEntity
     public HallEntity? Hall { get; set; }
 
     public MovieEntity? Movie { get; set; }
+    public double TicketPrice { get; set; }
 }

@@ -2,6 +2,6 @@
 {
     public class UpdateHallDTO
     {
-        public List<List<int>> Seats { get; set; }
+        public List<List<int>>? Seats { get; set; }
     }
 }

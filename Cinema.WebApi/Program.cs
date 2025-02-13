@@ -18,6 +18,9 @@ using Cinema.Infrastructure.Repositories;
 using System.Globalization;
 using Cinema.Infrastructure.Configuration;
 using Microsoft.AspNetCore.Identity;
+using Cinema.Application.Helpers.Validation;
+using FluentValidation.AspNetCore;
+using FluentValidation;
 
 
 public static class Program
@@ -39,6 +42,9 @@ public static class Program
         {
             options.Filters.Add<GlobalExceptionFilter>();
         });
+
+        builder.Services.AddFluentValidationAutoValidation();
+        builder.Services.AddValidatorsFromAssemblyContaining<AddHallValidator>();
 
         var key = Encoding.ASCII.GetBytes(secret);
 

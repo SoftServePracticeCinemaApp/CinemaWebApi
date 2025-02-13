@@ -1,6 +1,5 @@
 ﻿using Cinema.Application.Enums;
 using Cinema.Application.Helpers.Interfaces;
-using System.Net;
 
 namespace Cinema.Application.Helpers
 {

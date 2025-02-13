@@ -5,5 +5,6 @@
         public long MovieId { get; set; }
         public DateTime Date { get; set; }
         public int HallId { get; set; }
+        public double TicketPrice { get; set; }
     }
 }
