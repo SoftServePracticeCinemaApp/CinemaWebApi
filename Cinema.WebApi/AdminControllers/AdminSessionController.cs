@@ -32,6 +32,18 @@ namespace Cinema.WebApi.AdminControllers
         }
 
         /// <summary>
+        /// Отримати сеанс за параметрами
+        /// </summary>
+        [HttpGet("Get")]
+        [ProducesResponseType(typeof(IBaseResponse<GetSessionDTO>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IBaseResponse<GetSessionDTO>), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetSession([FromQuery] int movieId, [FromQuery] DateTime date, [FromQuery] int hallId)
+        {
+            var response = await _sessionService.GetSessionByParamsAsync(movieId, date, hallId);
+            return StatusCode((int)response.StatusCode, response);
+        }
+
+        /// <summary>
         /// Редагувати сеанс (тільки для адміністратора)
         /// </summary>
         [HttpPut]

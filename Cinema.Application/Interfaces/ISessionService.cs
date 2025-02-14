@@ -13,5 +13,6 @@ namespace Cinema.Application.Interfaces
         Task<IBaseResponse<string>> DeleteSessionAsync(long id);
         Task<IBaseResponse<List<GetSessionDTO>>> GetSessionsByDateAsync(DateTime date);
         Task<IBaseResponse<List<GetSessionDTO>>> GetSessionsByMovieIdAsync(long movieId);
+        Task<IBaseResponse<GetSessionDTO>> GetSessionByParamsAsync(int movieId, DateTime date, int hallId);
     }
 }

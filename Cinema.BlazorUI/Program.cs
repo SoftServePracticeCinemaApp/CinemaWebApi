@@ -21,8 +21,11 @@ builder.Services.AddScoped(sp => (IAccountManagement)sp.GetRequiredService<Authe
 
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IMovieService, MovieService>();
+builder.Services.AddScoped<IHallService, HallService>();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
+
 
 builder.Services.AddHttpClient("AuthServiceUrl", opt => 
 {

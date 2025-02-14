@@ -19,14 +19,15 @@ public class MovieRepository : IMovieRepository
         await _context.AddAsync(movie);
     }
 
-    public async Task DeleteByIdAsync(int Id)
+    public async Task DeleteByIdAsync(int id)
     {
-        var movieInDb = await _context.Movies
-            .AsNoTracking()
-            .FirstOrDefaultAsync(m => m.Id == Id);
+        var movieInDb = await _context.Movies.FindAsync(id);
 
-        if (movieInDb != null) await Task.Run(() => _context.Movies.Remove(movieInDb));
-        else throw new InvalidOperationException($"session with id {Id} doesn't exist");
+        if (movieInDb == null)
+            throw new InvalidOperationException($"Movie with id {id} doesn't exist");
+
+        _context.Movies.Remove(movieInDb);
+        await _context.SaveChangesAsync();
     }
 
     public async Task<List<MovieEntity>> GetAllAsync() => await _context.Movies.ToListAsync();

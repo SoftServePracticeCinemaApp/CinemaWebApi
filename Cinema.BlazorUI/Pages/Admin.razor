@@ -1,4 +1,4 @@
-@page "/admin"
+﻿@page "/admin"
 @using Cinema.BlazorUI.Model
 @using Cinema.BlazorUI.Services
 @using Cinema.BlazorUI.Services.Interfaces
@@ -6,10 +6,12 @@
 @inject IAdminService AService
 @inject NavigationManager NavigationManager
 @using Cinema.BlazorUI.Components.Admin
+<ModalComponent @ref="modal" />
 
 @namespace Cinema.BlazorUI.Pages.Admin
-
+@using Cinema.BlazorUI.Components
 <PageTitle>Admin</PageTitle>
+
 
 <CascadingAuthenticationState>
   <AuthorizeView>
@@ -33,7 +35,7 @@
                   Create session
                 </button>
                 <button @onclick="@(e => onChangePage("getSessions"))">
-                  Get sessions
+                  Get session
                 </button>
                 <button @onclick="@(e => onChangePage("updateSession"))">
                   Update session
@@ -63,14 +65,8 @@
                   <AddMovie Title="Add Movie" OnSubmit="@HandleAddMovie" SubmitText="Add Movie" />
                 }
                 else if (page == "deleteMovie") {
-                  <AdminAction
-                    Title="Delete Movie"
-                    Inputs="@(new List<AdminAction.InputField> {
-                      new() { Label = "Movie ID", Type = "number", Placeholder = "Enter a movie ID" },
-                    })"
-                    SubmitText="Delete"                  
-                    OnSubmit="@(async (data) => await DeleteMovie(data))"
-                  />
+                                    <DeleteMovie Title="Delete Movie" SubmitText="Delete Movie" />
+                  
                 }
                 else if (page == "deleteSession") {
                   <AdminAction 
@@ -134,28 +130,36 @@
                     OnSubmit="@(async (data) => await UpdateTickets(data))"
                   />
                 }
+               else if (page == "getSessions")
+               {
+                    <GetSession Title="Get Session ID" SubmitText="Find Session" />
+                }
                 else if (page == "updateSession") {
-                  <AdminAction 
-                    Title="Update Session"
-                    Inputs="@(new List<AdminAction.InputField>{
-                      new() {
-                        Label = "Session ID",
-                        Type = "number",
-                        Placeholder = "Enter a session ID"
-                      },
-                      new() {
-                        Label = "Date of session",
-                        Type = "datetime-local",
-                        Placeholder = "Select date and time"
-                      },
-                      new() {
-                        Label = "Hall number",
-                        Type = "number",
-                        Placeholder = "Enter a hall number"
-                      }
-                    })"
-                    OnSubmit="@(async (data) => await UpdateSession(data))" 
-                    SubmitText="Update Session" />
+                                    <AdminAction Title="Update Session"
+                                                 Inputs="@(new List<AdminAction.InputField>{
+            new() {
+                Label = "Session ID",
+                Type = "number",
+                Placeholder = "Enter a session ID"
+            },
+            new() {
+                Label = "Date of session",
+                Type = "datetime-local",
+                Placeholder = "Select date and time"
+            },
+            new() {
+                Label = "Hall number",
+                Type = "number",
+                Placeholder = "Enter a hall number"
+            },
+            new() {
+                Label = "Ticket price",
+                Type = "number",
+                Placeholder = "Enter ticket price"
+            }
+        })"
+                                                 OnSubmit="@(async (data) => await UpdateSession(data))"
+                                                 SubmitText="Update Session" />
                 }
 
 
@@ -186,6 +190,11 @@
   </AuthorizeView>
 </CascadingAuthenticationState>
 
+
+
+
+
+
 @code {
   private UserInfo user;
   private string page = "";
@@ -209,7 +218,7 @@
   }
 
   private async Task DeleteSession(Dictionary<string, string> data) {
-    await AService.DeleteSessionAsync(int.Parse(data["sessionId"]));
+        await AService.DeleteSessionAsync(int.Parse(data["Session ID"]));
   }
 
   private async Task AddTickets(Dictionary<string, string> data) {
@@ -220,12 +229,31 @@
     await AService.UpdateTicketsAsync(int.Parse(data["sessionId"]), int.Parse(data["ticketCount"]), double.Parse(data["ticketPrice"]));
   }
 
-  private async Task UpdateSession(Dictionary<string, string> data) {
-    await AService.UpdateSessionAsync(int.Parse(data["sessionId"]), DateTime.Parse(data["date"]), int.Parse(data["hallNumber"]));
-  }
+    private async Task UpdateSession(Dictionary<string, string> data)
+    {
+        await AService.UpdateSessionAsync(
+            int.Parse(data["Session ID"]),
+            DateTime.Parse(data["Date of session"]),
+            int.Parse(data["Hall number"]),
+            int.Parse(data["Ticket price"])
+        );
+    }
+    private ModalComponent modal;
 
-  private async Task HandleAddMovie(int movieId)
-  {
-    await AService.CreateMovieAsync(movieId);
-  }
+
+    private async Task HandleAddMovie(int movieId)
+    {
+        var result = await AService.CreateMovieAsync(movieId);
+
+        if (result.Succeeded) 
+        {
+            modal.ShowModal("Movie added successfully!", "success");
+        }
+        else
+        {
+            modal.ShowModal("Failed to add movie.", "failure");
+        }
+    }
+
 }
+

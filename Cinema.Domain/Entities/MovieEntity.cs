@@ -9,4 +9,6 @@ public class MovieEntity
     public string? ReleaseDate { get; set; }
     public double CinemaRating { get; set; }
     public string? PosterPath { get; set; }
+    public ICollection<SessionEntity> Sessions { get; set; }
+    public ICollection<TicketEntity> Tickets { get; set; }
 }

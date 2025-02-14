@@ -17,14 +17,29 @@ public class SessionRepository : ISessionRepository
         await _context.AddAsync(session);
     }
 
+    public async Task<SessionEntity> GetByParamsAsync(int movieId, DateTime date, int hallId)
+    {
+        var dateStart = date.AddMinutes(-1);
+        var dateEnd = date.AddMinutes(1);
+
+        return await _context.Sessions
+            .FirstOrDefaultAsync(s =>
+                s.MovieId == movieId &&
+                s.HallId == hallId &&
+                s.Date >= dateStart &&
+                s.Date <= dateEnd);
+    }
+
     public async Task DeleteByIdAsync(long Id)
     {
         var sessionInDb = await _context.Sessions
-            .AsNoTracking()
-            .FirstOrDefaultAsync(s => s.Id == Id);
+            .FirstOrDefaultAsync(s => s.Id == Id); 
 
-        if (sessionInDb == null) throw new InvalidOperationException($"session with id {Id} doesn't exist");
-        await Task.Run(() => _context.Remove(Id));
+        if (sessionInDb == null)
+            throw new InvalidOperationException($"Session with id {Id} doesn't exist");
+
+        _context.Sessions.Remove(sessionInDb); 
+        await _context.SaveChangesAsync(); 
     }
 
     public async Task<SessionEntity> GetByIdAsync(long Id)
@@ -49,16 +64,19 @@ public class SessionRepository : ISessionRepository
     {
         if (session == null) throw new ArgumentException($"{nameof(session)} can't be null");
 
-        var sessionInDb = await _context.Sessions
-            .AsNoTracking()
-            .FirstOrDefaultAsync(s => s.Id == Id);
+        var sessionInDb = await _context.Sessions.FirstOrDefaultAsync(s => s.Id == Id);
 
         if (sessionInDb == null) throw new InvalidOperationException($"session with Id {Id} doesn't exist");
 
         sessionInDb.Date = session.Date;
         sessionInDb.MovieId = session.MovieId;
         sessionInDb.HallId = session.HallId;
+        sessionInDb.TicketPrice = session.TicketPrice;
+
+
+        _context.Sessions.Update(sessionInDb);
     }
+
     public async Task<IEnumerable<SessionEntity>> GetByMovieIdAsync(long movieId)
     {
         return await _context.Sessions

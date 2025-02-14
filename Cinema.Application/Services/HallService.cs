@@ -3,6 +3,8 @@ using Cinema.Application.Helpers.Interfaces;
 using Cinema.Application.Interfaces;
 using Cinema.Domain.Entities;
 using AutoMapper;
+using Cinema.Application.DTO.MovieDTOs;
+using Cinema.Application.DTO.SessionDTOs;
 
 namespace Cinema.Application.Services
 {
@@ -17,6 +19,27 @@ namespace Cinema.Application.Services
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _responses = responses;
+        }
+
+        public async Task<IBaseResponse<List<GetHallDTO>>> GetFormattedHalls()
+        {
+            try
+            {
+                var halls = await _unitOfWork.Hall.GetAllAsync();
+
+                if (halls == null || halls.Count() == 0)
+                    return _responses.CreateBaseBadRequest<List<GetHallDTO>>("No movies found.");
+
+                var hallsDto = _mapper.Map<List<GetHallDTO>>(halls);
+
+
+
+                return _responses.CreateBaseOk(hallsDto, hallsDto.Count);
+            }
+            catch (Exception ex)
+            {
+                return _responses.CreateBaseServerError<List<GetHallDTO>>(ex.Message);
+            }
         }
 
         public async Task<IBaseResponse<GetHallDTO>> GetHallByIdAsync(int id)
