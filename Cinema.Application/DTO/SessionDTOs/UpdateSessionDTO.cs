@@ -6,5 +6,6 @@
         public int HallId { get; set; }
 
         public int TicketPrice { get; set; }
+
     }
 }
