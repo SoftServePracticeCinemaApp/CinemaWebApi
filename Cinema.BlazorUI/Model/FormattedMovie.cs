@@ -7,6 +7,7 @@ namespace Cinema.BlazorUI.Model
         public string? Title { get; set; }
         public string? Genre { get; set; }
         public string? PosterPath { get; set; }
+        public double? AverageUserRating { get; set; } = 0;
         public List<FormattedSession>? Sessions { get; set; }
     }
 }
