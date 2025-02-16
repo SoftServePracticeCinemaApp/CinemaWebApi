@@ -78,25 +78,30 @@ public static class Program
         builder.Services.AddScoped<IHallRepository, HallRepository>();
         builder.Services.AddScoped<IHallService, HallService>();
 
+        builder.Services.AddScoped<IRatingRepository, RatingRepository>();
+        builder.Services.AddScoped<IRatingService, RatingService>();
 
         builder.Services.AddDistributedMemoryCache();
 
-        builder.Services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(x =>
-        {
-            x.TokenValidationParameters = new()
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
             {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = true,
-                ValidIssuer = issuer,
-                ValidateAudience = true,
-                ValidAudience = audience
-            };
-        });
+                options.RequireHttpsMetadata = false; // Вимкнення HTTPS для локального тестування
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = true,
+                    ValidIssuer = issuer,
+                    ValidateAudience = true,
+                    ValidAudience = audience,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero // Вимикає затримку перевірки токена
+                };
+            });
+
+        builder.Services.AddAuthorization();
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -152,10 +157,10 @@ public static class Program
         }
 
         app.UseCors("AllowAll");
-        app.MapControllers();
-        //app.UseHttpsRedirection();
-        app.UseAuthentication();
-        app.UseAuthorization();
+        app.UseAuthentication(); 
+        app.UseAuthorization();  
+        app.MapControllers();    
+
 
         var supportedCultures = new[] { "en-US" };
         var localizationOptions = new RequestLocalizationOptions()

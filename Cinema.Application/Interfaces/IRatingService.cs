@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Cinema.Application.Helpers.Interfaces;
 using System.Threading.Tasks;
 
 namespace Cinema.Application.Interfaces
 {
-    internal class IRatingService
+    public interface IRatingService
     {
+        Task<IBaseResponse<string>> AddRatingAsync(int movieId, string userId, int rating);
+        Task<IBaseResponse<double>> GetAverageRatingAsync(int movieId);
+        Task<IBaseResponse<int?>> GetUserRatingAsync(int movieId, string userId);
+        Task<IBaseResponse<bool>> HasUserRatedAsync(int movieId, string userId);
     }
 }

@@ -42,7 +42,7 @@ namespace Cinema.Infrastructure.Utils
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                 .ForMember(dest => dest.Overview, opt => opt.MapFrom(src => src.Overview ?? string.Empty))
                 .ForMember(dest => dest.ReleaseDate, opt => opt.MapFrom(src => ParseReleaseDate(src.ReleaseDate)))
-                .ForMember(dest => dest.CinemaRating, opt => opt.MapFrom(src =>src.VoteAverage > 0 ? src.VoteAverage : 0.1))
+                .ForMember(dest => dest.CinemaRating, opt => opt.MapFrom(src =>src.VoteAverage > 0 ? src.VoteAverage : 0))
                 .ForMember(dest => dest.PosterPath, opt => opt.MapFrom(src =>!string.IsNullOrWhiteSpace(src.PosterPath)
                 ? $"https://image.tmdb.org/t/p/w500{src.PosterPath}"
                 : "https://via.placeholder.com/500x750?text=No+Image"));

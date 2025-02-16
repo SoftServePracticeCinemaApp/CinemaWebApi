@@ -73,14 +73,14 @@ else
                                     @for (int i = 1; i <= 10; i++)
                                     {
                                         var ratingValue = i;
-                                        <span class="star @(movie.AverageUserRating >= ratingValue ? "filled" : "")">
+                                        <span class="star @(movie.CinemaRating >= ratingValue ? "filled" : "")">
                                             ★
                                         </span>
                                     }
                                 </div>
-                                @if (movie.AverageUserRating != null)
+                                @if (movie.CinemaRating != null)
                                 {
-                                    <span class="rating-value">@movie.AverageUserRating?.ToString("F1")/10</span>
+                                    <span class="rating-value">@movie.CinemaRating?.ToString("F1")/10</span>
                                 }
                             </div>
 
