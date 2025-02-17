@@ -7,7 +7,7 @@ using System.Net;
 namespace Cinema.WebApi.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+	[ApiController]
     public class TicketController : ControllerBase
     {
         private readonly ITicketService _ticketService;
@@ -20,7 +20,6 @@ namespace Cinema.WebApi.Controllers
 		/// <summary>
 		/// Отримати всі квитки
 		/// </summary>
-		[Authorize(Roles = "admin")]
 		[HttpGet]
         [ProducesResponseType(typeof(BaseResponse<List<GetTicketDTO>>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(BaseResponse<List<GetTicketDTO>>), (int)HttpStatusCode.NotFound)]

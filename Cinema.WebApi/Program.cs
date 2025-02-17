@@ -86,7 +86,8 @@ public static class Program
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(x =>
+			options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+		}).AddJwtBearer(x =>
         {
             x.TokenValidationParameters = new()
             {
@@ -176,12 +177,12 @@ public static class Program
         }
 
         app.UseCors("AllowAll");
+		app.UseHttpsRedirection();
+		app.UseAuthentication();
+		app.UseAuthorization();
         app.MapControllers();
-        //app.UseHttpsRedirection();
-        app.UseAuthentication();
-        app.UseAuthorization();
 
-        var supportedCultures = new[] { "en-US" };
+		var supportedCultures = new[] { "en-US" };
         var localizationOptions = new RequestLocalizationOptions()
             .SetDefaultCulture(supportedCultures[0])
             .AddSupportedCultures(supportedCultures)
