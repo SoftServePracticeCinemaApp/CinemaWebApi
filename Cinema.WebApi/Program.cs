@@ -72,6 +72,8 @@ public static class Program
         builder.Services.AddScoped<IHallRepository, HallRepository>();
         builder.Services.AddScoped<IHallService, HallService>();
 
+        builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
+
 
         builder.Services.AddDistributedMemoryCache();
 
