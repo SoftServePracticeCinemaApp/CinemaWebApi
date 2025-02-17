@@ -101,7 +101,8 @@ public class MovieService : IMovieService
                     var trailer = result.Results.FirstOrDefault(v => v.Type.Equals("Trailer", StringComparison.OrdinalIgnoreCase));
                     if (trailer != null)
                     {
-                        return $"https://www.youtube.com/embed/{trailer.Key}";
+                        // return $"https://www.youtube.com/embed/{trailer.Key}";
+                        return $"https://www.youtube.com/watch?v={trailer.Key}";
                     }
                 }
                 return "";
@@ -112,6 +113,7 @@ public class MovieService : IMovieService
             Console.WriteLine($"Error getting movie trailer: {ex.Message}");
             return "";
         }
+
     }
 
     public async Task<List<string>> GetMovieActorsAsync(int id)
@@ -139,6 +141,62 @@ public class MovieService : IMovieService
         }
     }
 
+    public async Task<bool> HasUserRatedMovieAsync(int movieId)
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync($"api/movie/{movieId}/has-rating");
+            return response.IsSuccessStatusCode && await response.Content.ReadFromJsonAsync<bool>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error checking if user rated movie: {ex.Message}");
+            return false;
+        }
+    }
 
+    public async Task<bool> RateMovieAsync(int movieId, int rating)
+    {
+        try
+        {
+            if (rating < 1 || rating > 10)
+            {
+                return false;
+            }
+
+            var hasRating = await HasUserRatedMovieAsync(movieId);
+            if (hasRating)
+            {
+                var response = await _httpClient.PutAsJsonAsync($"api/movie/{movieId}/rate", new { rating });
+                return response.IsSuccessStatusCode;
+            }
+            
+            var postResponse = await _httpClient.PostAsJsonAsync($"api/movie/{movieId}/rate", new { rating });
+            return postResponse.IsSuccessStatusCode;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error rating movie: {ex.Message}");
+            return false;
+        }
+    }
+
+    public async Task<double?> GetUserRatingAsync(int movieId)
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync($"api/movie/{movieId}/rating");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<double>();
+            }
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error getting user rating: {ex.Message}");
+            return null;
+        }
+    }
 
 }
