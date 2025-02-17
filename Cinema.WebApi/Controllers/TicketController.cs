@@ -1,5 +1,6 @@
 ﻿using Cinema.Application.DTO.TicketDTOs;
 using Cinema.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -16,10 +17,11 @@ namespace Cinema.WebApi.Controllers
             _ticketService = ticketService;
         }
 
-        /// <summary>
-        /// Отримати всі квитки
-        /// </summary>
-        [HttpGet]
+		/// <summary>
+		/// Отримати всі квитки
+		/// </summary>
+		[Authorize(Roles = "admin")]
+		[HttpGet]
         [ProducesResponseType(typeof(BaseResponse<List<GetTicketDTO>>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(BaseResponse<List<GetTicketDTO>>), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetAll()
