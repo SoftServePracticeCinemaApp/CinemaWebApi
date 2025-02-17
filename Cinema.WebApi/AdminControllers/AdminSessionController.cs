@@ -1,6 +1,8 @@
 ﻿using Cinema.Application.DTO.SessionDTOs;
 using Cinema.Application.Helpers.Interfaces;
 using Cinema.Application.Interfaces;
+using Cinema.Infrastructure.Utils;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -8,7 +10,8 @@ using System.Net;
 namespace Cinema.WebApi.AdminControllers
 {
     [Route("api/admin/Sessions")]
-    [ApiController]
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = StaticDetails.ROLEAdmin)]
+	[ApiController]
     //[Authorize(Roles = "Admin")]
     public class AdminSessionController : ControllerBase
     {
