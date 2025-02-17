@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Identity;
 using Cinema.Application.Helpers.Validations.HallValidation;
 using FluentValidation.AspNetCore;
 using FluentValidation;
+using Microsoft.OpenApi.Models;
 
 
 public static class Program
@@ -85,7 +86,8 @@ public static class Program
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(x =>
+			options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+		}).AddJwtBearer(x =>
         {
             x.TokenValidationParameters = new()
             {
@@ -99,10 +101,33 @@ public static class Program
         });
 
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+		builder.Services.AddSwaggerGen(options =>
+		{
+			options.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme, securityScheme: new OpenApiSecurityScheme()
+			{
+				Name = "Authorization",
+				Description = "Enter Authorization string as following: Bearer JwtToken",
+				In = ParameterLocation.Header,
+				Type = SecuritySchemeType.ApiKey,
+				Scheme = "Bearer"
+			});
+			options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+	        {
+		        {
+			        new OpenApiSecurityScheme()
+			        {
+				        Reference = new OpenApiReference()
+				        {
+					        Type = ReferenceType.SecurityScheme,
+					        Id = JwtBearerDefaults.AuthenticationScheme
+				        }
+			        }, new string[] {}
+		        }
+	        });
+		});
 
 
-        builder.Services.AddAuthorization();
+		builder.Services.AddAuthorization();
 
         builder.Services.AddCors(options =>
         {
@@ -152,12 +177,12 @@ public static class Program
         }
 
         app.UseCors("AllowAll");
+		app.UseHttpsRedirection();
+		app.UseAuthentication();
+		app.UseAuthorization();
         app.MapControllers();
-        //app.UseHttpsRedirection();
-        app.UseAuthentication();
-        app.UseAuthorization();
 
-        var supportedCultures = new[] { "en-US" };
+		var supportedCultures = new[] { "en-US" };
         var localizationOptions = new RequestLocalizationOptions()
             .SetDefaultCulture(supportedCultures[0])
             .AddSupportedCultures(supportedCultures)
