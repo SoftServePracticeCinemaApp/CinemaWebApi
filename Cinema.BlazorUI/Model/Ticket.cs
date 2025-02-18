@@ -7,6 +7,7 @@
         public string? UserId { get; set; }
         public int MovieId { get; set; }
         public int Row { get; set; }
+        public int SeatNumber { get; set; }
         public bool IsBooked { get; set; }
         public bool IsSelected { get; set; }
     }

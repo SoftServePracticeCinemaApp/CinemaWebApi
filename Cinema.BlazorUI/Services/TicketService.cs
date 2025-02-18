@@ -45,8 +45,11 @@ namespace Cinema.BlazorUI.Services
                 var response = await _httpClient.GetAsync($"/api/ticket/session/{sessionId}");
                 response.EnsureSuccessStatusCode();
                 var content = await response.Content.ReadAsStringAsync();
-                var result = JsonSerializer.Deserialize<List<Ticket>>(content);
-                Console.WriteLine(result);
+                
+                var baseResponse = JsonSerializer.Deserialize<JsonElement>(content);
+                var ticketsJson = baseResponse.GetProperty("data").GetRawText();
+                
+                var result = JsonSerializer.Deserialize<List<Ticket>>(ticketsJson, _jsonSerializerOptions);
                 return result ?? new List<Ticket>();
             }
             catch(Exception ex)

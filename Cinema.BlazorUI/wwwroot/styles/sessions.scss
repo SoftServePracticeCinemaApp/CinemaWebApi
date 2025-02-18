@@ -1,0 +1,158 @@
+@use "sass:math";
+
+@function pxToRem($pxValue, $scale: 1) {
+  @return math.div($pxValue, 16px) * $scale * 1rem;
+}
+
+.session-page {
+  width: 100%;
+  padding: pxToRem(50px);
+  min-height: 100vh;
+}
+
+.session-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: pxToRem(40px);
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border-radius: pxToRem(15px);
+  padding: pxToRem(40px);
+}
+
+.session-header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: pxToRem(20px);
+}
+
+.session-title {
+  color: #FFF;
+  font-size: pxToRem(36px);
+  font-weight: 500;
+}
+
+.session-legend {
+  display: flex;
+  gap: pxToRem(30px);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: pxToRem(10px);
+  color: #FFF;
+}
+
+.screen {
+  width: 80%;
+  height: pxToRem(60px);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: pxToRem(8px);
+  margin-bottom: pxToRem(40px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.screen-content {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: pxToRem(14px);
+}
+
+.seats-container {
+  display: flex;
+  flex-direction: column;
+  gap: pxToRem(15px);
+  margin: pxToRem(30px) 0;
+}
+
+.seat-row {
+  display: flex;
+  gap: pxToRem(10px);
+  align-items: center;
+}
+
+.row-number {
+  color: #FFF;
+  width: pxToRem(30px);
+  text-align: center;
+}
+
+.seat {
+  width: pxToRem(40px);
+  height: pxToRem(40px);
+  border-radius: pxToRem(8px);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFF;
+  font-size: pxToRem(14px);
+}
+
+.seat.available {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.seat.selected {
+  background: rgba(167, 125, 255, 0.6);
+}
+
+.seat.booked {
+  background: rgba(255, 50, 50, 0.3);
+  cursor: not-allowed;
+}
+
+.seat:hover:not(.booked) {
+  transform: scale(1.1);
+}
+
+.booking-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: pxToRem(20px);
+  margin-top: pxToRem(30px);
+}
+
+.selected-seats {
+  color: #FFF;
+  font-size: pxToRem(18px);
+}
+
+.confirm-button {
+  padding: pxToRem(15px) pxToRem(40px);
+  border-radius: pxToRem(8px);
+  border: none;
+  background: radial-gradient(448.8% 100.69% at 97.73% 23.91%, rgba(252, 132, 175, 0.8) 0%, rgba(167, 125, 255, 0.8) 100%);
+  color: #FFF;
+  font-size: pxToRem(16px);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.confirm-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.confirm-button:hover:not(:disabled) {
+  transform: scale(1.05);
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: pxToRem(400px);
+  color: #FFF;
+  font-size: pxToRem(20px);
+}

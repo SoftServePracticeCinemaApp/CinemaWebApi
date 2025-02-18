@@ -2,49 +2,89 @@
 @using Cinema.BlazorUI.Model
 @inject ITicketService TicketService
 
-@if (isLoading)
-{
-    <p>Завантаження...</p>
-}
-else
-{
-    <h1>@Tickets.FirstOrDefault()</h1>
-    <div class="seats-container">
-        @foreach (var ticket in Tickets)
-        {
-            <button @onclick="() => ToggleTicket(ticket)"
-                    disabled="@ticket.IsBooked">
-                @(ticket.Row)-@(ticket.Id)
-            </button>
-        }
-    </div>
-    <div class="h-25 me-lg-auto w-25">
-        <h3 class="mt-lg-auto">Виберіть місця</h3>
-    </div>
-    <div class="h-25 mt-lg-auto me-lg-auto w-25">
-        <button @onclick="ConfirmSelection" class="h-25 mt-lg-auto me-lg-auto" disabled="@(Tickets.All(t => !t.IsSelected))">Підтвердити</button>
-    </div>
-}
+<div class="session-page">
+    @if (isLoading)
+    {
+        <div class="loading-container">
+            <p>Loading...</p>
+        </div>
+    }
+    else
+    {
+        <div class="session-container">
+            <div class="session-header">
+                <h1 class="session-title">Choose seats</h1>
+                <div class="session-legend">
+                    <div class="legend-item">
+                        <div class="seat available"></div>
+                        <span>Available</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="seat selected"></div>
+                        <span>Selected</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="seat booked"></div>
+                        <span>Booked</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="screen">
+                <div class="screen-content">Screen</div>
+            </div>
+
+            <div class="seats-container">
+                @{
+                    var groupedTickets = Tickets.GroupBy(t => t.Row).OrderBy(g => g.Key);
+                }
+                @foreach (var row in groupedTickets)
+                {
+                    <div class="seat-row">
+                        <div class="row-number">@row.Key</div>
+                        @foreach (var ticket in row.OrderBy(t => t.SeatNumber))
+                        {
+                            <button class="seat @(ticket.IsBooked ? "booked" : ticket.IsSelected ? "selected" : "available")"
+                                    @onclick="() => ToggleTicket(ticket)"
+                                    disabled="@ticket.IsBooked">
+                                @ticket.SeatNumber
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="booking-summary">
+                <div class="selected-seats">
+                    <span>Selected seats: @(Tickets.Count(t => t.IsSelected))</span>
+                </div>
+                <button class="confirm-button" 
+                        @onclick="ConfirmSelection" 
+                        disabled="@(Tickets.All(t => !t.IsSelected))">
+                    Confirm booking
+                </button>
+            </div>
+        </div>
+    }
+</div>
 
 @code {
     [Parameter] public int SessionId { get; set; }
-
     private List<Ticket> Tickets = new();
     private bool isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine("OnInitializedAsync викликано");
-        await Task.CompletedTask;
+        await LoadTickets();
     }
 
     private async Task LoadTickets()
     {
         try
         {
-            Console.WriteLine("Loading tickets");
             Tickets = await TicketService.GetBySessionIdAsync(SessionId);
-            Console.WriteLine($"Завантажено {Tickets.Count} квитків"); // Лог для перевірки
+
+            Console.WriteLine($"Завантажено {Tickets.Count} квитків");
         }
         catch (Exception ex)
         {
@@ -56,13 +96,12 @@ else
         }
     }
 
-
-
     private void ToggleTicket(Ticket ticket)
     {
         if (!ticket.IsBooked)
         {
             ticket.IsSelected = !ticket.IsSelected;
+            StateHasChanged();
         }
     }
 
