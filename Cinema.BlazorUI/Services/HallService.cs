@@ -25,7 +25,7 @@ namespace Cinema.BlazorUI.Services
         {
             try
             {
-                var response = await _httpClient.GetAsync("api/Hall/formatted");
+                var response = await _httpClient.GetAsync("api/admin/Hall/formatted");
                 response.EnsureSuccessStatusCode();
                 var content = await response.Content.ReadAsStringAsync();
                 Console.WriteLine($"Received JSON: {content}"); 

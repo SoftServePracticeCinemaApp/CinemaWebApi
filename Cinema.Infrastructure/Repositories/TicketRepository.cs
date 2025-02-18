@@ -16,6 +16,8 @@ public class TicketRepository : ITicketRepository
         if(ticket != null) await _context.Tickets.AddAsync(ticket);
     }
 
+    
+
     public async Task<IEnumerable<TicketEntity>> GetAllAsync() 
         => await _context.Tickets
         .AsNoTracking()

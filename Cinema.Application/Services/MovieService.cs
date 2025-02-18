@@ -2,6 +2,7 @@
 using Azure;
 using Cinema.Application.DTO.MovieDTOs;
 using Cinema.Application.DTO.SessionDTOs;
+using Cinema.Application.Enums;
 using Cinema.Application.Helpers.Interfaces;
 using Cinema.Application.Interfaces;
 using Cinema.Domain.Entities;
@@ -20,6 +21,7 @@ namespace Cinema.Application.Services
         private readonly IMapper _mapper; 
         private readonly IResponses _responses;
         private readonly TmdbService _tmdbService;
+        private readonly IRatingService _ratingService;
 
         public MovieService(IResponses responses, IUnitOfWork unitOfWork, IMapper mapper, TmdbService tmdbService)
         {
@@ -72,13 +74,21 @@ namespace Cinema.Application.Services
 
         public async Task<IBaseResponse<GetMovieDTO>> GetMovieDataByIdAsync(int id)
         {
-            try {
+            try
+            {
                 var movie = await _unitOfWork.Movie.GetByIdAsync(id);
 
                 if (movie == null)
                     return _responses.CreateBaseNotFound<GetMovieDTO>($"Movie with id {id} not found.");
 
                 var movieDto = _mapper.Map<GetMovieDTO>(movie);
+
+                var ratingResponse = await _ratingService.GetAverageRatingAsync(id);
+                if (ratingResponse.StatusCode == StatusCode.Ok)
+                {
+                    movieDto.CinemaRating = ratingResponse.Data;
+                }
+
                 return _responses.CreateBaseOk(movieDto, 1);
             }
             catch (Exception ex)
@@ -86,6 +96,7 @@ namespace Cinema.Application.Services
                 return _responses.CreateBaseServerError<GetMovieDTO>(ex.Message);
             }
         }
+
 
         public async Task<IBaseResponse<GetMovieDTO>> GetMovieByIdAsync(int id)
 

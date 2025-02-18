@@ -99,6 +99,8 @@ namespace Cinema.Application.Services
             }
         }
 
+
+
         public async Task<IBaseResponse<string>> DeleteTicketAsync(int id)
         {
             try
