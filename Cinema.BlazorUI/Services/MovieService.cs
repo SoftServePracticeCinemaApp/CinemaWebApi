@@ -31,7 +31,18 @@ public class MovieService : IMovieService
             response.EnsureSuccessStatusCode();
 
             var content = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"API Response: {content}");
+            
             var result = JsonSerializer.Deserialize<List<FormattedMovie>>(content, _jsonSerializerOptions);
+            
+            if (result != null)
+            {
+                foreach (var movie in result)
+                {
+                    Console.WriteLine($"Movie {movie.Id}: Genre = {movie.Genre ?? "null"}");
+                }
+            }
+            
             return result ?? new List<FormattedMovie>();
         }
         catch (Exception ex)
@@ -196,6 +207,35 @@ public class MovieService : IMovieService
         {
             Console.WriteLine($"Error getting user rating: {ex.Message}");
             return null;
+        }
+    }
+
+    public async Task<List<Genre>> GetGenresAsync()
+    {
+        var options = new RestClientOptions("https://api.themoviedb.org/3/genre/movie/list?language=en");
+        var client = new RestClient(options);
+        var request = new RestRequest("");
+        request.AddHeader("accept", "application/json");
+        request.AddHeader("Authorization", $"Bearer {_movieApiKey}");
+        
+        try 
+        {
+            var response = await client.GetAsync(request);
+            if (response.IsSuccessful && !string.IsNullOrEmpty(response.Content))
+            {
+                var result = JsonSerializer.Deserialize<GenreResponse>(
+                    response.Content, 
+                    _jsonSerializerOptions
+                );
+                
+                return result?.Genres ?? new List<Genre>();
+            }
+            return new List<Genre>();
+        }
+        catch (Exception ex) 
+        {
+            Console.WriteLine($"Error getting genres from TMDb: {ex.Message}");
+            return new List<Genre>();
         }
     }
 

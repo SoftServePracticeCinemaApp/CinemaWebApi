@@ -120,6 +120,7 @@ else
                             <div class="sessions-grid">
                                 @foreach (var session in movie.Sessions.OrderBy(s => s.Date))
                                 {
+                                    if (!isSessionExpired(session.Date)) {
                                     <div class="session-item">
                                         <span class="date">@session.Date.ToString("dd.MM.yyyy")</span>
                                         <span class="time">@session.Date.ToString("HH:mm")</span>
@@ -127,6 +128,7 @@ else
                                             Book Tickets
                                         </button>
                                     </div>
+                                    }
                                 }
                             </div>
                         }
@@ -210,15 +212,10 @@ else
         }
     }
 
-    @* protected override async Task OnAfterRenderAsync(bool firstRender)
+    private bool isSessionExpired(DateTime sessionDate)
     {
-        if (firstRender && !string.IsNullOrEmpty(trailerURL))
-        {
-            await Task.Delay(200);
-            _playerReady = true;
-            StateHasChanged();
-        }
-    } *@
+        return sessionDate < DateTime.Now;
+    }
 
     private void BookSession(int sessionId)
     {
@@ -237,18 +234,18 @@ else
             {
                 _userRating = rating;
                 hasUserRated = true;
-                ratingMessage = "Рейтинг успішно збережено!";
+                ratingMessage = "Rating saved successfully!";
                 ratingSuccess = true;
             }
             else
             {
-                ratingMessage = "Не вдалося зберегти рейтинг. Спробуйте ще раз.";
+                ratingMessage = "Failed to save rating. Please try again.";
                 ratingSuccess = false;
             }
         }
         catch
         {
-            ratingMessage = "Сталася помилка при збереженні рейтингу.";
+            ratingMessage = "An error occurred while saving the rating.";
             ratingSuccess = false;
         }
         finally 

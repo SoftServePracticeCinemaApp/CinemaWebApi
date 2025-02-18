@@ -13,5 +13,6 @@ public interface IMovieService
   Task<bool> RateMovieAsync(int movieId, int rating);
   Task<double?> GetUserRatingAsync(int movieId);
   Task<bool> HasUserRatedMovieAsync(int movieId);
+  Task<List<Genre>> GetGenresAsync();
 }
 

@@ -16,12 +16,6 @@
                 <p>Loading movies...</p>
             </div>
         }
-        else if (!Movies.Any())
-        {
-            <div class="no-movies-container">
-                <p>No movies available at the moment.</p>
-            </div>
-        }
         else
         {
             <Slider Movies="@Movies" OnMovieClick="@NavigateToMovie" />
@@ -34,7 +28,7 @@
                         </div>
 
                         <div class="selector">
-                            <select @bind="selectedDate" @bind:after="FilterMovies">
+                            <select @bind="selectedDate" @bind:after="async () => await FilterMovies()">
                                 <option value="" disabled selected>Select Date</option>
                                 @if (dates != null) {
                                     foreach (var date in dates)
@@ -44,7 +38,7 @@
                                 }
                             </select>
                             <button class="clear-button @(string.IsNullOrEmpty(selectedDate) ? "hidden" : "")" 
-                                    @onclick="() => ClearFilter(FilterType.Date)">
+                                    @onclick="async () => await ClearFilter(FilterType.Date)">
                                 <img src="images/close.svg" alt="clear">
                             </button>
                         </div>
@@ -57,7 +51,7 @@
                         </div>
 
                         <div class="selector">
-                            <select @bind="selectedSessionTime" @bind:after="FilterMovies">
+                            <select @bind="selectedSessionTime" @bind:after="async () => await FilterMovies()">
                                 <option value="" disabled selected>Select session time</option>
                                 @if (sessionTimes != null) {
                                     foreach (var time in sessionTimes)
@@ -67,8 +61,7 @@
                                 }
                             </select>
                             <button class="clear-button @(string.IsNullOrEmpty(selectedSessionTime) ? "hidden" : "")" 
-                                    @onclick="() => ClearFilter(FilterType.Time)">
-
+                                    @onclick="async () => await ClearFilter(FilterType.Time)">
                                 <img src="images/close.svg" alt="clear">
                             </button>
                         </div>
@@ -81,7 +74,7 @@
                         </div>
 
                         <div class="selector">
-                            <select @bind="selectedGenre" @bind:after="FilterMovies">
+                            <select @bind="selectedGenre" @bind:after="async () => await FilterMovies()">
                                 <option value="" disabled selected>Select genre</option>
                                 @if (genres != null) {
                                     foreach (var genre in genres)
@@ -91,7 +84,7 @@
                                 }
                             </select>
                             <button class="clear-button @(string.IsNullOrEmpty(selectedGenre) ? "hidden" : "")" 
-                                    @onclick="() => ClearFilter(FilterType.Genre)">
+                                    @onclick="async () => await ClearFilter(FilterType.Genre)">
                                 <img src="images/close.svg" alt="clear">
                             </button>
                         </div>
@@ -128,29 +121,34 @@
     private string[] genres;
     private List<FormattedMovie> Movies = new()
     {
-      new FormattedMovie { PosterPath = "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/crDALXiyHVZg2xIIErMaBmTC3e3.jpg", Id = 1, SearchId = 1, Genre = "Action", Sessions = new List<FormattedSession> { new FormattedSession { Id = 1, MovieId = 1, Date = new DateTime(2025, 2, 4, 10, 0, 0) } } },
+      @* new FormattedMovie { PosterPath = "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/crDALXiyHVZg2xIIErMaBmTC3e3.jpg", Id = 1, SearchId = 1, Genre = "Action", Sessions = new List<FormattedSession> { new FormattedSession { Id = 1, MovieId = 1, Date = new DateTime(2025, 2, 4, 10, 0, 0) } } },
       new FormattedMovie { PosterPath = "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/vtdEHG1j07PqLlVyhKNZRHTPKGt.jpg", Id = 2, SearchId = 2, Genre = "Adventure", Sessions = new List<FormattedSession> { new FormattedSession { Id = 1, MovieId = 2, Date = new DateTime(2024, 2, 1, 10, 0, 0) } } },
       new FormattedMovie { PosterPath = "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/3rTNq7sgAoAKNK8axPYA6MoBO83.jpg", Id = 3, SearchId = 3, Genre = "Comedy", Sessions = new List<FormattedSession> { new FormattedSession { Id = 1, MovieId = 3, Date = new DateTime(2024, 3, 1, 10, 0, 0) } } },
       new FormattedMovie { PosterPath = "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/2gEFiAeJdboFcd0LoCWCH062NQO.jpg", Id = 4, SearchId = 4, Genre = "Drama", Sessions = new List<FormattedSession> { new FormattedSession { Id = 1, MovieId = 4, Date = new DateTime(2024, 4, 1, 10, 0, 0) } } },
       new FormattedMovie { PosterPath = "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/jtsJ0B0CXWVob325mYuw4lJlP1u.jpg", Id = 5, SearchId = 5, Genre = "Fantasy", Sessions = new List<FormattedSession> { new FormattedSession { Id = 1, MovieId = 5, Date = new DateTime(2024, 5, 1, 10, 0, 0) } } },
       new FormattedMovie { PosterPath = "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/fiMBvj4SBHX0MNTrAV2wszoFzdn.jpg", Id = 6, SearchId = 6, Genre = "Horror", Sessions = new List<FormattedSession> { new FormattedSession { Id = 1, MovieId = 6, Date = new DateTime(2024, 6, 1, 10, 0, 0) } } },
       new FormattedMovie { PosterPath = "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/ckyYZf5cGTSOwF8LWIRqeThyh18.jpg", Id = 7, SearchId = 7, Genre = "Mystery", Sessions = new List<FormattedSession> { new FormattedSession { Id = 1, MovieId = 7, Date = new DateTime(2024, 7, 1, 10, 0, 0) } } },
-      new FormattedMovie { PosterPath = "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/tzWswZ7gL6A8Znw0dFGjnBdsUXW.jpg", Id = 8, SearchId = 8, Genre = "Romance", Sessions = new List<FormattedSession> { new FormattedSession { Id = 1, MovieId = 8, Date = new DateTime(2024, 1, 1, 10, 0, 0) } } },
+      new FormattedMovie { PosterPath = "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/tzWswZ7gL6A8Znw0dFGjnBdsUXW.jpg", Id = 8, SearchId = 8, Genre = "Romance", Sessions = new List<FormattedSession> { new FormattedSession { Id = 1, MovieId = 8, Date = new DateTime(2024, 1, 1, 10, 0, 0) } } }, *@
     };
 
     private List<FormattedMovie> FilteredMovies;
     private List<FormattedMovie> TodayMovies;
+    private List<Genre> availableGenres = new();
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             Movies = await movieService.GetMoviesAsync();
+            
             if (Movies != null)
             {
                 dates = GetAvailableDates();
                 sessionTimes = GetAvailableSessionsTime();
-                genres = GetGenres();
+                
+                availableGenres = await movieService.GetGenresAsync();
+                genres = availableGenres.Select(g => g.Name).ToArray();
+                
                 FilteredMovies = Movies;
                 TodayMovies = GetTodayMovies();
             }
@@ -161,15 +159,15 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading movies: {ex.Message}");
             Movies = new List<FormattedMovie>();
         }
     }
 
-
-    private void FilterMovies()
+    private async Task FilterMovies()
     {
-        FilteredMovies = Movies.Where(movie =>
+        var filteredList = new List<FormattedMovie>();
+        
+        foreach (var movie in Movies)
         {
             bool dateMatch = string.IsNullOrEmpty(selectedDate) || 
                 movie.Sessions.Any(s => s.Date.ToString("yyyy-MM-dd") == selectedDate);
@@ -177,11 +175,20 @@
             bool timeMatch = string.IsNullOrEmpty(selectedSessionTime) || 
                 movie.Sessions.Any(s => s.Date.ToString("HH:mm") == selectedSessionTime);
             
-            bool genreMatch = string.IsNullOrEmpty(selectedGenre) || 
-                movie.Genre == selectedGenre;
+            bool genreMatch = true;
+            if (!string.IsNullOrEmpty(selectedGenre))
+            {
+                var movieData = await movieService.GetMovieDataAsync(movie.SearchId);
+                genreMatch = movieData?.Genres?.Any(g => g.Name == selectedGenre) ?? false;
+            }
 
-            return dateMatch && timeMatch && genreMatch;
-        }).ToList();
+            if (dateMatch && timeMatch && genreMatch)
+            {
+                filteredList.Add(movie);
+            }
+        }
+        
+        FilteredMovies = filteredList;
     }
 
     private List<FormattedMovie> GetTodayMovies() {
@@ -222,19 +229,6 @@
         return list.Distinct().ToArray();
     }
 
-    public string[] GetGenres() {
-        List<string> list = new();
-
-        foreach (var movie in Movies) {
-            if (movie?.Genre != null) {
-                list.Add(movie.Genre);
-            }
-        }
-
-
-        return list.Distinct().ToArray();
-    }
-
     private enum FilterType
     {
         Date,
@@ -242,7 +236,7 @@
         Genre
     }
 
-    private void ClearFilter(FilterType filterType)
+    private async Task ClearFilter(FilterType filterType)
     {
         switch (filterType)
         {
@@ -256,12 +250,11 @@
                 selectedGenre = "";
                 break;
         }
-        FilterMovies();
+        await FilterMovies();
     }
 
     private void NavigateToMovie(int id)
     {
-        Console.WriteLine($"Navigating to movie with id: {id}");
         NavigationManager.NavigateTo($"/movie/{id}");
     }
 }
