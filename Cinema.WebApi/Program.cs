@@ -81,6 +81,7 @@ public static class Program
 
         builder.Services.AddScoped<IRatingRepository, RatingRepository>();
         builder.Services.AddScoped<IRatingService, RatingService>();
+        builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 
         builder.Services.AddDistributedMemoryCache();
 

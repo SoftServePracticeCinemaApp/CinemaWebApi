@@ -1,6 +1,8 @@
 ﻿using Cinema.Application.DTO.MovieDTOs;
 using Cinema.Application.Interfaces;
+
 using Cinema.Infrastructure.Utils;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -56,12 +58,15 @@ namespace Cinema.WebApi.AdminControllers
         /// Додати фільм з TMDB за SearchId.
         /// </summary>
         [HttpPost("[action]")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.Conflict)]
         [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> Add([FromBody]int searchId)
         {
+            var claims = User.Claims.Select(c => new { c.Type, c.Value }).ToList();
+      
             var response = await _movieService.AddMovieFromTmdbAsync(searchId);
 
             return StatusCode((int)response.StatusCode, response);

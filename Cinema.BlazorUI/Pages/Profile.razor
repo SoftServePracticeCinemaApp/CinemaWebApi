@@ -90,6 +90,15 @@
                         <div class="profile-container-body-row-item-title">Admin</div>
                       </NavLink>
                     }
+                        @if (user.Claims.ContainsKey("Role") && user.Claims["Role"] == "Admin")
+                        {
+                            <NavLink href="analytics" class="profile-container-body-row-item">
+                                <div class="profile-container-body-row-item-icon">
+                                    <img class="w-100 h-100" src="images/profile/admin.svg" alt="">
+                                </div>
+                                <div class="profile-container-body-row-item-title">Analytics</div>
+                            </NavLink>
+                        }
                   </div>
                 </div>
                 <div class="profile-container-footer">
