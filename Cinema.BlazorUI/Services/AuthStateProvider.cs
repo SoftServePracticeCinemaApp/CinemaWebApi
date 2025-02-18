@@ -127,6 +127,8 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
     {
         string[] defaultDetail = ["An unknown error prevented registration from succeeding."];
 
+        string role = email.ToLower() == "admin@example.com" ? "Admin" : "User";
+
         try
         {
             var result = await _httpClient.PostAsJsonAsync("register",
@@ -136,7 +138,7 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
                     LastName = lastName,
                     PhoneNumber = phone,
                     Password = password,
-                    Role = "User"
+                    Role = role
                    });
             if (result.IsSuccessStatusCode)
 

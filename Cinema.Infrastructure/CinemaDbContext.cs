@@ -2,6 +2,7 @@
 using Cinema.Infrastructure.Configuration;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace Cinema.Infrastructure;
 
@@ -12,6 +13,7 @@ public class CinemaDbContext(DbContextOptions<CinemaDbContext> options) : Identi
     public DbSet<SessionEntity> Sessions { get; set; }
     public DbSet<UserEntity> Users { get; set; }
     public DbSet<HallEntity> Halls { get; set; }
+    public DbSet<RatingEntity> Ratings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -53,6 +55,7 @@ public class CinemaDbContext(DbContextOptions<CinemaDbContext> options) : Identi
         builder.ApplyConfiguration(new MovieConfiguration());
         builder.ApplyConfiguration(new SessionConfiguration());
         builder.ApplyConfiguration(new TicketConfiguration());
+        builder.ApplyConfiguration(new RatingConfiguration());
 
         builder.Entity<HallEntity>()
             .Ignore(h => h.Seats);

@@ -143,9 +143,10 @@ public class MovieService : IMovieService
 
     public async Task<bool> HasUserRatedMovieAsync(int movieId)
     {
+
         try
         {
-            var response = await _httpClient.GetAsync($"api/movie/{movieId}/has-rating");
+            var response = await _httpClient.GetAsync($"api/movie/{movieId}/rate/has-rating");
             return response.IsSuccessStatusCode && await response.Content.ReadFromJsonAsync<bool>();
         }
         catch (Exception ex)
@@ -170,7 +171,7 @@ public class MovieService : IMovieService
                 var response = await _httpClient.PutAsJsonAsync($"api/movie/{movieId}/rate", new { rating });
                 return response.IsSuccessStatusCode;
             }
-            
+
             var postResponse = await _httpClient.PostAsJsonAsync($"api/movie/{movieId}/rate", new { rating });
             return postResponse.IsSuccessStatusCode;
         }
@@ -180,12 +181,11 @@ public class MovieService : IMovieService
             return false;
         }
     }
-
     public async Task<double?> GetUserRatingAsync(int movieId)
     {
         try
         {
-            var response = await _httpClient.GetAsync($"api/movie/{movieId}/rating");
+            var response = await _httpClient.GetAsync($"api/movie/{movieId}/rate");
             if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadFromJsonAsync<double>();
