@@ -25,7 +25,7 @@ namespace Cinema.BlazorUI.Services
             HttpResponseMessage response;
             try
             {
-                response = await _httpClient.GetAsync($"/api/ticket/book/{ticketId}");
+                response = await _httpClient.PatchAsync($"/api/ticket/book/{ticketId}", null);
                 return await HandleResponse(response);
             }
             catch (Exception ex) 
@@ -45,10 +45,10 @@ namespace Cinema.BlazorUI.Services
                 var response = await _httpClient.GetAsync($"/api/ticket/session/{sessionId}");
                 response.EnsureSuccessStatusCode();
                 var content = await response.Content.ReadAsStringAsync();
-                
+
                 var baseResponse = JsonSerializer.Deserialize<JsonElement>(content);
                 var ticketsJson = baseResponse.GetProperty("data").GetRawText();
-                
+                Console.WriteLine($"Tickets JSON: {ticketsJson}");
                 var result = JsonSerializer.Deserialize<List<Ticket>>(ticketsJson, _jsonSerializerOptions);
                 return result ?? new List<Ticket>();
             }

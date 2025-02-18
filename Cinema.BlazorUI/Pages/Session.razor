@@ -83,12 +83,10 @@
         try
         {
             Tickets = await TicketService.GetBySessionIdAsync(SessionId);
-
-            Console.WriteLine($"Завантажено {Tickets.Count} квитків");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Помилка завантаження квитків: {ex.Message}");
+            Console.WriteLine($"Err in load tickets: {ex.Message}");
         }
         finally
         {
@@ -117,7 +115,11 @@
                 ticket.IsBooked = true;
                 ticket.IsSelected = false;
             }
+
+            @* Console.WriteLine($"Бронь квитка {ticket.Id} успішна: {result.Succeeded}"); *@
         }
+
+        @* this.StateHasChanged(); *@
 
         await LoadTickets();
     }
