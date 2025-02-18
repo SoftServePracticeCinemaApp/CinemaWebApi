@@ -128,6 +128,32 @@
     flex-direction: column;
     gap: pxToRem(15px);
 
+    select {
+      width: 100%;
+      height: auto;
+
+      background: transparent;
+      border: pxToRem(2px) solid rgba(255, 255, 255, 0.30);
+      border-radius: pxToRem(8px);
+      backdrop-filter: blur(1vh);
+
+      color: #FFF;
+      font-size: pxToRem(16px);
+      font-style: normal;
+
+      padding: pxToRem(10px);
+
+      option {
+        color: #FFF;
+        font-size: pxToRem(16px);
+        font-style: normal;
+
+        background: #000;
+
+        // border-radius: pxToRem(8px);
+      }
+    }
+
     &-title {
       color: #FFF;
       font-size: pxToRem(30px);

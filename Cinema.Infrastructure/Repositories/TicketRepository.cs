@@ -96,9 +96,12 @@ public class TicketRepository : ITicketRepository
 
     public async Task UpdateTicketBookStatus(long ticketId, bool isBooked)
     {
-        var ticketInDb = await _context.Tickets.AsNoTracking().FirstOrDefaultAsync(t => t.Id == ticketId);
+        var ticketInDb = await _context.Tickets.FirstOrDefaultAsync(t => t.Id == ticketId);
         if (ticketInDb == null) throw new ArgumentException($"Ticket with Id {ticketId} not found");
 
         ticketInDb.isBooked = isBooked;
+        Console.WriteLine($"Ticket {ticketId} updated to {isBooked}");
+
+        await _context.SaveChangesAsync();
     }
 }

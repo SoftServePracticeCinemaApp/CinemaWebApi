@@ -194,6 +194,10 @@ namespace Cinema.Application.Services
             {
                 await _unitOfWork.Ticket.UpdateTicketBookStatus(ticketId, true);
                 await _unitOfWork.CompleteAsync();
+
+                Console.WriteLine($"Ticket {ticketId} booked successfully");
+
+                
                 return _responses.CreateBaseOk("Ticket booked successfully", 1);
             }
 

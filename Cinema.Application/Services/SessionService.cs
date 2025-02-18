@@ -64,6 +64,19 @@ namespace Cinema.Application.Services
                 await _unitOfWork.Session.AddAsync(session);
                 await _unitOfWork.CompleteAsync();
 
+                for (int i = 0; i < 10; i++) {
+                    for (int j = 0; j < 10; j++) {
+                        var ticket = new TicketEntity {
+                            SessionId = session.Id,
+                            Row = i,
+                            SeatNumber = j,
+                            isBooked = false,
+                            MovieId = session.MovieId,
+                        };
+                        await _unitOfWork.Ticket.AddAsync(ticket);
+                    }
+                }
+
                 return _responses.CreateBaseOk("Session added successfully.", 1);
             }
             catch (Exception ex)
