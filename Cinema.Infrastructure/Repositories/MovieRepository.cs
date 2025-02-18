@@ -46,14 +46,15 @@ public class MovieRepository : IMovieRepository
     {
         if (movie == null) throw new ArgumentException($"{nameof(movie)} can't be null");
 
-        var movieInDb = await _context.Movies
-            .AsNoTracking()
-            .FirstOrDefaultAsync(m => m.Id == Id);
+        var movieInDb = await _context.Movies.FirstOrDefaultAsync(m => m.Id == Id);
 
         if (movieInDb != null)
         {
             movieInDb.SearchId = movie.SearchId;
             movieInDb.CinemaRating = movie.CinemaRating;
+
+            _context.Movies.Update(movieInDb); 
+            await _context.SaveChangesAsync(); 
         }
     }
 
