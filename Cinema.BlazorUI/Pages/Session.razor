@@ -1,0 +1,85 @@
+﻿@page "/movie-session/{SessionId:int}"
+@using Cinema.BlazorUI.Model
+@inject ITicketService TicketService
+
+@if (isLoading)
+{
+    <p>Завантаження...</p>
+}
+else
+{
+    <h1>@Tickets.FirstOrDefault()</h1>
+    <div class="seats-container">
+        @foreach (var ticket in Tickets)
+        {
+            <button @onclick="() => ToggleTicket(ticket)"
+                    disabled="@ticket.IsBooked">
+                @(ticket.Row)-@(ticket.Id)
+            </button>
+        }
+    </div>
+    <div class="h-25 me-lg-auto w-25">
+        <h3 class="mt-lg-auto">Виберіть місця</h3>
+    </div>
+    <div class="h-25 mt-lg-auto me-lg-auto w-25">
+        <button @onclick="ConfirmSelection" class="h-25 mt-lg-auto me-lg-auto" disabled="@(Tickets.All(t => !t.IsSelected))">Підтвердити</button>
+    </div>
+}
+
+@code {
+    [Parameter] public int SessionId { get; set; }
+
+    private List<Ticket> Tickets = new();
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("OnInitializedAsync викликано");
+        await Task.CompletedTask;
+    }
+
+    private async Task LoadTickets()
+    {
+        try
+        {
+            Console.WriteLine("Loading tickets");
+            Tickets = await TicketService.GetBySessionIdAsync(SessionId);
+            Console.WriteLine($"Завантажено {Tickets.Count} квитків"); // Лог для перевірки
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Помилка завантаження квитків: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+
+
+    private void ToggleTicket(Ticket ticket)
+    {
+        if (!ticket.IsBooked)
+        {
+            ticket.IsSelected = !ticket.IsSelected;
+        }
+    }
+
+    private async Task ConfirmSelection()
+    {
+        var selectedTickets = Tickets.Where(t => t.IsSelected).ToList();
+
+        foreach (var ticket in selectedTickets)
+        {
+            var result = await TicketService.BookTicketAsync(ticket.Id);
+            if (result.Succeeded)
+            {
+                ticket.IsBooked = true;
+                ticket.IsSelected = false;
+            }
+        }
+
+        await LoadTickets();
+    }
+}
