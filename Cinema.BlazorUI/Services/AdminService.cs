@@ -160,11 +160,9 @@ public class AdminService : IAdminService
             var response = await _httpClient.GetAsync($"api/admin/Sessions/Get?movieId={movieId}&date={date:yyyy-MM-ddTHH:mm:ss}&hallId={hallNumber}");
             if (response.IsSuccessStatusCode)
             {
-                // Отримуємо JSON і парсимо як dynamic щоб дістатись до поля data
                 var jsonDoc = await response.Content.ReadFromJsonAsync<JsonDocument>(_jsonSerializerOptions);
                 var dataElement = jsonDoc.RootElement.GetProperty("data");
 
-                // Серіалізуємо тільки дані з поля data в нашу модель
                 var session = dataElement.Deserialize<FromattedSession>(_jsonSerializerOptions);
                 return session;
             }

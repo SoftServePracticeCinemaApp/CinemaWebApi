@@ -195,20 +195,23 @@ public class AuthStateProvider : AuthenticationStateProvider, IAccountManagement
             if (result.IsSuccessStatusCode)
             {
                 var tokenResponse = await result.Content.ReadAsStringAsync();
+                Console.WriteLine($"Token response: {tokenResponse}");
+                
                 var tokenInfo = JsonSerializer.Deserialize<TokenInfo>(tokenResponse, jsonSerializerOptions);
 
                 if (tokenInfo?.Token != null)
                 {
                     await _localStorageService.SetItemAsync("accessToken", tokenInfo.Token);
+                    Console.WriteLine("Token successfully saved to localStorage");
 
                     NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
                     return new FormResult { Succeeded = true };
                 }
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            //Log service error
+            Console.WriteLine($"Login error: {ex.Message}");
         }
 
         return new FormResult

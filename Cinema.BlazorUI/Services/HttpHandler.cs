@@ -19,14 +19,20 @@ public class CustomHttpHandler : DelegatingHandler
         if (!string.IsNullOrEmpty(token))
         {
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            Console.WriteLine($"Setting Authorization header: Bearer {token}");
         }
+
+        
+
+        
+
+        Console.WriteLine($"Token: {token}");
+        Console.WriteLine($"Authorization header: {request.Headers.Authorization}");
 
         var response = await base.SendAsync(request, cancellationToken);
 
-        // Handle 401 Unauthorized responses
         if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
         {
-            // Clear the token if unauthorized
             await _localStorageService.RemoveItemAsync("accessToken", cancellationToken);
         }
 
