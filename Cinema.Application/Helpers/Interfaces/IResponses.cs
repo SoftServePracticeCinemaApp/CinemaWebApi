@@ -10,5 +10,6 @@ namespace Cinema.Application.Helpers.Interfaces
         IBaseResponse<T> CreateBaseBadRequest<T>(string description);
         IBaseResponse<T> CreateBaseNotFound<T>(string description);
         IBaseResponse<T> CreateBaseServerError<T>(string exceptionMessage);
+        IBaseResponse<T> CreateBaseConflict<T>(string message);
     }
 }

@@ -42,7 +42,8 @@ namespace Cinema.Application.Services
 
         }
 
-        public async Task<IBaseResponse<GetTicketDTO>> GetTicketByIdAsync(long id)
+
+        public async Task<IBaseResponse<GetTicketDTO>> GetTicketByIdAsync(int id)
         {
             try
             {
@@ -77,7 +78,7 @@ namespace Cinema.Application.Services
             }
         }
 
-        public async Task<IBaseResponse<string>> UpdateTicketAsync(long id, UpdateTicketDTO ticketDto)
+        public async Task<IBaseResponse<string>> UpdateTicketAsync(int id, UpdateTicketDTO ticketDto)
         {
             try
             {
@@ -98,7 +99,9 @@ namespace Cinema.Application.Services
             }
         }
 
-        public async Task<IBaseResponse<string>> DeleteTicketAsync(long id)
+
+
+        public async Task<IBaseResponse<string>> DeleteTicketAsync(int id)
         {
             try
             {
@@ -149,7 +152,7 @@ namespace Cinema.Application.Services
             }
         }
 
-        public async Task<IBaseResponse<List<GetTicketDTO>>> GetTicketsBySessionIdAsync(long sessionId)
+        public async Task<IBaseResponse<List<GetTicketDTO>>> GetTicketsBySessionIdAsync(int sessionId)
         {
             try
             {
@@ -193,7 +196,8 @@ namespace Cinema.Application.Services
                 await _unitOfWork.CompleteAsync();
                 return _responses.CreateBaseOk("Ticket booked successfully", 1);
             }
-            catch (Exception ex) 
+
+            catch (Exception ex)
             {
                 return _responses.CreateBaseBadRequest<string>(ex.Message);
             }

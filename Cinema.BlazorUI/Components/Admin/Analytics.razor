@@ -1,0 +1,125 @@
+﻿@page "/analytics"
+@attribute [Authorize(Roles = "Admin")]
+@using Cinema.BlazorUI.Services
+@inject IAnalyticsService AnalyticsService
+
+<div class="admin">
+    <div class="admin-container">
+        <h3 class="admin-container-title">Analytics Dashboard</h3>
+
+        <div class="admin-action">
+            <div class="admin-action-form">
+                <div class="admin-action-form-block">
+                    <div class="admin-action-form-block-small">
+                        <label>Start Date:</label>
+                        <input type="date" @bind="startDate" />
+                    </div>
+                    <div class="admin-action-form-block-small">
+                        <label>End Date:</label>
+                        <input type="date" @bind="endDate" />
+                    </div>
+                    <div class="admin-action-form-block-small">
+                        <div class="actions">
+                            <button @onclick="LoadAnalytics">
+                                Update Analytics
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (revenue == null || topMovies == null || salesData == null)
+        {
+            <div class="admin-action">
+                <div class="alert" style="background: rgba(255, 255, 255, 0.30); backdrop-filter: blur(1vh); color: #FFF;">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Loading analytics...
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="admin-action">
+                <div class="admin-action-form-block" style="margin-bottom: 20px;">
+                    <div style="background: rgba(255, 255, 255, 0.30); backdrop-filter: blur(1vh); padding: 20px; border-radius: 8px;">
+                        <h4 style="color: #FFF;">Total Revenue</h4>
+                        <p style="color: #FFF; font-size: 2.5rem; margin: 0;">@revenue?.ToString("C")</p>
+                    </div>
+                    <div style="background: rgba(255, 255, 255, 0.30); backdrop-filter: blur(1vh); padding: 20px; border-radius: 8px; grid-column: span 2;">
+                        <h4 style="color: #FFF; margin-bottom: 20px;">Top Movies</h4>
+                        <div class="table-responsive">
+                            <table class="table" style="color: #FFF;">
+                                <thead>
+                                    <tr>
+                                        <th>Movie Title</th>
+                                        <th class="text-end">Tickets Sold</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var movie in topMovies)
+                                    {
+                                        <tr>
+                                            <td>@movie.MovieTitle</td>
+                                            <td class="text-end">@movie.TicketsSold</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: rgba(255, 255, 255, 0.30); backdrop-filter: blur(1vh); padding: 20px; border-radius: 8px;">
+                    <h4 style="color: #FFF; margin-bottom: 20px;">Daily Sales</h4>
+                    <div class="table-responsive">
+                        <table class="table" style="color: #FFF;">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th class="text-end">Revenue</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var sale in salesData)
+                                {
+                                    <tr>
+                                        <td>@sale.Date.ToShortDateString()</td>
+                                        <td class="text-end">@sale.Revenue.ToString("C")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private double? revenue;
+    private List<(string MovieTitle, int TicketsSold)>? topMovies;
+    private List<(DateTime Date, double Revenue)>? salesData;
+    private DateTime startDate = DateTime.Now.AddMonths(-1);
+    private DateTime endDate = DateTime.Now;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAnalytics();
+    }
+
+    private async Task LoadAnalytics()
+    {
+        try
+        {
+            revenue = await AnalyticsService.GetTotalRevenue(startDate, endDate);
+            topMovies = await AnalyticsService.GetTopMovies(startDate, endDate);
+            salesData = await AnalyticsService.GetRevenueByPeriod(startDate, endDate);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading analytics: {ex.Message}");
+        }
+    }
+}

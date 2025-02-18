@@ -2,9 +2,12 @@
 
 public class SessionEntity
 {
-    public long Id { get; set; }
-    public long MovieId { get; set; }
+    public int Id { get; set; }
+    public int MovieId { get; set; }
     public DateTime Date { get; set; }
     public int HallId { get; set; }
+    public double TicketPrice { get; set; }
     public HallEntity? Hall { get; set; }
+
+    public MovieEntity? Movie { get; set; }
 }

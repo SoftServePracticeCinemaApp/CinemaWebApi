@@ -1,4 +1,4 @@
-﻿using Cinema.Application.DTO.HallEntityDTOs;
+﻿using Cinema.Application.DTO.HallDTOs;
 
 namespace Cinema.Application.DTO.SessionDTOs
 {
@@ -9,5 +9,6 @@ namespace Cinema.Application.DTO.SessionDTOs
         public DateTime Date { get; set; }
         public int HallId { get; set; }
         public GetHallDTO? Hall { get; set; }
+        public decimal TicketPrice { get; set; }
     }
 }

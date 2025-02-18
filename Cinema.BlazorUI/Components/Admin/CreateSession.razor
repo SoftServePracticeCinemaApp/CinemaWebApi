@@ -1,0 +1,180 @@
+@using Cinema.BlazorUI.Model
+@using Cinema.BlazorUI.Model.TMDb
+@inject IMovieService MService
+@inject IHallService HallService
+@namespace Cinema.BlazorUI.Components.Admin
+
+<div class="admin-action">
+    <div class="admin-action-title">@Title</div>
+
+    <div class="admin-action-form">
+        <div class="admin-action-form-group">
+            <label>Select Movie</label>
+            @if (movies != null && movies.Any())
+            {
+                <select class="admin-action-form-group-control" @bind="MovieId">
+                    <option value="0">Select a movie...</option>
+                    @foreach (var movie in movies)
+                    {
+                        <option value="@movie.Id">@movie.Title</option>
+                    }
+                </select>
+            }
+            else
+            {
+                <p>Loading movies...</p>
+            }
+        </div>
+
+        <div class="admin-action-form-block">
+            @for (int i = 0; i < Sessions.Count; i++)
+            {
+                var index = i;
+
+                <div class="admin-action-form-block-small">
+                    <label for="">Dates</label>
+                    <input type="datetime-local"
+                           class="admin-action-form-block-small-control"
+                           @bind="Sessions[index].Date"
+                           @bind:event="oninput"
+                           placeholder="Select date and time" />
+                </div>
+
+                <div class="admin-action-form-block-small">
+                    <label for="">Select Hall</label>
+                    @if (halls != null && halls.Any())
+                    {
+                        <select class="admin-action-form-block-small-control" @bind="Sessions[index].HallNumber">
+                            <option value="0">Select a hall...</option>
+                            @foreach (var hall in halls)
+                            {
+                                <option value="@hall.Id">Hall @hall.Id</option>
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        <p>Loading halls...</p>
+                    }
+                </div>
+
+                <div class="admin-action-form-block-small">
+                    <label for="">Ticket price</label>
+                    <input type="number"
+                           class="admin-action-form-block-small-control"
+                           @bind="Sessions[index].TicketPrice"
+                           placeholder="Enter ticket price" />
+                </div>
+            }
+
+           
+            <div class="buttons">
+                <button type="button" class="buttons add-session-button" @onclick="AddNewSession">
+                    Add Session
+                </button>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button @onclick="HandleSubmit"
+                    disabled="@(MovieId == 0 || Sessions.Any(s => s.HallNumber == 0))">
+                @(SubmitText ?? "Submit")
+            </button>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    public class SessionData
+    {
+        public int MovieId { get; set; }
+        public SessionInfo[] Sessions { get; set; }
+    }
+
+    public class SessionInfo
+    {
+        public DateTime Date { get; set; }
+        public int HallNumber { get; set; }
+        public double TicketPrice { get; set; }
+    }
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public EventCallback<SessionData> OnSubmit { get; set; }
+
+    [Parameter]
+    public string SubmitText { get; set; }
+
+    private int MovieId { get; set; }
+    private List<SessionInfo> Sessions { get; set; } = new()
+    {
+        new SessionInfo
+        {
+            Date = DateTime.Now,
+            HallNumber = 0,
+            TicketPrice = 0
+        }
+    };
+    private List<FormattedMovie>? movies;
+    private List<FormattedHall>? halls;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var moviesTask = MService.GetMoviesAsync();
+            var hallsTask = HallService.GetHallsAsync();
+
+            await Task.WhenAll(moviesTask, hallsTask);
+
+            movies = await moviesTask;
+            halls = await hallsTask;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading data: {ex.Message}");
+            movies = new List<FormattedMovie>();
+            halls = new List<FormattedHall>();
+        }
+    }
+
+    private void HandleSessionChange(int index)
+    {
+        if (index == Sessions.Count - 1)
+        {
+            Sessions.Add(new SessionInfo
+                {
+                    Date = DateTime.Now,
+                    HallNumber = 0,
+                    TicketPrice = 0
+                });
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        if (MovieId == 0 || Sessions.Any(s => s.HallNumber == 0)) return;
+
+        var sessionData = new SessionData
+            {
+                MovieId = MovieId,
+                Sessions = Sessions.ToArray()
+            };
+        await OnSubmit.InvokeAsync(sessionData);
+    }
+
+     private void AddNewSession()
+    {
+        Sessions.Add(new SessionInfo
+        {
+            Date = DateTime.Now,
+            HallNumber = 0,
+            TicketPrice = 0
+        });
+        StateHasChanged();
+    }
+}

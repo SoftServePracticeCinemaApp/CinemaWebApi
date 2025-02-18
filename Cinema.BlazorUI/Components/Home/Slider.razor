@@ -1,0 +1,65 @@
+@using Cinema.BlazorUI.Model
+@using Cinema.BlazorUI.Pages.Home
+@namespace Cinema.BlazorUI.Components.Home.Slider
+
+
+        <div class="movie-slider-container">
+            <button class="slider-button prev" @onclick="PreviousSlide">
+                <img class="arrow" src="images/home/arrow.svg" alt="arrow" />
+            </button>
+
+
+            <div class="movie-slider">
+                @for (int i = 0; i < Movies.Count; i++)
+                {
+                    var movie = Movies[i];
+                    var position = GetSlidePosition(i);
+                    <div class="movie-slide @position" @onclick="() => OnMovieClicked(movie.Id)">
+                        <img src="https://image.tmdb.org/t/p/original/@movie.PosterPath" alt="@movie.Genre" />
+                        <img src="https://image.tmdb.org/t/p/original/@movie.PosterPath" alt="@movie.Genre" />
+                    </div>
+
+                }
+            </div>
+
+            <button class="slider-button next" @onclick="NextSlide">
+                <img class="arrow" src="images/home/arrow.svg" alt="arrow" />
+            </button>
+        </div>
+
+@code {
+    [Parameter]
+    public List<FormattedMovie> Movies { get; set; }
+    [Parameter]
+    public EventCallback<int> OnMovieClick { get; set; }
+    private int CurrentIndex = 0;
+
+    private void NextSlide()
+    {
+        CurrentIndex = (CurrentIndex + 1) % Movies.Count;
+    }
+
+    private void PreviousSlide()
+    {
+        CurrentIndex = (CurrentIndex - 1 + Movies.Count) % Movies.Count;
+    }
+
+    private string GetSlidePosition(int index)
+    {
+        var difference = (index - CurrentIndex + Movies.Count) % Movies.Count;
+        return difference switch
+        {
+            0 => "active",
+            1 => "next",
+            2 => "next-2",
+            var x when x == Movies.Count - 1 => "prev",
+            var x when x == Movies.Count - 2 => "prev-2",
+            _ => "hidden"
+        };
+    }
+
+    private async Task OnMovieClicked(int movieId)
+    {
+        await OnMovieClick.InvokeAsync(movieId);
+    }
+}

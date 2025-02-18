@@ -19,14 +19,15 @@ public class MovieRepository : IMovieRepository
         await _context.AddAsync(movie);
     }
 
-    public async Task DeleteByIdAsync(int Id)
+    public async Task DeleteByIdAsync(int id)
     {
-        var movieInDb = await _context.Movies
-            .AsNoTracking()
-            .FirstOrDefaultAsync(m => m.Id == Id);
+        var movieInDb = await _context.Movies.FindAsync(id);
 
-        if (movieInDb != null) await Task.Run(() => _context.Movies.Remove(movieInDb));
-        else throw new InvalidOperationException($"session with id {Id} doesn't exist");
+        if (movieInDb == null)
+            throw new InvalidOperationException($"Movie with id {id} doesn't exist");
+
+        _context.Movies.Remove(movieInDb);
+        await _context.SaveChangesAsync();
     }
 
     public async Task<List<MovieEntity>> GetAllAsync() => await _context.Movies.ToListAsync();
@@ -45,14 +46,15 @@ public class MovieRepository : IMovieRepository
     {
         if (movie == null) throw new ArgumentException($"{nameof(movie)} can't be null");
 
-        var movieInDb = await _context.Movies
-            .AsNoTracking()
-            .FirstOrDefaultAsync(m => m.Id == Id);
+        var movieInDb = await _context.Movies.FirstOrDefaultAsync(m => m.Id == Id);
 
         if (movieInDb != null)
         {
             movieInDb.SearchId = movie.SearchId;
             movieInDb.CinemaRating = movie.CinemaRating;
+
+            _context.Movies.Update(movieInDb); 
+            await _context.SaveChangesAsync(); 
         }
     }
 
@@ -62,5 +64,42 @@ public class MovieRepository : IMovieRepository
             .OrderByDescending(m => m.CinemaRating)
             .Take(take)
             .ToListAsync();
+    }
+    public async Task<MovieEntity> GetBySearchIdAsync(int searchId)
+    {
+        var movie = await _context.Movies
+            .AsNoTracking()
+            .FirstOrDefaultAsync(m => m.SearchId == searchId);
+
+        return movie;
+    }
+
+    public async Task<List<MovieEntity>> GetAllWithPaginationAsync(int take, int skip, string sortBy, bool ascending)
+    {
+        IQueryable<MovieEntity> query = _context.Movies.AsQueryable();
+
+        if (string.IsNullOrEmpty(sortBy))
+        {
+            sortBy = "release_date";
+        }
+
+        switch (sortBy.ToLower())
+        {
+            case "title":
+                query = ascending ? query.OrderBy(m => m.Title) : query.OrderByDescending(m => m.Title);
+                break;
+            case "rating":
+                query = ascending ? query.OrderBy(m => m.CinemaRating) : query.OrderByDescending(m => m.CinemaRating);
+                break;
+            case "release_date":
+                query = ascending ? query.OrderBy(m => m.ReleaseDate) : query.OrderByDescending(m => m.ReleaseDate);
+                break;
+            default:
+                return new List<MovieEntity>();
+        }
+
+        var movies = await query.Skip(skip).Take(take).ToListAsync();
+
+        return movies;
     }
 }

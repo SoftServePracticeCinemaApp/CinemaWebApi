@@ -15,11 +15,18 @@ using Cinema.Application.Interfaces;
 using Cinema.Application.Services;
 using Cinema.Domain.Interfaces;
 using Cinema.Infrastructure.Repositories;
+using System.Globalization;
+using Cinema.Infrastructure.Configuration;
+using Microsoft.AspNetCore.Identity;
+using Cinema.Application.Helpers.Validations.HallValidation;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using Microsoft.OpenApi.Models;
 
 
 public static class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
         var useInMemoryDB = builder.Configuration.GetValue<bool>("UseInMemoryDB");
@@ -30,12 +37,15 @@ public static class Program
         var secret = builder.Configuration.GetValue<string>("ApiSettings:Secret");
         var issuer = builder.Configuration.GetValue<string>("ApiSettings:Issuer");
         var audience = builder.Configuration.GetValue<string>("ApiSettings:Audience");
-        builder.Services.AddInMemoryDataBase();
+
         builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
         builder.Services.AddControllers(options =>
         {
             options.Filters.Add<GlobalExceptionFilter>();
         });
+
+        builder.Services.AddFluentValidationAutoValidation();
+        builder.Services.AddValidatorsFromAssemblyContaining<AddHallValidator>();
 
         var key = Encoding.ASCII.GetBytes(secret);
 
@@ -50,6 +60,9 @@ public static class Program
                 ServiceProviderOptions => ServiceProviderOptions.EnableRetryOnFailure()));
         }
 
+        builder.Services.Configure<TmdbSettings>(builder.Configuration.GetSection("TMDB"));
+        builder.Services.AddHttpClient<TmdbService>();
+        builder.Services.AddScoped<TmdbService>();
 
         builder.Services.AddScoped<IResponses, Responses>();
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -64,29 +77,92 @@ public static class Program
         builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 
         builder.Services.AddScoped<IHallRepository, HallRepository>();
+        builder.Services.AddScoped<IHallService, HallService>();
+
+        builder.Services.AddScoped<IRatingRepository, RatingRepository>();
+        builder.Services.AddScoped<IRatingService, RatingService>();
+        builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
+
+        builder.Services.AddDistributedMemoryCache();
+
 
         builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(x =>
+			options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+		}).AddJwtBearer(x =>
         {
             x.TokenValidationParameters = new()
+
             {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = true,
-                ValidIssuer = issuer,
-                ValidateAudience = true,
-                ValidAudience = audience
-            };
-        });
-
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
-
+                options.RequireHttpsMetadata = false; // Вимкнення HTTPS для локального тестування
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = true,
+                    ValidIssuer = issuer,
+                    ValidateAudience = true,
+                    ValidAudience = audience,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero // Вимикає затримку перевірки токена
+                };
+            });
 
         builder.Services.AddAuthorization();
+
+        builder.Services.AddEndpointsApiExplorer();
+		builder.Services.AddSwaggerGen(options =>
+		{
+			options.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme, securityScheme: new OpenApiSecurityScheme()
+			{
+				Name = "Authorization",
+				Description = "Enter Authorization string as following: Bearer JwtToken",
+				In = ParameterLocation.Header,
+				Type = SecuritySchemeType.ApiKey,
+				Scheme = "Bearer"
+			});
+			options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+	        {
+		        {
+			        new OpenApiSecurityScheme()
+			        {
+				        Reference = new OpenApiReference()
+				        {
+					        Type = ReferenceType.SecurityScheme,
+					        Id = JwtBearerDefaults.AuthenticationScheme
+				        }
+			        }, new string[] {}
+		        }
+	        });
+		});
+
+
+		builder.Services.AddAuthorization();
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            });
+        });
+
+        CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+        CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
+        // builder.Services.Configure<System.Globalization.CultureInfo>("en-US");
+        // System.Globalization.CultureInfo.DefaultThreadCurrentCulture = new System.Globalization.CultureInfo("en-US");
+        // System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = new System.Globalization.CultureInfo("en-US");
+
+        builder.Services.AddIdentity<UserEntity, IdentityRole>()
+            .AddEntityFrameworkStores<CinemaDbContext>()
+            .AddDefaultTokenProviders();
+
+        builder.Services.AddScoped<RoleSeeder>();
 
         var app = builder.Build();
         app.UseSwagger();
@@ -113,30 +189,44 @@ public static class Program
             }
         }
 
+        app.UseCors("AllowAll");
 
+		app.UseHttpsRedirection();
+		app.UseAuthentication();
+		app.UseAuthorization();
         app.MapControllers();
-        app.UseHttpsRedirection();
-        app.UseAuthentication();
-        app.UseAuthorization();
+
+
+		var supportedCultures = new[] { "en-US" };
+        var localizationOptions = new RequestLocalizationOptions()
+            .SetDefaultCulture(supportedCultures[0])
+            .AddSupportedCultures(supportedCultures)
+            .AddSupportedUICultures(supportedCultures);
+
+        app.UseRequestLocalization(localizationOptions);
+
+        using (var scope = app.Services.CreateScope())
+        {
+            var roleSeeder = scope.ServiceProvider.GetRequiredService<RoleSeeder>();
+            await roleSeeder.SeedRolesAsync();
+            await roleSeeder.AssignAdminRoleAsync("admin@example.com");  
+        }
+
         app.Run();
     }
 
 
- private static void SeedData(CinemaDbContext context)
+private static void SeedData(CinemaDbContext context)
     {
         var name = "John";
         var lastName = "Doe";
 
-        // Додавання користувачів
-
         context.Users.AddRange(
-            new UserEntity { Id = "1",  Name = "JonDoe", LastName = "Doe", UserName = $"{name} {lastName}", Tickets = [] },
+            new UserEntity { Id = "1", Name = "JonDoe", LastName = "Doe", UserName = $"{name} {lastName}", Tickets = [] },
             new UserEntity { Id = "2", Name = "JonDoe", LastName = "Doe", UserName = $"{name} {lastName}", Tickets = [] }
         );
-
         context.SaveChanges();
 
-        // Додавання залів
         var halls = new List<HallEntity>
     {
         new HallEntity { Id = 1, Seats = new List<List<int>> { new List<int> { 1, 2, 3 }, new List<int> { 4, 5, 6 } } },
@@ -144,23 +234,36 @@ public static class Program
     };
         context.Halls.AddRange(halls);
 
-        // Додавання фільмів
         var movies = new List<MovieEntity>
     {
-        new MovieEntity { Id = 1, SearchId = 101, CinemaRating = 8.5 },
-        new MovieEntity { Id = 2, SearchId = 102, CinemaRating = 7.8 }
+        new MovieEntity {
+            Id = 1,
+            SearchId = 101,
+            Title = "Inception",
+            Overview = "A thief who steals corporate secrets through dream-sharing technology...",
+            ReleaseDate = "2010-07-16",
+            CinemaRating = 8.5,
+            PosterPath = "/r84x4x93LbZ2gozISTBYVeq0gLZ.jpg"
+        },
+        new MovieEntity {
+            Id = 2,
+            SearchId = 102,
+            Title = "The Matrix",
+            Overview = "A computer programmer discovers the true nature of his reality...",
+            ReleaseDate = "1999-03-31",
+            CinemaRating = 7.8,
+            PosterPath = "/58748AndVH1DitlTbcbLpKHuSS2.jpg"
+        }
     };
         context.Movies.AddRange(movies);
 
-        // Додавання сеансів
         var sessions = new List<SessionEntity>
     {
-        new SessionEntity { Id = 1, MovieId = 1, Date = DateTime.Now.AddDays(1), HallId = 1 },
-        new SessionEntity { Id = 2, MovieId = 2, Date = DateTime.Now.AddDays(2), HallId = 2 }
+        new SessionEntity { Id = 1, MovieId = 1, Date = DateTime.Now.AddDays(1), HallId = 1, TicketPrice = 2.3 },
+        new SessionEntity { Id = 2, MovieId = 2, Date = DateTime.Now.AddDays(2), HallId = 2, TicketPrice = 3.3 }
     };
         context.Sessions.AddRange(sessions);
 
-        // Додавання квитків
         var tickets = new List<TicketEntity>
     {
         new TicketEntity { Id = 1, SessionId = 1, UserId = "1", MovieId = 1, Row = 1 },

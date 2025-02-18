@@ -10,5 +10,7 @@ namespace Cinema.Domain.Interfaces
         Task<MovieEntity> GetByIdAsync(int id);
         Task<List<MovieEntity>> GetAllAsync();
         Task<List<MovieEntity>> GetTopRatedAsync(int take);
+        Task<MovieEntity> GetBySearchIdAsync(int searchId);
+        Task<List<MovieEntity>> GetAllWithPaginationAsync(int take, int skip, string sortBy, bool ascending);
     }
 }

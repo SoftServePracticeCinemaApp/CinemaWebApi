@@ -1,0 +1,272 @@
+@page "/movie/{Id:int}"
+@using Cinema.BlazorUI.Model
+@using Cinema.BlazorUI.Model.TMDb
+@inject IMovieService movieService
+@inject NavigationManager NavigationManager
+
+<PageTitle>@(movie?.Title ?? "Movie")</PageTitle>
+
+@if (_loading)
+{
+    <div class="loading-container">
+        <p>Loading movie...</p>
+    </div>
+}
+else if (_error)
+{
+    <div class="error-container">
+        <p>An error occurred while loading the movie.</p>
+    </div>
+}
+else if (movie == null)
+{
+    <div class="no-movie-container">
+        <p>Movie not found.</p>
+    </div>
+}
+else
+{
+    <div class="movie-page">
+        <div class="movie-container">
+            <div class="movie-header">
+                <div class="movie-poster">
+                    <img src="https://image.tmdb.org/t/p/original/@movie.PosterPath" alt="@movie.Title" />
+
+                    @if (_playerReady && !string.IsNullOrEmpty(trailerURL))
+                    {
+                        <a href="@trailerURL" target="_blank">
+                            Trailer
+                        </a>
+                    }
+                </div>
+                <div class="movie-info">
+                    <div class="movie-title">@movie.Title</div>
+                    <div class="movie-details">
+                        <div class="rating">@(movieData?.VoteAverage.ToString("0.0") ?? "")</div>
+                        <div class="genre">@(movieData?.Genres?.FirstOrDefault()?.Name ?? "")</div>
+                        <div class="duration">@(movieData?.Runtime != null ? $"{movieData.Runtime / 60}:{movieData.Runtime % 60}" : "")</div>
+                        <div class="adult">@(movieData?.Adult == true ? "18+" : "16+")</div>
+                    </div>
+                    <div class="movie-overview">
+                        <span class="movie-overview-title">Overview:</span>
+                        <span class="movie-overview-content">@(movieData?.Overview ?? "")</span>
+                    </div>
+
+                    <div class="movie-actors">
+                        <span class="movie-actors-title">Cast:</span>
+                        @if (actors != null)
+                        {
+                            @foreach (var actor in actors)
+                            {
+                                <span class="movie-actor">
+                                    @actor@(actor != actors.Last() ? ", " : "")
+                                </span>
+                            }
+                        }
+                    </div>
+
+                    <div class="rating-section">
+                        <div class="ratings-container">
+                            <div class="average-rating">
+                                <span class="rating-title">Average user rating:</span>
+                                <div class="stars-container readonly">
+                                    @for (int i = 1; i <= 10; i++)
+                                    {
+                                        var ratingValue = i;
+                                        <span class="star @(movie.CinemaRating >= ratingValue ? "filled" : "")">
+                                            ★
+                                        </span>
+                                    }
+                                </div>
+                                @if (movie.CinemaRating != null)
+                                {
+                                    <span class="rating-value">@movie.CinemaRating?.ToString("F1")/10</span>
+                                }
+                            </div>
+
+                            <div class="user-rating-container">
+                                <span class="rating-title">Rate this movie:</span>
+                                <div class="stars-container">
+                                    @for (int i = 1; i <= 10; i++)
+                                    {
+                                        var ratingValue = i;
+                                        <span class="star @(_userRating >= ratingValue ? "filled" : "") @(_hoverRating >= ratingValue ? "hovered" : "")"
+                                              @onclick="() => OnRateMovie(ratingValue)"
+                                              @onmouseover="() => OnStarHover(ratingValue)" 
+                                              @onmouseout="OnStarLeave">
+                                            ★
+                                        </span>
+                                    }
+                                </div>
+                                @if (_userRating.HasValue)
+                                {
+                                    <span class="rating-value">Your rating: @_userRating/10</span>
+                                }
+                                @if (ratingMessage != null)
+                                {
+                                    <div class="@(ratingSuccess ? "rating-success" : "rating-error")">
+                                        @ratingMessage
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sessions">
+                        <h2>Available Sessions</h2>
+
+                        @if (movie.Sessions?.Any() == true)
+                        {
+                            <div class="sessions-grid">
+                                @foreach (var session in movie.Sessions.OrderBy(s => s.Date))
+                                {
+                                    <div class="session-item">
+                                        <span class="date">@session.Date.ToString("dd.MM.yyyy")</span>
+                                        <span class="time">@session.Date.ToString("HH:mm")</span>
+                                        <button class="btn-book" @onclick="() => BookSession(session.Id)">
+                                            Book Tickets
+                                        </button>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p>No available sessions</p>
+                        }
+                    </div>
+                </div>
+            </div>
+@* 
+            @if (_playerReady && !string.IsNullOrEmpty(trailerURL))
+            {
+                <div class="trailer">
+                    <iframe src="@trailerURL" title="YouTube video player" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen></iframe>
+                </div>
+            } *@
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private FormattedMovie? movie;
+    private MovieResult? movieData;
+
+    private List<string>? actors = new(); // Initialize
+
+    private readonly string baseURL = "https://www.youtube.com/watch?v=";
+    private string? trailerURL;
+
+    private bool _loading = true;
+    private bool _error = false;
+    private bool _playerReady = false;
+
+    private double? _userRating;
+    private int _hoverRating = 0;
+    private string? ratingMessage;
+    private bool ratingSuccess;
+    private bool isRatingSubmitting = false;
+    private bool hasUserRated;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var movies = await movieService.GetMoviesAsync();
+            movie = movies?.FirstOrDefault(m => m.Id == Id);
+
+            if (movie != null)
+            {
+                movieData = await movieService.GetMovieDataAsync(movie.SearchId);
+                trailerURL = await movieService.GetMovieTrailerAsync(movie.SearchId);
+                actors = await movieService.GetMovieActorsAsync(movie.SearchId);
+                hasUserRated = await movieService.HasUserRatedMovieAsync(Id);
+                if (hasUserRated)
+                {
+                    _userRating = await movieService.GetUserRatingAsync(Id);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(trailerURL))
+            {
+                await Task.Delay(200);
+                _playerReady = true;
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading movie: {ex.Message}");
+            _error = true;
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    @* protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !string.IsNullOrEmpty(trailerURL))
+        {
+            await Task.Delay(200);
+            _playerReady = true;
+            StateHasChanged();
+        }
+    } *@
+
+    private void BookSession(int sessionId)
+    {
+        NavigationManager.NavigateTo($"/booking/{sessionId}");
+    }
+
+    private async Task OnRateMovie(int rating)
+    {
+        if (isRatingSubmitting) return;
+        
+        try
+        {
+            isRatingSubmitting = true;
+            var success = await movieService.RateMovieAsync(Id, rating);
+            if (success)
+            {
+                _userRating = rating;
+                hasUserRated = true;
+                ratingMessage = "Рейтинг успішно збережено!";
+                ratingSuccess = true;
+            }
+            else
+            {
+                ratingMessage = "Не вдалося зберегти рейтинг. Спробуйте ще раз.";
+                ratingSuccess = false;
+            }
+        }
+        catch
+        {
+            ratingMessage = "Сталася помилка при збереженні рейтингу.";
+            ratingSuccess = false;
+        }
+        finally 
+        {
+            isRatingSubmitting = false;
+            await Task.Delay(3000);
+            ratingMessage = null;
+            StateHasChanged();
+        }
+    }
+
+    private void OnStarHover(int rating)
+    {
+        _hoverRating = rating;
+    }
+
+    private void OnStarLeave()
+    {
+        _hoverRating = 0;
+    }
+}

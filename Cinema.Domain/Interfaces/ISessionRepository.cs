@@ -11,5 +11,6 @@ namespace Cinema.Domain.Interfaces
         Task<IEnumerable<SessionEntity>> GetByDateAsync(DateTime dateTime);
         Task DeleteByIdAsync(long sessionId);
         Task<IEnumerable<SessionEntity>> GetByMovieIdAsync(long movieId);
+        Task<SessionEntity> GetByParamsAsync(int movieId, DateTime date, int hallId);
     }
 }

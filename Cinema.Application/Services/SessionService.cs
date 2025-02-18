@@ -83,13 +83,35 @@ namespace Cinema.Application.Services
 
                 _mapper.Map(sessionDto, existingSession);
 
+    
+                await _unitOfWork.Session.UpdateAsync(id, existingSession);
+
                 await _unitOfWork.CompleteAsync();
 
-                return _responses.CreateBaseOk("Session updated successfully.", 1);
+                return _responses.CreateBaseOk("Session date and hall updated successfully.", 1);
             }
             catch (Exception ex)
             {
                 return _responses.CreateBaseServerError<string>(ex.Message);
+            }
+        }
+
+
+        public async Task<IBaseResponse<GetSessionDTO>> GetSessionByParamsAsync(int movieId, DateTime date, int hallId)
+        {
+            try
+            {
+                var session = await _unitOfWork.Session.GetByParamsAsync(movieId, date, hallId);
+
+                if (session == null)
+                    return _responses.CreateBaseNotFound<GetSessionDTO>("No session found with the specified parameters.");
+
+                var sessionDto = _mapper.Map<GetSessionDTO>(session);
+                return _responses.CreateBaseOk(sessionDto, 1);
+            }
+            catch (Exception ex)
+            {
+                return _responses.CreateBaseServerError<GetSessionDTO>(ex.Message);
             }
         }
 
@@ -107,6 +129,7 @@ namespace Cinema.Application.Services
                 return _responses.CreateBaseServerError<string>(ex.Message);
             }
         }
+
 
         public async Task<IBaseResponse<List<GetSessionDTO>>> GetSessionsByDateAsync(DateTime date)
         {

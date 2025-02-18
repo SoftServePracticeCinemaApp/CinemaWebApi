@@ -18,13 +18,21 @@ namespace Cinema.Infrastructure.Configuration
                 {
                     Id = 1,
                     SearchId = 101,
-                    CinemaRating = 8.5
+                    Title = "Inception",
+                    Overview = "A thief who steals corporate secrets through dream-sharing technology...",
+                    ReleaseDate = "2010-07-16",
+                    CinemaRating = 8.5,
+                    PosterPath = "/poster/inception.jpg"
                 },
                 new MovieEntity
                 {
                     Id = 2,
                     SearchId = 102,
-                    CinemaRating = 7.8
+                    Title = "The Matrix",
+                    Overview = "A computer programmer discovers the true nature of his reality...",
+                    ReleaseDate = "1999-03-31",
+                    CinemaRating = 7.8,
+                    PosterPath = "/poster/matrix.jpg"
                 }
             );
         }

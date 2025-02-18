@@ -1,0 +1,360 @@
+@use "sass:math";
+
+@function pxToRem($pxValue, $scale: 1) {
+  @return math.div($pxValue, 16px) * $scale * 1rem;
+}
+
+.movie-page {
+  padding: 2rem;
+  max-width: 100%;
+  margin: 0 auto;
+
+  padding: pxToRem(20px) pxToRem(170px);
+
+  .movie-container {
+    width: 100%;
+    height: auto;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    gap: pxToRem(20px);
+
+
+    padding: pxToRem(20px);
+
+    border-radius: pxToRem(10px);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+  
+    .movie-header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: pxToRem(20px);
+      gap: 2rem;
+  
+      @media (max-width: 768px) {
+        flex-direction: column;
+      }
+    }
+  
+    .movie-poster {
+      width: pxToRem(400px);
+      height: auto;
+
+      display: flex;
+      flex-direction: column;
+      gap: pxToRem(20px);
+  
+      img {
+        width: pxToRem(400px);
+        height: pxToRem(600px);
+        border-radius: pxToRem(8px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      a {
+        width: 100%;
+        height: auto;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+        text-decoration: none;
+
+        font-family: Poppins;
+        font-size: pxToRem(20px);
+        font-style: normal;
+        font-weight: 400;
+        line-height: pxToRem(16px);
+
+        color: #FFF;
+
+        background: rgb(255, 255, 255, 0.3);
+        border-radius: pxToRem(8px);
+        padding: pxToRem(16px) pxToRem(10px);
+      }
+    }
+  
+    .movie-info {
+      // max-width: 50%;
+      flex: 1;
+  
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: pxToRem(20px);
+  
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+  
+      .movie-details {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
+          align-items: center;
+          gap: pxToRem(10px);
+      //   margin-bottom: 2rem;
+  
+      //   p {
+      //     margin-bottom: 0.5rem;
+      //   }
+  
+        .rating {
+          width: fit-content;
+          height: fit-content;
+          color: #F2F2F2;
+          font-family: Poppins;
+          font-size: pxToRem(16px);
+          font-style: normal;
+          font-weight: 500;
+          line-height: pxToRem(16px);
+  
+          border-radius: pxToRem(3px);
+          background: rgba(235, 235, 235, 0.30);
+          backdrop-filter: blur(12.5px);
+  
+          padding: pxToRem(4px) pxToRem(6px);
+        }
+  
+        .genre, .duration, .adult {
+          color: #9E9E9E;
+          font-family: Poppins;
+          font-size: pxToRem(16px);
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+        }
+      }
+    }
+  
+    .movie-overview {
+      color: #FFF;
+      font-family: Poppins;
+      font-size: pxToRem(16px);
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+  
+      max-width: 70%;
+
+      &-title {
+        color: rgba(255, 255, 255, 0.50);
+        font-family: Poppins;
+        font-size: pxToRem(16px);
+        font-style: normal;
+        font-weight: 400;
+        line-height: pxToRem(16px);
+      }
+    }
+
+    .movie-actors {
+      width: 100%;
+      height: auto;
+
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: pxToRem(10px);
+      row-gap: pxToRem(5px);
+
+      line-height: pxToRem(5px);
+
+      &-title {
+        color: rgba(255, 255, 255, 0.50);
+        font-family: Poppins;
+        font-size: pxToRem(16px);
+        font-style: normal;
+        font-weight: 400;
+        line-height: pxToRem(16px);
+      }
+
+
+      .movie-actor {
+        color: #FFF;
+        font-family: Poppins;
+        font-size: pxToRem(16px);
+        font-style: normal;
+        font-weight: 400;
+        line-height: pxToRem(16px);
+      }
+
+    }
+  
+    .movie-title {
+      color: #FFF;
+      font-size: pxToRem(48px);
+      font-style: normal;
+      font-weight: 500;
+      line-height: normal;
+    }
+  
+    .sessions {
+      h2 {
+        margin-bottom: 1rem;
+      }
+  
+      .sessions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(pxToRem(200px), 1fr));
+        gap: 1rem;
+      }
+  
+      .session-item {
+        padding: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+  
+        .date {
+          font-weight: bold;
+        }
+  
+        .time {
+          color: #666;
+          margin: 0.5rem 0;
+        }
+  
+        .btn-book {
+          background-color: #e31221;
+          color: white;
+          border: none;
+          padding: 0.5rem 1rem;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: background-color 0.2s;
+  
+          &:hover {
+            background-color: darken(#e31221, 10%);
+          }
+        }
+      }
+    }
+
+    .trailer {
+      width: 100%;
+      height: auto;
+      iframe {
+        width: 100%;
+        height: 100%;
+
+        min-height: pxToRem(600px);
+        border-radius: pxToRem(10px);
+      }
+    }
+  }
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: pxToRem(400px);
+}
+
+.rating-section {
+    width: 100%;
+    padding: pxToRem(20px);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: pxToRem(8px);
+    
+    .ratings-container {
+        display: flex;
+        flex-direction: column;
+        gap: pxToRem(20px);
+
+        .average-rating,
+        .user-rating-container {
+            display: flex;
+            flex-direction: column;
+            gap: pxToRem(10px);
+        }
+    }
+
+    .rating-title {
+        color: rgba(255, 255, 255, 0.7);
+        font-family: Poppins;
+        font-size: pxToRem(16px);
+        font-weight: 500;
+    }
+
+    .stars-container {
+        display: flex;
+        gap: pxToRem(4px);
+
+        &.readonly {
+            pointer-events: none;
+            
+            .star {
+                font-size: pxToRem(20px);
+                cursor: default;
+
+                &.filled {
+                    color: #FFD700;
+                }
+            }
+        }
+
+        .star {
+            font-size: pxToRem(24px);
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.3);
+            transition: all 0.2s ease;
+
+            &:hover {
+                transform: scale(1.1);
+            }
+
+            &.filled {
+                color: #FFD700;
+            }
+
+            &.hovered {
+                color: #FFD700;
+                opacity: 0.8;
+            }
+        }
+    }
+
+    .rating-value {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: pxToRem(14px);
+        margin-top: pxToRem(5px);
+    }
+
+    .rating-success {
+        color: #4CAF50;
+        font-size: pxToRem(14px);
+        animation: fadeIn 0.3s ease;
+    }
+
+    .rating-error {
+        color: #e31221;
+        font-size: pxToRem(14px);
+        animation: fadeIn 0.3s ease;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
