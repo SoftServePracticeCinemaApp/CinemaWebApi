@@ -77,6 +77,7 @@ namespace Cinema.WebApi.Controllers
         [ProducesResponseType(typeof(BaseResponse<List<GetTicketDTO>>), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetBySessionId([FromRoute] int sessionId)
         {
+            Console.WriteLine("Loading tickets");
             var response = await _ticketService.GetTicketsBySessionIdAsync(sessionId);
 
             return StatusCode((int)response.StatusCode, response);

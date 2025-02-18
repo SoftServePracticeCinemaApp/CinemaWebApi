@@ -188,10 +188,13 @@ public static class Program
 
 		app.UseCors("AllowAll");
 
-		app.UseHttpsRedirection();
-		app.UseAuthentication();
-		app.UseAuthorization();
-		app.MapControllers();
+        app.UseHttpsRedirection();
+        app.UseRouting();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.MapControllers();
 
 
 		var supportedCultures = new[] { "en-US" };

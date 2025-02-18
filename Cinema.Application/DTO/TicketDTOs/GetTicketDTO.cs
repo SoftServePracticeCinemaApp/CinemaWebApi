@@ -9,6 +9,8 @@ namespace Cinema.Application.DTO.TicketDTOs
         public string? UserId { get; set; }
         public long MovieId { get; set; }
         public int Row { get; set; }
+        public int SeatNumber { get; set; }
+        public bool IsBooked { get; set; }
         public GetSessionDTO? Session { get; set; }
         public GetMovieDTO? Movie { get; set; }
     }

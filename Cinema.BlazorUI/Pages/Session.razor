@@ -1,0 +1,126 @@
+﻿@page "/movie-session/{SessionId:int}"
+@using Cinema.BlazorUI.Model
+@inject ITicketService TicketService
+
+<div class="session-page">
+    @if (isLoading)
+    {
+        <div class="loading-container">
+            <p>Loading...</p>
+        </div>
+    }
+    else
+    {
+        <div class="session-container">
+            <div class="session-header">
+                <h1 class="session-title">Choose seats</h1>
+                <div class="session-legend">
+                    <div class="legend-item">
+                        <div class="seat available"></div>
+                        <span>Available</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="seat selected"></div>
+                        <span>Selected</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="seat booked"></div>
+                        <span>Booked</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="screen">
+                <div class="screen-content">Screen</div>
+            </div>
+
+            <div class="seats-container">
+                @{
+                    var groupedTickets = Tickets.GroupBy(t => t.Row).OrderBy(g => g.Key);
+                }
+                @foreach (var row in groupedTickets)
+                {
+                    <div class="seat-row">
+                        <div class="row-number">@row.Key</div>
+                        @foreach (var ticket in row.OrderBy(t => t.SeatNumber))
+                        {
+                            <button class="seat @(ticket.IsBooked ? "booked" : ticket.IsSelected ? "selected" : "available")"
+                                    @onclick="() => ToggleTicket(ticket)"
+                                    disabled="@ticket.IsBooked">
+                                @ticket.SeatNumber
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="booking-summary">
+                <div class="selected-seats">
+                    <span>Selected seats: @(Tickets.Count(t => t.IsSelected))</span>
+                </div>
+                <button class="confirm-button" 
+                        @onclick="ConfirmSelection" 
+                        disabled="@(Tickets.All(t => !t.IsSelected))">
+                    Confirm booking
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public int SessionId { get; set; }
+    private List<Ticket> Tickets = new();
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadTickets();
+    }
+
+    private async Task LoadTickets()
+    {
+        try
+        {
+            Tickets = await TicketService.GetBySessionIdAsync(SessionId);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Err in load tickets: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void ToggleTicket(Ticket ticket)
+    {
+        if (!ticket.IsBooked)
+        {
+            ticket.IsSelected = !ticket.IsSelected;
+            StateHasChanged();
+        }
+    }
+
+    private async Task ConfirmSelection()
+    {
+        var selectedTickets = Tickets.Where(t => t.IsSelected).ToList();
+
+        foreach (var ticket in selectedTickets)
+        {
+            var result = await TicketService.BookTicketAsync(ticket.Id);
+            if (result.Succeeded)
+            {
+                ticket.IsBooked = true;
+                ticket.IsSelected = false;
+            }
+
+            @* Console.WriteLine($"Бронь квитка {ticket.Id} успішна: {result.Succeeded}"); *@
+        }
+
+        @* this.StateHasChanged(); *@
+
+        await LoadTickets();
+    }
+}

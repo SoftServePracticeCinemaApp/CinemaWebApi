@@ -1,4 +1,6 @@
 ﻿using Cinema.Application.Interfaces;
+using Cinema.Infrastructure.Utils;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -7,7 +9,9 @@ using System.Threading.Tasks;
 namespace Cinema.WebApi.Controllers
 {
     [Route("api/movie/{movieId}/rate")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
+    // [Authorize]
     public class RatingController : ControllerBase
     {
         private readonly IRatingService _ratingService;
