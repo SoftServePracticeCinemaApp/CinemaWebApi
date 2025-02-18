@@ -58,7 +58,6 @@ namespace Cinema.WebApi.AdminControllers
         /// Додати фільм з TMDB за SearchId.
         /// </summary>
         [HttpPost("[action]")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.Conflict)]
         [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]

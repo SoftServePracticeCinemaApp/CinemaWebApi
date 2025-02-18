@@ -93,17 +93,17 @@ public static class Program
             options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(options =>
         {
-            options.RequireHttpsMetadata = false; // Вимкнення HTTPS для локального тестування
+            options.RequireHttpsMetadata = true; // Вимкнення HTTPS для локального тестування
             options.SaveToken = true;
             options.TokenValidationParameters = new TokenValidationParameters
             {
-                ValidateIssuerSigningKey = true,
+                ValidateIssuerSigningKey = false,
                 IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = true,
+                ValidateIssuer = false,
                 ValidIssuer = issuer,
-                ValidateAudience = true,
+                ValidateAudience = false,
                 ValidAudience = audience,
-                ValidateLifetime = true,
+                ValidateLifetime = false,
                 ClockSkew = TimeSpan.Zero // Вимикає затримку перевірки токена
             };
         });
@@ -188,9 +188,12 @@ public static class Program
 
         app.UseCors("AllowAll");
 
-		app.UseHttpsRedirection();
-		app.UseAuthentication();
-		app.UseAuthorization();
+        app.UseHttpsRedirection();
+        app.UseRouting();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
+
         app.MapControllers();
 
 

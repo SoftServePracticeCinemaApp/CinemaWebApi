@@ -205,9 +205,17 @@
       }
   
       .sessions-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(pxToRem(200px), 1fr));
-        gap: 1rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        gap: pxToRem(10px);
+        row-gap: pxToRem(5px);
+
+        flex-wrap: wrap;
+
+        // grid-template-columns: repeat(auto-fill, minmax(pxToRem(200px), 1fr));
+        // gap: 1rem;
       }
   
       .session-item {

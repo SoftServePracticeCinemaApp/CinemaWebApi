@@ -66,7 +66,7 @@ namespace Cinema.Application.Services
 
                 for (int i = 0; i < 10; i++) {
                     for (int j = 0; j < 10; j++) {
-                        var ticket = new TicketEntity {
+                        TicketEntity ticket = new TicketEntity {
                             SessionId = session.Id,
                             Row = i,
                             SeatNumber = j,
@@ -74,6 +74,7 @@ namespace Cinema.Application.Services
                             MovieId = session.MovieId,
                         };
                         await _unitOfWork.Ticket.AddAsync(ticket);
+                        await _unitOfWork.CompleteAsync();
                     }
                 }
 

@@ -8,6 +8,8 @@ namespace Cinema.Infrastructure.Utils
 {
 	public static class StaticDetails
 	{
-		public const string ROLEAdmin = "admin";
+		public const string ROLEAdmin = "Admin";
+		public const string ROLEUser = "User";
+		public const string DefaultRole = "User";
 	}
 }
